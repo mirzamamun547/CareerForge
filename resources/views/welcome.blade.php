@@ -168,129 +168,81 @@
                 </div>
             </div>
 
-            <!-- Hero Right Side: Glassmorphic Dashboard Mockup -->
-            <div class="lg:col-span-6 relative flex items-center justify-center min-h-[480px]">
+            <!-- Hero Right Side: Browser Mockup -->
+            <div class="lg:col-span-6 relative flex items-center justify-center">
                 
                 <!-- Glowing Decorative Background Gradients -->
-                <div class="absolute w-72 h-72 rounded-full bg-indigo-400/20 blur-3xl -top-10 -left-10 animate-pulse"></div>
-                <div class="absolute w-80 h-80 rounded-full bg-violet-400/20 blur-3xl -bottom-10 -right-10 animate-pulse"></div>
+                <div class="absolute w-72 h-72 rounded-full bg-indigo-400/10 blur-3xl -top-10 -left-10 animate-pulse"></div>
+                <div class="absolute w-80 h-80 rounded-full bg-violet-400/15 blur-3xl -bottom-10 -right-10 animate-pulse"></div>
                 
-                <!-- Main Mockup Container -->
-                <div class="relative w-full max-w-md mx-auto aspect-square flex items-center justify-center">
+                <!-- Browser Window Container -->
+                <div class="relative w-full max-w-lg bg-white border border-gray-200/80 rounded-2xl shadow-xl overflow-hidden animate-float">
                     
-                    <!-- Center Concept Illustration (Modern Flat Workspace) -->
-                    <div class="w-64 h-64 rounded-3xl bg-indigo-50 border border-indigo-100/50 flex flex-col items-center justify-center p-6 shadow-inner">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-20 h-20 text-indigo-500 mb-4 animate-float-delayed">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
-                        </svg>
-                        <h3 class="text-sm font-bold text-gray-800 text-center leading-tight">Interactive Platform</h3>
-                        <p class="text-xs text-gray-500 text-center mt-1">Design & code directly in your browser.</p>
+                    <!-- Browser Top Bar -->
+                    <div class="bg-gray-50 border-b border-gray-200/80 px-4 py-3 flex items-center gap-2">
+                        <!-- Window Controls -->
+                        <div class="flex gap-1.5 shrink-0">
+                            <span class="w-3 h-3 rounded-full bg-rose-400 block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400 block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-400 block"></span>
+                        </div>
+                        <!-- URL Bar -->
+                        <div class="bg-white border border-gray-200/60 rounded-lg text-[10px] text-gray-400 px-4 py-1 flex-1 text-center font-mono truncate select-none">
+                            careerforge.com/dashboard
+                        </div>
                     </div>
-
-                    <!-- Floating Widgets -->
                     
-                    <!-- 1. Skills Circle Card -->
-                    <div class="absolute top-0 -left-6 glass border border-white/60 p-4 rounded-2xl shadow-xl w-44 animate-float">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-xs font-bold text-gray-700">My Skills</span>
-                            <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                    <!-- Browser Content Workspace -->
+                    <div class="bg-gray-50/50 p-5 flex gap-4 h-64 select-none">
+                        
+                        <!-- Mini Sidebar -->
+                        <div class="w-1/4 flex flex-col gap-2">
+                            <div class="h-4.5 bg-indigo-100 rounded-md w-full"></div>
+                            <div class="h-3.5 bg-gray-200/80 rounded-md w-4/5"></div>
+                            <div class="h-3.5 bg-gray-200/80 rounded-md w-3/4"></div>
+                            <div class="h-3.5 bg-gray-200/80 rounded-md w-5/6"></div>
+                            <div class="h-3.5 bg-gray-200/80 rounded-md w-2/3"></div>
                         </div>
-                        <!-- Donut Chart SVG -->
-                        <div class="flex items-center gap-3">
-                            <div class="relative w-12 h-12 flex items-center justify-center">
-                                <svg class="w-full h-full transform -rotate-90">
-                                    <circle cx="24" cy="24" r="18" stroke="#E0E7FF" stroke-width="4.5" fill="transparent"/>
-                                    <circle cx="24" cy="24" r="18" stroke="#4F46E5" stroke-width="4.5" fill="transparent" stroke-dasharray="113" stroke-dashoffset="28"/>
-                                </svg>
-                                <span class="absolute text-[10px] font-bold text-indigo-600">75%</span>
+                        
+                        <!-- Mini Content Panel -->
+                        <div class="flex-1 flex flex-col gap-3">
+                            <!-- Greeting Banner -->
+                            <div class="bg-indigo-600 rounded-xl p-3 text-white flex flex-col gap-1">
+                                <div class="text-[11px] font-bold">Welcome back!</div>
+                                <div class="text-[8px] text-indigo-100/90 leading-tight">Your skills are ready for the next level. Let's build today.</div>
                             </div>
-                            <div>
-                                <div class="text-[11px] font-bold text-gray-800">Technical</div>
-                                <div class="text-[9px] text-gray-400">3 Categories</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Job Match Card -->
-                    <div class="absolute bottom-6 -left-8 glass border border-white/60 p-4 rounded-2xl shadow-xl w-48 animate-float-delayed">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-[11px] font-semibold text-gray-500">Job Match</span>
-                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">92%</span>
-                        </div>
-                        <div class="text-sm font-extrabold text-gray-800">Product Designer</div>
-                        <!-- Graph Line SVG -->
-                        <div class="mt-2 w-full h-10">
-                            <svg viewBox="0 0 100 30" class="w-full h-full overflow-visible">
-                                <path d="M0 25 C20 20, 40 5, 60 15 C80 25, 90 2, 100 5" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/>
-                                <path d="M0 25 C20 20, 40 5, 60 15 C80 25, 90 2, 100 5 L100 30 L0 30 Z" fill="url(#greenGradient)" opacity="0.1"/>
-                                <defs>
-                                    <linearGradient id="greenGradient" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stop-color="#10B981" />
-                                        <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
-                                    </linearGradient>
-                                </defs>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- 3. Roadmap Progress Card -->
-                    <div class="absolute top-10 -right-8 glass border border-white/60 p-5 rounded-2xl shadow-xl w-52 animate-float-delayed">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs font-bold text-gray-800">Roadmap Progress</span>
-                            <span class="text-xs font-bold text-indigo-600">75%</span>
-                        </div>
-                        <!-- Progress Bar -->
-                        <div class="w-full h-2 bg-indigo-50 rounded-full mb-4 overflow-hidden">
-                            <div class="h-full bg-indigo-600 rounded-full" style="width: 75%"></div>
-                        </div>
-                        <!-- Steps -->
-                        <div class="flex flex-col gap-2">
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-2.5 h-2.5 text-white">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
+                            
+                            <!-- Two Columns Widgets -->
+                            <div class="grid grid-cols-2 gap-3 flex-1">
+                                <!-- Widget 1: Graph -->
+                                <div class="bg-white border border-gray-200/60 rounded-xl p-3 flex flex-col justify-between">
+                                    <div class="text-[9px] font-bold text-gray-500">Skill Progression</div>
+                                    <svg viewBox="0 0 100 40" class="w-full h-10 mt-1">
+                                        <path d="M0,35 Q20,10 40,25 T80,5 T100,20" fill="none" stroke="#4F46E5" stroke-width="2.5" stroke-linecap="round"/>
                                     </svg>
                                 </div>
-                                <span class="text-[10px] font-semibold text-gray-700">HTML / CSS Foundations</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-2.5 h-2.5 text-white">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
-                                    </svg>
+                                <!-- Widget 2: Tasks -->
+                                <div class="bg-white border border-gray-200/60 rounded-xl p-3 flex flex-col gap-2">
+                                    <div class="text-[9px] font-bold text-gray-500">Next Milestones</div>
+                                    <div class="flex flex-col gap-1">
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 block"></span>
+                                            <span class="text-[8px] text-gray-600 font-semibold truncate">HTML / CSS</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 block"></span>
+                                            <span class="text-[8px] text-gray-600 font-semibold truncate">JS Basics</span>
+                                        </div>
+                                        <div class="flex items-center gap-1">
+                                            <span class="w-2.5 h-2.5 rounded-full bg-indigo-500 block"></span>
+                                            <span class="text-[8px] text-gray-600 font-semibold truncate">Laravel API</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="text-[10px] font-semibold text-gray-700">JavaScript DOM Manipulation</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full bg-indigo-600 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-2.5 h-2.5 text-white">
-                                        <path fill-rule="evenodd" d="M19.916 4.626a.75.75 0 0 1 .208 1.04l-9 13.5a.75.75 0 0 1-1.154.114l-6-6a.75.75 0 0 1 1.06-1.06l5.353 5.353 8.493-12.74a.75.75 0 0 1 1.04-.207Z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <span class="text-[10px] font-semibold text-gray-700">Vue.js / React Basics</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-4 h-4 rounded-full border border-gray-300 flex items-center justify-center"></div>
-                                <span class="text-[10px] font-semibold text-gray-400">Laravel MVC Architecture</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- 4. Interactive Badges -->
-                    <div class="absolute bottom-16 right-0 w-11 h-11 bg-rose-500 rounded-2xl shadow-lg shadow-rose-200 flex items-center justify-center animate-float">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.57 50.57 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7 1.138 3-3" />
-                        </svg>
-                    </div>
-
-                    <div class="absolute top-24 left-1/2 -translate-x-1/2 w-11 h-11 bg-violet-600 rounded-2xl shadow-lg shadow-violet-200 flex items-center justify-center animate-float">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="white" class="w-5.5 h-5.5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 0 1 3.75 18.4V14.15m16.5 0c0-1.22-.821-2.278-2.02-2.565A8.24 8.24 0 0 0 12 10.5a8.24 8.24 0 0 0-6.23 1.085c-1.2 2.87-2.02 1.345-2.02 2.565m16.5 0a2.25 2.25 0 0 0-2.25-2.25H18.75m-15 0a2.25 2.25 0 0 0-2.25 2.25H5.25m13.5-3V7.5m-12 0V7.5" />
-                        </svg>
-                    </div>
-
                 </div>
-
             </div>
 
         </main>
