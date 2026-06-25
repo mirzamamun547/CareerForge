@@ -219,27 +219,27 @@
                         <i class="bi bi-grid-fill fs-5"></i>
                         Dashboard
                     </a>
-                    <a href="/employer/post-job" class="nav-link-custom {{ Request::is('employer/post-job') ? 'active' : '' }}">
+                    <a href="/employer/jobs" class="nav-link-custom {{ Request::is('employer/jobs') ? 'active' : '' }}">
                         <i class="bi bi-plus-circle fs-5"></i>
                         Post a Job
                     </a>
-                    <a href="/employer/jobs" class="nav-link-custom {{ Request::is('employer/jobs') ? 'active' : '' }}">
+                    <a href="/employer/manage-jobs" class="nav-link-custom {{ Request::is('employer/manage-jobs') ? 'active' : '' }}">
                         <i class="bi bi-list-task fs-5"></i>
                         Manage Jobs
                     </a>
-                    <a href="#applicants" class="nav-link-custom">
+                    <a href="/employer/applicants" class="nav-link-custom {{ Request::is('employer/applicants') || Request::is('employer/applicant-details') ? 'active' : '' }}">
                         <i class="bi bi-people fs-5"></i>
                         Applicants
                     </a>
-                    <a href="#schedule" class="nav-link-custom">
+                    <a href="/employer/interview-schedule" class="nav-link-custom {{ Request::is('employer/interview-schedule') || Request::is('employer/schedule-interview') ? 'active' : '' }}">
                         <i class="bi bi-calendar-event fs-5"></i>
                         Interview Schedule
                     </a>
-                    <a href="#company" class="nav-link-custom">
+                    <a href="/employer/company-profile" class="nav-link-custom {{ Request::is('employer/company-profile') ? 'active' : '' }}">
                         <i class="bi bi-building fs-5"></i>
                         Company Profile
                     </a>
-                    <a href="#notifications" class="nav-link-custom">
+                    <a href="/employer/notifications" class="nav-link-custom {{ Request::is('employer/notifications') ? 'active' : '' }}">
                         <i class="bi bi-bell fs-5"></i>
                         Notifications
                     </a>
