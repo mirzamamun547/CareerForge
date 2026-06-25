@@ -34,3 +34,38 @@ Route::get('/employer/company-profile', function () {
 Route::get('/employer/notifications', function () {
     return view('employer.notifications');
 });
+Route::get('/student/dashboard', function () {
+    return view('student.dashboard');
+});
+
+Route::get('/student/profile', function () {
+    return view('student.profile');
+});
+
+Route::get('/student/resume', function () {
+    return view('student.resume');
+});
+
+Route::get('/student/resume-review', function () {
+    return view('student.resume-review');
+});
+
+Route::get('/student/skills', function () {
+    return view('student.skills');
+});
+
+Route::get('/student/jobs', function () {
+    return view('student.jobs');
+});
+
+Route::get('/student/applications', function () {
+    return view('student.applications');
+});
+
+Route::get('/student/interviews', function () {
+    return view('student.interviews');
+});
+
+Route::get('/student/notifications', function () {
+    return view('student.notifications');
+});
