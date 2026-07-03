@@ -76,7 +76,7 @@
 
             <!-- Mid Links -->
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-600">
-                <a href="/" class="text-indigo-600 relative after:absolute after:bottom-[-6px] after:left-0 after:w-full after:h-0.5 after:bg-indigo-600">Home</a>
+                <a href="/" class="text-indigo-600 relative after:absolute after:bottom-[-6px] after:left-0 after:w-full after:h-0.5 after:bg-indigo-600">Dashboard</a>
                 <a href="#features" class="hover:text-indigo-600 transition-colors">Features</a>
                 <a href="#students" class="hover:text-indigo-600 transition-colors">For Students</a>
                 <a href="#employers" class="hover:text-indigo-600 transition-colors">For Employers</a>
