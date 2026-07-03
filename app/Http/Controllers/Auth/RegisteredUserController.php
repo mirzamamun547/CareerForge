@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\EmployerProfile;
+use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
@@ -46,7 +49,7 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Validate and create a student account.
+     * Validate and create a student account + student_profiles row.
      */
     protected function storeStudent(Request $request): RedirectResponse
     {
@@ -66,17 +69,25 @@ class RegisteredUserController extends Controller
             ? $request->file('profile_picture')->store('profile-pictures', 'public')
             : null;
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'student',
-            'phone' => $validated['phone'],
-            'university' => $validated['university'],
-            'department' => $validated['department'],
-            'graduation_year' => $validated['graduation_year'],
-            'profile_picture' => $profilePicturePath,
-        ]);
+        $user = DB::transaction(function () use ($validated, $profilePicturePath) {
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'student',
+            ]);
+
+            StudentProfile::create([
+                'user_id' => $user->id,
+                'phone' => $validated['phone'],
+                'profile_picture' => $profilePicturePath,
+                'university' => $validated['university'],
+                'department' => $validated['department'],
+                'graduation_year' => $validated['graduation_year'],
+            ]);
+
+            return $user;
+        });
 
         event(new Registered($user));
 
@@ -86,7 +97,7 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Validate and create an employer account.
+     * Validate and create an employer account + employer_profiles row.
      */
     protected function storeEmployer(Request $request): RedirectResponse
     {
@@ -107,20 +118,28 @@ class RegisteredUserController extends Controller
             ? $request->file('company_logo')->store('company-logos', 'public')
             : null;
 
-        $user = User::create([
-            'name' => $validated['contact_person'],
-            'email' => $validated['company_email'],
-            'password' => Hash::make($validated['password']),
-            'role' => 'employer',
-            'phone' => $validated['phone'],
-            'company_name' => $validated['company_name'],
-            'company_email' => $validated['company_email'],
-            'website' => $validated['website'] ?? null,
-            'industry' => $validated['industry'],
-            'company_address' => $validated['company_address'],
-            'contact_person' => $validated['contact_person'],
-            'company_logo' => $companyLogoPath,
-        ]);
+        $user = DB::transaction(function () use ($validated, $companyLogoPath) {
+            $user = User::create([
+                'name' => $validated['contact_person'],
+                'email' => $validated['company_email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'employer',
+                'phone' => $validated['phone'],
+            ]);
+
+            EmployerProfile::create([
+                'user_id' => $user->id,
+                'company_name' => $validated['company_name'],
+                'company_email' => $validated['company_email'],
+                'website' => $validated['website'] ?? null,
+                'industry' => $validated['industry'],
+                'company_address' => $validated['company_address'],
+                'contact_person' => $validated['contact_person'],
+                'company_logo' => $companyLogoPath,
+            ]);
+
+            return $user;
+        });
 
         event(new Registered($user));
 

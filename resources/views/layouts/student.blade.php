@@ -364,9 +364,13 @@
                         <span class="dot"></span>
                     </a>
                     <div class="user-chip">
-                        <div class="user-avatar">RU</div>
+                        @if(Auth::user()->studentProfile && Auth::user()->studentProfile->profile_picture)
+                            <img src="{{ asset('storage/' . Auth::user()->studentProfile->profile_picture) }}" alt="Avatar" class="rounded-circle object-cover border" style="width: 32px; height: 32px;">
+                        @else
+                            <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                        @endif
                         <div>
-                            <div class="user-name">Raihan Uddin</div>
+                            <div class="user-name">{{ Auth::user()->name }}</div>
                             <div class="user-role">Student</div>
                         </div>
                         <i class="bi bi-chevron-down ms-1" style="font-size:0.65rem;color:#9CA3AF;"></i>

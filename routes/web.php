@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentProfileController;
+use App\Http\Controllers\StudentResumeController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -66,8 +68,11 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
     Route::get('/dashboard', function () { return view('student.dashboard'); })->name('student.dashboard');
-    Route::get('/profile', function () { return view('student.profile'); })->name('student.profile');
-    Route::get('/resume', function () { return view('student.resume'); })->name('student.resume');
+    Route::get('/profile', [StudentProfileController::class, 'edit'])->name('student.profile');
+    Route::post('/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
+    Route::get('/resume', [StudentResumeController::class, 'edit'])->name('student.resume');
+    Route::post('/resume', [StudentResumeController::class, 'store'])->name('student.resume.upload');
+    Route::get('/resume/download', [StudentResumeController::class, 'download'])->name('student.resume.download');
     Route::get('/resume-review', function () { return view('student.resume-review'); })->name('student.resume-review');
     Route::get('/skills', function () { return view('student.skills'); })->name('student.skills');
     Route::get('/jobs', function () { return view('student.jobs'); })->name('student.jobs');

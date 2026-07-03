@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -24,20 +25,6 @@ class User extends Authenticatable
         'role',
         'phone',
         'profile_picture',
-
-        // Student fields
-        'university',
-        'department',
-        'graduation_year',
-
-        // Employer fields
-        'company_name',
-        'company_email',
-        'website',
-        'industry',
-        'company_address',
-        'contact_person',
-        'company_logo',
     ];
 
     /**
@@ -60,8 +47,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'graduation_year' => 'integer',
         ];
+    }
+
+    public function studentProfile(): HasOne
+    {
+        return $this->hasOne(StudentProfile::class);
+    }
+
+    public function employerProfile(): HasOne
+    {
+        return $this->hasOne(EmployerProfile::class);
     }
 
     public function isStudent(): bool
