@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,6 +21,23 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'phone',
+        'profile_picture',
+
+        // Student fields
+        'university',
+        'department',
+        'graduation_year',
+
+        // Employer fields
+        'company_name',
+        'company_email',
+        'website',
+        'industry',
+        'company_address',
+        'contact_person',
+        'company_logo',
     ];
 
     /**
@@ -44,6 +60,35 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'graduation_year' => 'integer',
         ];
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
+
+    public function isEmployer(): bool
+    {
+        return $this->role === 'employer';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Where this user should land after login, based on role.
+     */
+    public function dashboardRoute(): string
+    {
+        return match ($this->role) {
+            'student' => route('student.dashboard'),
+            'employer' => route('employer.dashboard'),
+            'admin' => route('dashboard'),
+            default => route('dashboard'),
+        };
     }
 }

@@ -328,11 +328,15 @@
             </nav>
 
             <!-- Logout -->
-            <div class="sidebar-bottom">
-                <a href="/logout" class="nav-link-custom" style="color:#F43F5E;">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
-            </div>
+           <div class="sidebar-bottom">
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <a href="{{ route('logout') }}" class="nav-link-custom" style="color:#F43F5E;"
+           onclick="event.preventDefault(); this.closest('form').submit();">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </form>
+</div>
         </aside>
 
         <!-- ═══ MAIN CONTENT ═══ -->

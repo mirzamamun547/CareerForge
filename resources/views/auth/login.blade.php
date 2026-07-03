@@ -78,6 +78,10 @@
                 Don't have an account?
                 <a href="/register" class="font-bold text-[#2563EB] hover:underline">Register</a>
             </p>
+            <p class="text-xs text-[#94a3b8] mt-2">
+                Logging in as an employer or admin?
+                <a href="{{ route('login.select') }}" class="font-semibold text-[#2563EB] hover:underline">Choose your portal</a>
+            </p>
         </div>
 
     </div>

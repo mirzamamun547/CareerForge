@@ -30,6 +30,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'role' => ['nullable', 'in:student,employer,admin'],
         ];
     }
 
@@ -47,6 +48,20 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        // If this login came from a role-specific page (student/employer/admin
+        // login form), make sure the account actually has that role.
+        $expectedRole = $this->input('role');
+
+        if ($expectedRole && Auth::user()->role !== $expectedRole) {
+            Auth::logout();
+
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => 'This account is not registered as a '.$expectedRole.'.',
             ]);
         }
 

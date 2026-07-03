@@ -13,9 +13,9 @@ Route::middleware('guest')->group(function () {
         return view('auth.login');
     })->name('login');
 
-    Route::get('/register', function () {
-        return view('auth.select-role');
-    })->name('register');
+    Route::get('/login/select', function () {
+        return view('auth.login-selection');
+    })->name('login.select');
 
     Route::get('/register/student', function () {
         return view('auth.register-student');
@@ -51,25 +51,29 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/employer/jobs', function () { return view('employer.jobs'); });
-Route::get('/employer/manage-jobs', function () { return view('employer.manage-jobs'); });
-Route::get('/employer/dashboard', function () { return view('employer.dashboard'); });
-Route::get('/employer/applicants', function () { return view('employer.applicants'); });
-Route::get('/employer/applicant-details', function () { return view('employer.applicant-details'); });
-Route::get('/employer/interview-schedule', function () { return view('employer.interview-schedule'); });
-Route::get('/employer/schedule-interview', function () { return view('employer.schedule-interview'); });
-Route::get('/employer/company-profile', function () { return view('employer.company-profile'); });
-Route::get('/employer/notifications', function () { return view('employer.notifications'); });
+Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function () {
+    Route::get('/jobs', function () { return view('employer.jobs'); })->name('employer.jobs');
+    Route::get('/manage-jobs', function () { return view('employer.manage-jobs'); })->name('employer.manage-jobs');
+    Route::get('/dashboard', function () { return view('employer.dashboard'); })->name('employer.dashboard');
+    Route::get('/applicants', function () { return view('employer.applicants'); })->name('employer.applicants');
+    Route::get('/applicant-details', function () { return view('employer.applicant-details'); })->name('employer.applicant-details');
+    Route::get('/interview-schedule', function () { return view('employer.interview-schedule'); })->name('employer.interview-schedule');
+    Route::get('/schedule-interview', function () { return view('employer.schedule-interview'); })->name('employer.schedule-interview');
+    Route::get('/company-profile', function () { return view('employer.company-profile'); })->name('employer.company-profile');
+    Route::get('/notifications', function () { return view('employer.notifications'); })->name('employer.notifications');
+});
 
 
-Route::get('/student/dashboard', function () { return view('student.dashboard'); });
-Route::get('/student/profile', function () { return view('student.profile'); });
-Route::get('/student/resume', function () { return view('student.resume'); });
-Route::get('/student/resume-review', function () { return view('student.resume-review'); });
-Route::get('/student/skills', function () { return view('student.skills'); });
-Route::get('/student/jobs', function () { return view('student.jobs'); });
-Route::get('/student/applications', function () { return view('student.applications'); });
-Route::get('/student/interviews', function () { return view('student.interviews'); });
-Route::get('/student/notifications', function () { return view('student.notifications'); });
+Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
+    Route::get('/dashboard', function () { return view('student.dashboard'); })->name('student.dashboard');
+    Route::get('/profile', function () { return view('student.profile'); })->name('student.profile');
+    Route::get('/resume', function () { return view('student.resume'); })->name('student.resume');
+    Route::get('/resume-review', function () { return view('student.resume-review'); })->name('student.resume-review');
+    Route::get('/skills', function () { return view('student.skills'); })->name('student.skills');
+    Route::get('/jobs', function () { return view('student.jobs'); })->name('student.jobs');
+    Route::get('/applications', function () { return view('student.applications'); })->name('student.applications');
+    Route::get('/interviews', function () { return view('student.interviews'); })->name('student.interviews');
+    Route::get('/notifications', function () { return view('student.notifications'); })->name('student.notifications');
+});
 
 require __DIR__.'/auth.php';

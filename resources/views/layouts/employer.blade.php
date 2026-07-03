@@ -251,12 +251,17 @@
             </div>
 
             <!-- Logout -->
-            <div class="pt-3 border-top border-light">
-                <a href="#logout" class="nav-link-custom text-danger hover:bg-danger-subtle">
-                    <i class="bi bi-box-arrow-right fs-5"></i>
-                    Logout
-                </a>
-            </div>
+          <!-- Logout -->
+<div class="pt-3 border-top border-light">
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <a href="{{ route('logout') }}" class="nav-link-custom text-danger hover:bg-danger-subtle"
+           onclick="event.preventDefault(); this.closest('form').submit();">
+            <i class="bi bi-box-arrow-right fs-5"></i>
+            Logout
+        </a>
+    </form>
+</div>
         </aside>
 
         <!-- Main Content Area -->
