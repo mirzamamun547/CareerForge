@@ -111,4 +111,17 @@ class EmployerJobsTest extends TestCase
         $response->assertSee('Benefits');
         $response->assertSee('Preview Job');
     }
+
+    public function test_post_job_page_has_live_preview_targets(): void
+    {
+        $employer = User::factory()->create(['role' => 'employer']);
+
+        $this->actingAs($employer);
+
+        $response = $this->get(route('employer.jobs'));
+
+        $response->assertOk();
+        $response->assertSee('previewSidebarTitle', false);
+        $response->assertSee('previewSidebarMeta', false);
+    }
 }

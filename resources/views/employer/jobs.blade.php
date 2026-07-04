@@ -227,8 +227,8 @@
                 <h5 class="fw-bold text-dark">Preview</h5>
                 <div class="border rounded-4 p-3 mt-3" style="background:#F9FAFB; border-color:#E5E7EB;">
                     <div class="text-secondary" style="font-size:0.78rem;">Job Preview</div>
-                    <div class="fw-bold text-dark mt-1">Your job title will appear here</div>
-                    <div class="text-secondary mt-2" style="font-size:0.85rem;">Category • Location • Full Time</div>
+                    <div class="fw-bold text-dark mt-1" id="previewSidebarTitle">Your job title will appear here</div>
+                    <div class="text-secondary mt-2" style="font-size:0.85rem;" id="previewSidebarMeta">Category • Location • Full Time</div>
                 </div>
             </div>
         </div>
@@ -250,6 +250,8 @@
     const previewTitle = document.getElementById('previewTitle');
     const previewMeta = document.getElementById('previewMeta');
     const previewType = document.getElementById('previewType');
+    const previewSidebarTitle = document.getElementById('previewSidebarTitle');
+    const previewSidebarMeta = document.getElementById('previewSidebarMeta');
     const previewSalary = document.getElementById('previewSalary');
     const previewLevel = document.getElementById('previewLevel');
     const previewDeadline = document.getElementById('previewDeadline');
@@ -274,6 +276,8 @@
         if (previewTitle) previewTitle.textContent = title;
         if (previewMeta) previewMeta.textContent = `${category} • ${location} • ${selectedType}`;
         if (previewType) previewType.textContent = selectedType;
+        if (previewSidebarTitle) previewSidebarTitle.textContent = title;
+        if (previewSidebarMeta) previewSidebarMeta.textContent = `${category} • ${location} • ${selectedType}`;
         if (previewSalary) previewSalary.textContent = `${Number(min).toLocaleString()} - ${Number(max).toLocaleString()} BDT`;
         if (previewLevel) previewLevel.textContent = level;
         if (previewDeadline) previewDeadline.textContent = deadline;
