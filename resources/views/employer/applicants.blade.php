@@ -43,101 +43,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="py-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
-                                    RU
+                    @forelse($applications as $application)
+                        <tr>
+                            <td class="py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
+                                        {{ strtoupper(substr($application->student->name ?? 'A', 0, 2)) }}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">{{ $application->student->name }}</h6>
+                                        <span class="text-secondary" style="font-size: 0.75rem;">{{ $application->jobListing->title }}</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Raihan Uddin</h6>
-                                    <span class="text-secondary" style="font-size: 0.75rem;">Backend Developer</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">Backend Developer</td>
-                        <td class="py-3 text-secondary" style="font-size: 0.85rem;">16 May 2024</td>
-                        <td class="py-3"><span class="badge-custom-amber">Under Review</span></td>
-                        <td class="py-3">
-                            <a href="/employer/applicant-details" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
-                                    TI
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Tasnimul Islam</h6>
-                                    <span class="text-secondary" style="font-size: 0.75rem;">Laravel Developer</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">Laravel Developer</td>
-                        <td class="py-3 text-secondary" style="font-size: 0.85rem;">15 May 2024</td>
-                        <td class="py-3"><span class="badge-custom-emerald">Shortlisted</span></td>
-                        <td class="py-3">
-                            <a href="/employer/applicant-details" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
-                                    SA
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Sadia Akter</h6>
-                                    <span class="text-secondary" style="font-size: 0.75rem;">UI/UX Designer</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">UI/UX Designer</td>
-                        <td class="py-3 text-secondary" style="font-size: 0.85rem;">14 May 2024</td>
-                        <td class="py-3"><span class="badge-custom-indigo">Interview</span></td>
-                        <td class="py-3">
-                            <a href="/employer/applicant-details" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
-                                    HH
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Hasibul Hasan</h6>
-                                    <span class="text-secondary" style="font-size: 0.75rem;">PHP Developer</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">PHP Developer</td>
-                        <td class="py-3 text-secondary" style="font-size: 0.85rem;">13 May 2024</td>
-                        <td class="py-3"><span class="badge-custom-indigo">Applied</span></td>
-                        <td class="py-3">
-                            <a href="/employer/applicant-details" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px;">
-                                    NH
-                                </div>
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">Nayeem Hossain</h6>
-                                    <span class="text-secondary" style="font-size: 0.75rem;">Backend Developer</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">Backend Developer</td>
-                        <td class="py-3 text-secondary" style="font-size: 0.85rem;">12 May 2024</td>
-                        <td class="py-3"><span class="badge-custom-rose">Rejected</span></td>
-                        <td class="py-3">
-                            <a href="/employer/applicant-details" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
-                        </td>
-                    </tr>
+                            </td>
+                            <td class="py-3 text-dark fw-medium" style="font-size: 0.85rem;">{{ $application->jobListing->title }}</td>
+                            <td class="py-3 text-secondary" style="font-size: 0.85rem;">{{ $application->created_at->format('d M Y') }}</td>
+                            <td class="py-3"><span class="badge-custom-amber">{{ $application->status }}</span></td>
+                            <td class="py-3">
+                                <a href="{{ route('employer.applicant-details', $application) }}" class="btn btn-sm btn-light border rounded-3"><i class="bi bi-eye"></i></a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-secondary">No applications yet for your jobs.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

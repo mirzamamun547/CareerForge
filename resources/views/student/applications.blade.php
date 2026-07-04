@@ -110,43 +110,14 @@
                 <h6 class="fw-bold text-dark mb-0" style="font-size:0.95rem;">
                     <i class="bi bi-diagram-3-fill me-2" style="color:#4F46E5;"></i>Application Tracking
                 </h6>
-                <p class="text-secondary mb-0 mt-1" style="font-size:0.78rem;">Laravel Developer at Creative IT — Applied on 10 May 2024</p>
+                <p class="text-secondary mb-0 mt-1" style="font-size:0.78rem;">Your latest application status is shown below.</p>
             </div>
-            <span class="status-badge status-shortlisted">Shortlisted</span>
-        </div>
-
-        {{-- Stepper --}}
-        <div class="stepper mb-3">
-            <div class="step-item done">
-                <div class="step-dot"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label">Applied</div>
-                <div class="step-date">10 May</div>
-            </div>
-            <div class="step-item done">
-                <div class="step-dot"><i class="bi bi-check-lg"></i></div>
-                <div class="step-label">Under Review</div>
-                <div class="step-date">12 May</div>
-            </div>
-            <div class="step-item active">
-                <div class="step-dot"><i class="bi bi-star-fill" style="font-size:0.6rem;"></i></div>
-                <div class="step-label">Shortlisted</div>
-                <div class="step-date">16 May</div>
-            </div>
-            <div class="step-item">
-                <div class="step-dot">4</div>
-                <div class="step-label">Interview</div>
-                <div class="step-date">—</div>
-            </div>
-            <div class="step-item">
-                <div class="step-dot">5</div>
-                <div class="step-label">Hired</div>
-                <div class="step-date">—</div>
-            </div>
+            <span class="status-badge status-applied">{{ $applications->first()?->status ?? 'Applied' }}</span>
         </div>
 
         <div class="p-3 rounded-3 mt-2" style="background:#ECFDF5; border:1px solid #A7F3D0;">
-            <div class="fw-bold text-success mb-1" style="font-size:0.82rem;"><i class="bi bi-check-circle-fill me-1"></i>Current Status: Shortlisted</div>
-            <div class="text-secondary" style="font-size:0.78rem;">Congratulations! You have been shortlisted. Await interview invitation.</div>
+            <div class="fw-bold text-success mb-1" style="font-size:0.82rem;"><i class="bi bi-check-circle-fill me-1"></i>Current Status: {{ $applications->first()?->status ?? 'Applied' }}</div>
+            <div class="text-secondary" style="font-size:0.78rem;">You can track every job you applied for from this page.</div>
         </div>
     </div>
 
@@ -174,66 +145,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-status="under-review">
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="company-logo-sm" style="background:#EEF2FF; color:#4F46E5;">TS</div>
-                                <span class="fw-semibold">Junior PHP Developer</span>
-                            </div>
-                        </td>
-                        <td class="text-secondary">TechSoft Ltd</td>
-                        <td><span class="status-badge status-under-review">Under Review</span></td>
-                        <td class="text-secondary">12 May 2024</td>
-                        <td><button class="view-btn">View</button></td>
-                    </tr>
-                    <tr data-status="shortlisted">
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="company-logo-sm" style="background:#ECFDF5; color:#10B981;">CI</div>
-                                <span class="fw-semibold">Laravel Developer</span>
-                            </div>
-                        </td>
-                        <td class="text-secondary">Creative IT</td>
-                        <td><span class="status-badge status-shortlisted">Shortlisted</span></td>
-                        <td class="text-secondary">10 May 2024</td>
-                        <td><button class="view-btn">View</button></td>
-                    </tr>
-                    <tr data-status="interview">
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="company-logo-sm" style="background:#FEF3C7; color:#D97706;">BS</div>
-                                <span class="fw-semibold">Web Developer</span>
-                            </div>
-                        </td>
-                        <td class="text-secondary">Brain Station 23</td>
-                        <td><span class="status-badge status-interview">Interview</span></td>
-                        <td class="text-secondary">08 May 2024</td>
-                        <td><button class="view-btn">View</button></td>
-                    </tr>
-                    <tr data-status="applied">
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="company-logo-sm" style="background:#F3F4F6; color:#6B7280;">SC</div>
-                                <span class="fw-semibold">PHP Developer</span>
-                            </div>
-                        </td>
-                        <td class="text-secondary">SoftCloud</td>
-                        <td><span class="status-badge status-applied">Applied</span></td>
-                        <td class="text-secondary">05 May 2024</td>
-                        <td><button class="view-btn">View</button></td>
-                    </tr>
-                    <tr data-status="rejected">
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="company-logo-sm" style="background:#FFF1F2; color:#F43F5E;">DH</div>
-                                <span class="fw-semibold">Backend Developer</span>
-                            </div>
-                        </td>
-                        <td class="text-secondary">DevHub</td>
-                        <td><span class="status-badge status-rejected">Rejected</span></td>
-                        <td class="text-secondary">03 May 2024</td>
-                        <td><button class="view-btn">View</button></td>
-                    </tr>
+                    @forelse($applications as $application)
+                        <tr data-status="{{ strtolower(str_replace(' ', '-', $application->status)) }}">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="company-logo-sm" style="background:#EEF2FF; color:#4F46E5;">{{ strtoupper(substr($application->jobListing->title ?? 'J', 0, 2)) }}</div>
+                                    <span class="fw-semibold">{{ $application->jobListing->title }}</span>
+                                </div>
+                            </td>
+                            <td class="text-secondary">{{ $application->jobListing->user->name ?? 'Company' }}</td>
+                            <td><span class="status-badge status-{{ strtolower(str_replace(' ', '-', $application->status)) }}">{{ $application->status }}</span></td>
+                            <td class="text-secondary">{{ $application->created_at->format('d M Y') }}</td>
+                            <td><button class="view-btn">View</button></td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-secondary">You have not applied for any jobs yet.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

@@ -66,6 +66,16 @@ class User extends Authenticatable
         return $this->hasMany(JobListing::class);
     }
 
+    public function jobApplications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class, 'student_id');
+    }
+
+    public function jobBookmarks(): HasMany
+    {
+        return $this->hasMany(JobBookmark::class, 'student_id');
+    }
+
     public function isStudent(): bool
     {
         return $this->role === 'student';

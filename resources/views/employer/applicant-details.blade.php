@@ -23,26 +23,26 @@
                         RU
                     </div>
                 </div>
-                <h5 class="fw-bold text-dark mb-1" style="font-size: 1rem;">Raihan Uddin</h5>
-                <p class="text-secondary mb-1" style="font-size: 0.8rem;">raihan@example.com</p>
+                <h5 class="fw-bold text-dark mb-1" style="font-size: 1rem;">{{ $application->student->name }}</h5>
+                <p class="text-secondary mb-1" style="font-size: 0.8rem;">{{ $application->student->email }}</p>
 
                 <div class="border-top border-light pt-3 mt-3 text-start">
                     <div class="mb-3">
                         <span class="text-secondary d-block" style="font-size: 0.75rem;">Applied For</span>
-                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">Backend Developer</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ $application->jobListing->title }}</span>
                     </div>
                     <div class="mb-3">
                         <span class="text-secondary d-block" style="font-size: 0.75rem;">Applied On</span>
-                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">16 May 2024</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ $application->created_at->format('d M Y') }}</span>
                     </div>
                     <div class="mb-3">
                         <span class="text-secondary d-block" style="font-size: 0.75rem;">Location</span>
-                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">Dhaka, Bangladesh</span>
+                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">{{ $application->jobListing->location }}</span>
                     </div>
                     <div class="mb-3">
                         <span class="text-secondary d-block" style="font-size: 0.75rem;">Current Status</span>
                         <select class="form-select form-control-custom mt-1" style="font-size: 0.85rem;">
-                            <option selected>Under Review</option>
+                            <option selected>{{ $application->status }}</option>
                             <option>Shortlisted</option>
                             <option>Interview</option>
                             <option>Hired</option>

@@ -21,11 +21,18 @@ class EmployerJobController extends Controller
             'category' => ['required','string','max:255'],
             'job_type' => ['required','string','max:255'],
             'location' => ['required','string','max:255'],
+            'level' => ['nullable','string','max:255'],
             'min_salary' => ['required','integer','min:0'],
             'max_salary' => ['required','integer','min:0'],
+            'deadline' => ['nullable','date'],
+            'skills' => ['nullable','string'],
             'description' => ['required','string'],
+            'requirements' => ['nullable','string'],
+            'benefits' => ['nullable','array'],
             'status' => ['nullable','string','max:50'],
         ]);
+
+        $validated['benefits'] = ! empty($validated['benefits']) ? implode(', ', $validated['benefits']) : null;
 
         $request->user()->jobListings()->create($validated);
 
@@ -48,11 +55,18 @@ class EmployerJobController extends Controller
             'category' => ['required','string','max:255'],
             'job_type' => ['required','string','max:255'],
             'location' => ['required','string','max:255'],
+            'level' => ['nullable','string','max:255'],
             'min_salary' => ['required','integer','min:0'],
             'max_salary' => ['required','integer','min:0'],
+            'deadline' => ['nullable','date'],
+            'skills' => ['nullable','string'],
             'description' => ['required','string'],
+            'requirements' => ['nullable','string'],
+            'benefits' => ['nullable','array'],
             'status' => ['nullable','string','max:50'],
         ]);
+
+        $validated['benefits'] = ! empty($validated['benefits']) ? implode(', ', $validated['benefits']) : null;
 
         $job->update($validated);
 

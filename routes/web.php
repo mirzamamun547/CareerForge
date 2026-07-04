@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EmployerJobController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentJobController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentResumeController;
 use Illuminate\Support\Facades\Route;
@@ -60,8 +61,8 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/manage-jobs', [EmployerJobController::class, 'index'])->name('employer.manage-jobs');
     Route::put('/jobs/{job}', [EmployerJobController::class, 'update'])->name('employer.jobs.update');
     Route::get('/dashboard', function () { return view('employer.dashboard'); })->name('employer.dashboard');
-    Route::get('/applicants', function () { return view('employer.applicants'); })->name('employer.applicants');
-    Route::get('/applicant-details', function () { return view('employer.applicant-details'); })->name('employer.applicant-details');
+    Route::get('/applicants', [StudentJobController::class, 'employerApplicants'])->name('employer.applicants');
+    Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
     Route::get('/interview-schedule', function () { return view('employer.interview-schedule'); })->name('employer.interview-schedule');
     Route::get('/schedule-interview', function () { return view('employer.schedule-interview'); })->name('employer.schedule-interview');
     Route::get('/company-profile', function () { return view('employer.company-profile'); })->name('employer.company-profile');
@@ -78,8 +79,13 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::get('/resume/download', [StudentResumeController::class, 'download'])->name('student.resume.download');
     Route::get('/resume-review', function () { return view('student.resume-review'); })->name('student.resume-review');
     Route::get('/skills', function () { return view('student.skills'); })->name('student.skills');
-    Route::get('/jobs', function () { return view('student.jobs'); })->name('student.jobs');
-    Route::get('/applications', function () { return view('student.applications'); })->name('student.applications');
+    Route::get('/jobs', [StudentJobController::class, 'index'])->name('student.jobs');
+    Route::get('/jobs/{job}', [StudentJobController::class, 'show'])->name('student.jobs.show');
+    Route::get('/jobs/{job}/apply', [StudentJobController::class, 'showApplyForm'])->name('student.jobs.apply.form');
+    Route::post('/jobs/{job}/apply', [StudentJobController::class, 'apply'])->name('student.jobs.apply');
+    Route::get('/jobs/{job}/apply/success', [StudentJobController::class, 'applySuccess'])->name('student.jobs.apply.success');
+    Route::post('/jobs/{job}/bookmark', [StudentJobController::class, 'bookmark'])->name('student.jobs.bookmark');
+    Route::get('/applications', [StudentJobController::class, 'applications'])->name('student.applications');
     Route::get('/interviews', function () { return view('student.interviews'); })->name('student.interviews');
     Route::get('/notifications', function () { return view('student.notifications'); })->name('student.notifications');
 });

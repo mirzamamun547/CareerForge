@@ -6,83 +6,301 @@
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-8 col-xl-7">
-            <div class="card card-custom p-4">
-                
-                <!-- Card Header with Edit Option on the Top Right -->
-                <div class="d-flex justify-content-between align-items-center border-bottom border-light pb-3 mb-4">
-                    <h5 class="fw-bold text-dark m-0" style="font-size: 1.1rem;">Job Details Form</h5>
-                    <a href="/employer/manage-jobs" class="btn btn-warning-custom d-inline-flex align-items-center gap-1.5" style="font-size: 0.8rem; padding: 0.4rem 0.85rem;">
-                        <i class="bi bi-pencil-square"></i>
-                        Edit / Manage Jobs
-                    </a>
+    <div class="row g-4">
+        <div class="col-12 col-xl-8">
+            <div class="card card-custom p-4 p-lg-5">
+                <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-4">
+                    <div>
+                        <div class="badge-custom-indigo mb-2">Job Listing Builder</div>
+                        <h4 class="fw-bold text-dark mb-1">Post New Job</h4>
+                        <p class="text-secondary mb-0">Fill in the details below to publish a polished role listing.</p>
+                    </div>
+                    <a href="/employer/manage-jobs" class="btn btn-outline-custom btn-sm">Manage Jobs</a>
                 </div>
 
                 <form method="POST" action="{{ route('employer.jobs.store') }}">
                     @csrf
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Title</label>
-                        <input type="text" name="title" class="form-control form-control-custom" placeholder="e.g. Laravel Developer" required>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Category</label>
-                        <select name="category" class="form-select form-control-custom">
-                            <option>Development</option>
-                            <option>Design</option>
-                            <option>Marketing</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Type</label>
-                        <select name="job_type" class="form-select form-control-custom">
-                            <option>Full Time</option>
-                            <option>Part Time</option>
-                            <option>Internship</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Location</label>
-                        <input type="text" name="location" class="form-control form-control-custom" placeholder="Dhaka, Bangladesh" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Salary Range</label>
-                        <div class="row g-2">
-                            <div class="col">
-                                <input type="number" name="min_salary" class="form-control form-control-custom" placeholder="Min (BDT)" required>
+                    <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
+                        <h5 class="fw-bold text-dark mb-3">Job Details</h5>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-dark">Job Title *</label>
+                                <input type="text" name="title" class="form-control form-control-custom" placeholder="e.g. Senior Laravel Developer" required>
                             </div>
-                            <div class="col">
-                                <input type="number" name="max_salary" class="form-control form-control-custom" placeholder="Max (BDT)" required>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Category *</label>
+                                <select name="category" class="form-select form-control-custom">
+                                    <option>Software Development</option>
+                                    <option>Design</option>
+                                    <option>Marketing</option>
+                                    <option>Operations</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Job Type *</label>
+                                <div class="d-flex flex-wrap gap-3 mt-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_type" value="Full Time" checked>
+                                        <label class="form-check-label text-secondary">Full Time</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_type" value="Part Time">
+                                        <label class="form-check-label text-secondary">Part Time</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_type" value="Internship">
+                                        <label class="form-check-label text-secondary">Internship</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="job_type" value="Remote">
+                                        <label class="form-check-label text-secondary">Remote</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Location *</label>
+                                <input type="text" name="location" class="form-control form-control-custom" placeholder="Dhaka, Bangladesh" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Experience Required</label>
+                                <select name="level" class="form-select form-control-custom">
+                                    <option value="Entry Level">0-1 Years</option>
+                                    <option value="Mid Level">1-3 Years</option>
+                                    <option value="Senior Level">3+ Years</option>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Minimum Salary</label>
+                                <input type="number" name="min_salary" class="form-control form-control-custom" placeholder="30000" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label fw-semibold text-dark">Maximum Salary</label>
+                                <input type="number" name="max_salary" class="form-control form-control-custom" placeholder="50000" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold text-dark">Deadline</label>
+                                <input type="date" name="deadline" class="form-control form-control-custom">
                             </div>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Description</label>
-                        <textarea name="description" class="form-control form-control-custom" rows="5" placeholder="Briefly describe the requirements, qualifications, and duties..." required></textarea>
+                    <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
+                        <h5 class="fw-bold text-dark mb-3">Required Skills</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge-custom-indigo">Laravel</span>
+                            <span class="badge-custom-indigo">PHP</span>
+                            <span class="badge-custom-indigo">MySQL</span>
+                            <span class="badge-custom-indigo">Git</span>
+                            <span class="badge-custom-indigo">Bootstrap</span>
+                        </div>
+                        <input type="text" name="skills" class="form-control form-control-custom" placeholder="Add more skills such as React, Docker, AWS..." required>
+                    </div>
+
+                    <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
+                        <h5 class="fw-bold text-dark mb-3">Job Description</h5>
+                        <textarea name="description" class="form-control form-control-custom" rows="5" placeholder="Describe the role, responsibilities, and why this opportunity is exciting..." required></textarea>
+                    </div>
+
+                    <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
+                        <h5 class="fw-bold text-dark mb-3">Requirements</h5>
+                        <textarea name="requirements" class="form-control form-control-custom" rows="4" placeholder="List the must-have qualifications and expectations..." required></textarea>
+                    </div>
+
+                    <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
+                        <h5 class="fw-bold text-dark mb-3">Benefits</h5>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="benefits[]" value="Remote" checked>
+                                    <label class="form-check-label text-secondary">Remote</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="benefits[]" value="Flexible Hours" checked>
+                                    <label class="form-check-label text-secondary">Flexible Hours</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="benefits[]" value="Health Insurance">
+                                    <label class="form-check-label text-secondary">Health Insurance</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="benefits[]" value="Paid Leave">
+                                    <label class="form-check-label text-secondary">Paid Leave</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="benefits[]" value="Training">
+                                    <label class="form-check-label text-secondary">Training</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <input type="hidden" name="status" value="Active">
 
-                    <!-- Action buttons at the bottom -->
-                    <div class="d-flex gap-3">
-                        <button type="submit" class="btn btn-primary-custom flex-grow-1 py-3 d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-send-fill"></i>
-                            Publish Job
-                        </button>
-                        <button type="reset" class="btn btn-secondary-custom px-4 py-3 d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-arrow-counterclockwise"></i>
-                            Reset
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4">
+                        <button type="button" class="btn btn-outline-custom" data-bs-toggle="modal" data-bs-target="#jobPreviewModal">Preview Job</button>
+                        <button type="submit" class="btn btn-primary-custom d-inline-flex align-items-center gap-2">
+                            <i class="bi bi-send-fill"></i> Publish Job
                         </button>
                     </div>
-                </form>
 
+                    <div class="modal fade" id="jobPreviewModal" tabindex="-1" aria-labelledby="jobPreviewModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 shadow-lg" style="border-radius: 1.25rem; overflow: hidden;">
+                                <div class="modal-header border-0 p-4 pb-0">
+                                    <div>
+                                        <div class="badge-custom-indigo mb-2">Live Preview</div>
+                                        <h5 class="fw-bold text-dark mb-1" id="jobPreviewModalLabel">Job Preview</h5>
+                                        <p class="text-secondary mb-0" style="font-size:0.85rem;">This shows how the listing will appear to students.</p>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="border rounded-4 p-4" style="background:#F9FAFB; border-color:#E5E7EB;">
+                                        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+                                            <div>
+                                                <h4 class="fw-bold text-dark mb-1" id="previewTitle">Your job title will appear here</h4>
+                                                <div class="text-secondary" id="previewMeta">Category • Location • Full Time</div>
+                                            </div>
+                                            <span class="badge-custom-indigo" id="previewType">Full Time</span>
+                                        </div>
+                                        <div class="mt-4 row g-3">
+                                            <div class="col-md-4">
+                                                <div class="p-3 rounded-3" style="background:#fff; border:1px solid #E5E7EB;">
+                                                    <div class="small text-secondary">Salary</div>
+                                                    <div class="fw-bold text-dark" id="previewSalary">0 - 0 BDT</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="p-3 rounded-3" style="background:#fff; border:1px solid #E5E7EB;">
+                                                    <div class="small text-secondary">Experience</div>
+                                                    <div class="fw-bold text-dark" id="previewLevel">Entry Level</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="p-3 rounded-3" style="background:#fff; border:1px solid #E5E7EB;">
+                                                    <div class="small text-secondary">Deadline</div>
+                                                    <div class="fw-bold text-dark" id="previewDeadline">Not set</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="fw-bold text-dark">Description</h6>
+                                            <p class="text-secondary mb-0" id="previewDescription">Your job description will appear here.</p>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="fw-bold text-dark">Requirements</h6>
+                                            <p class="text-secondary mb-0" id="previewRequirements">Your requirements will appear here.</p>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="fw-bold text-dark">Skills</h6>
+                                            <div class="d-flex flex-wrap gap-2" id="previewSkills">
+                                                <span class="badge-custom-indigo">Laravel</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h6 class="fw-bold text-dark">Benefits</h6>
+                                            <div class="d-flex flex-wrap gap-2" id="previewBenefits">
+                                                <span class="badge-custom-emerald">Remote</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-12 col-xl-4">
+            <div class="card card-custom p-4 sticky-top" style="top: 1.5rem;">
+                <div class="badge-custom-amber mb-3">Live Preview</div>
+                <h5 class="fw-bold text-dark">Preview</h5>
+                <div class="border rounded-4 p-3 mt-3" style="background:#F9FAFB; border-color:#E5E7EB;">
+                    <div class="text-secondary" style="font-size:0.78rem;">Job Preview</div>
+                    <div class="fw-bold text-dark mt-1">Your job title will appear here</div>
+                    <div class="text-secondary mt-2" style="font-size:0.85rem;">Category • Location • Full Time</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+    const previewModalButton = document.querySelector('[data-bs-target="#jobPreviewModal"]');
+    const titleInput = document.querySelector('input[name="title"]');
+    const categoryInput = document.querySelector('select[name="category"]');
+    const locationInput = document.querySelector('input[name="location"]');
+    const levelInput = document.querySelector('select[name="level"]');
+    const minInput = document.querySelector('input[name="min_salary"]');
+    const maxInput = document.querySelector('input[name="max_salary"]');
+    const deadlineInput = document.querySelector('input[name="deadline"]');
+    const skillsInput = document.querySelector('input[name="skills"]');
+    const descriptionInput = document.querySelector('textarea[name="description"]');
+    const requirementsInput = document.querySelector('textarea[name="requirements"]');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewMeta = document.getElementById('previewMeta');
+    const previewType = document.getElementById('previewType');
+    const previewSalary = document.getElementById('previewSalary');
+    const previewLevel = document.getElementById('previewLevel');
+    const previewDeadline = document.getElementById('previewDeadline');
+    const previewDescription = document.getElementById('previewDescription');
+    const previewRequirements = document.getElementById('previewRequirements');
+    const previewSkills = document.getElementById('previewSkills');
+    const previewBenefits = document.getElementById('previewBenefits');
+
+    function updatePreview() {
+        const title = titleInput?.value || 'Your job title will appear here';
+        const category = categoryInput?.value || 'Category';
+        const location = locationInput?.value || 'Location';
+        const level = levelInput?.value || 'Entry Level';
+        const min = minInput?.value || '0';
+        const max = maxInput?.value || '0';
+        const deadline = deadlineInput?.value ? new Date(deadlineInput.value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not set';
+        const description = descriptionInput?.value || 'Your job description will appear here.';
+        const requirements = requirementsInput?.value || 'Your requirements will appear here.';
+        const skills = (skillsInput?.value || 'Laravel').split(',').map(s => s.trim()).filter(Boolean);
+        const selectedType = document.querySelector('input[name="job_type"]:checked')?.value || 'Full Time';
+
+        if (previewTitle) previewTitle.textContent = title;
+        if (previewMeta) previewMeta.textContent = `${category} • ${location} • ${selectedType}`;
+        if (previewType) previewType.textContent = selectedType;
+        if (previewSalary) previewSalary.textContent = `${Number(min).toLocaleString()} - ${Number(max).toLocaleString()} BDT`;
+        if (previewLevel) previewLevel.textContent = level;
+        if (previewDeadline) previewDeadline.textContent = deadline;
+        if (previewDescription) previewDescription.textContent = description;
+        if (previewRequirements) previewRequirements.textContent = requirements;
+        if (previewSkills) {
+            previewSkills.innerHTML = skills.length ? skills.map(skill => `<span class="badge-custom-indigo">${skill}</span>`).join('') : '<span class="badge-custom-indigo">Laravel</span>';
+        }
+        if (previewBenefits) {
+            const checkedBenefits = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            previewBenefits.innerHTML = checkedBenefits.length ? checkedBenefits.map(benefit => `<span class="badge-custom-emerald">${benefit}</span>`).join('') : '<span class="badge-custom-emerald">Remote</span>';
+        }
+    }
+
+    [titleInput, categoryInput, locationInput, levelInput, minInput, maxInput, deadlineInput, skillsInput, descriptionInput, requirementsInput].forEach(input => {
+        input?.addEventListener('input', updatePreview);
+        input?.addEventListener('change', updatePreview);
+    });
+
+    document.querySelectorAll('input[name="job_type"], input[type="checkbox"]').forEach(input => {
+        input.addEventListener('change', updatePreview);
+    });
+
+    if (previewModalButton) {
+        previewModalButton.addEventListener('click', updatePreview);
+    }
+</script>
+@endpush
+
 @endsection

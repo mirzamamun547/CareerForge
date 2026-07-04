@@ -86,4 +86,29 @@ class EmployerJobsTest extends TestCase
             'status' => 'Inactive',
         ]);
     }
+
+    public function test_manage_jobs_page_shows_extended_edit_fields_and_preview(): void
+    {
+        $employer = User::factory()->create(['role' => 'employer']);
+        JobListing::create([
+            'user_id' => $employer->id,
+            'title' => 'Junior PHP Developer',
+            'category' => 'Development',
+            'job_type' => 'Full Time',
+            'location' => 'Remote',
+            'min_salary' => 40000,
+            'max_salary' => 70000,
+            'description' => 'Initial role.',
+            'status' => 'Active',
+        ]);
+
+        $this->actingAs($employer);
+
+        $response = $this->get(route('employer.manage-jobs'));
+
+        $response->assertOk();
+        $response->assertSee('Skills');
+        $response->assertSee('Benefits');
+        $response->assertSee('Preview Job');
+    }
 }
