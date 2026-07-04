@@ -20,7 +20,6 @@
         background: #fff;
         padding: 1.25rem 1.35rem;
         transition: box-shadow 0.2s, transform 0.2s;
-        cursor: pointer;
     }
     .job-card:hover {
         box-shadow: 0 8px 28px rgba(79, 70, 229, 0.11);
@@ -73,21 +72,6 @@
         color: #9CA3AF;
         font-size: 0.85rem;
     }
-    .filter-btn {
-        border: 1.5px solid #E5E7EB;
-        background: #fff;
-        border-radius: 0.75rem;
-        padding: 0.6rem 1.1rem;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #4B5563;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        transition: all 0.2s;
-        white-space: nowrap;
-    }
-    .filter-btn:hover { border-color: #4F46E5; color: #4F46E5; background: #EEF2FF; }
     .posted-date { font-size: 0.72rem; color: #9CA3AF; }
     .job-apply-btn {
         font-size: 0.8rem;
@@ -98,7 +82,9 @@
         color: #fff;
         border: none;
         transition: background 0.2s;
+        text-decoration: none;
         white-space: nowrap;
+        display: inline-block;
     }
     .job-apply-btn:hover { background: #4338CA; color: #fff; }
     .job-apply-btn.applied {
@@ -117,75 +103,88 @@
         border-top: 1px solid #F3F4F6;
         margin: 0.65rem 0;
     }
-    .filter-chip {
-        font-size: 0.75rem;
-        font-weight: 600;
-        padding: 0.3em 0.85em;
-        border-radius: 50rem;
-        border: 1.5px solid #E5E7EB;
-        background: #fff;
-        color: #6B7280;
-        cursor: pointer;
-        transition: all 0.18s;
-    }
-    .filter-chip.active, .filter-chip:hover {
-        border-color: #4F46E5;
-        background: #EEF2FF;
-        color: #4F46E5;
-    }
     .results-count { font-size: 0.82rem; color: #6B7280; }
+    .pagination-wrapper nav svg {
+        height: 1.25rem;
+    }
 </style>
 @endpush
 
 @section('content')
 <div class="container-fluid p-0">
-    <div class="card card-custom p-3 mb-4">
-        <div class="row g-3">
-            <div class="col-12 col-lg-4">
-                <div class="search-wrapper">
-                    <i class="bi bi-search"></i>
-                    <input type="text" class="search-bar" placeholder="Search jobs, companies..." id="jobSearchInput">
+    <!-- Filter form -->
+    <form action="{{ route('student.jobs') }}" method="GET">
+        <div class="card card-custom p-3 mb-4">
+            <div class="row g-3">
+                <div class="col-12 col-lg-3">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="q" value="{{ request('q') }}" class="search-bar" placeholder="Search jobs, company, skills...">
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                    <select class="form-select form-control-custom" name="job_type">
+                        <option value="">All Job Types</option>
+                        @foreach($jobTypes as $type)
+                            <option value="{{ $type }}" {{ request('job_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                    <select class="form-select form-control-custom" name="level">
+                        <option value="">All Levels</option>
+                        @foreach($levels as $lvl)
+                            <option value="{{ $lvl }}" {{ request('level') == $lvl ? 'selected' : '' }}>{{ $lvl }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                    <select class="form-select form-control-custom" name="location">
+                        <option value="">All Locations</option>
+                        @foreach($locations as $loc)
+                            <option value="{{ $loc }}" {{ request('location') == $loc ? 'selected' : '' }}>{{ $loc }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2">
+                    <select class="form-select form-control-custom" name="salary">
+                        <option value="">Any Salary</option>
+                        <option value="30000" {{ request('salary') == '30000' ? 'selected' : '' }}>Above 30k</option>
+                        <option value="50000" {{ request('salary') == '50000' ? 'selected' : '' }}>Above 50k</option>
+                        <option value="80000" {{ request('salary') == '80000' ? 'selected' : '' }}>Above 80k</option>
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-4 col-lg-1">
+                    <select class="form-select form-control-custom" name="sort">
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-2">
-                <select class="form-select form-control-custom" id="jobTypeFilter">
-                    <option value="">All Job Types</option>
-                    <option>Full Time</option>
-                    <option>Part Time</option>
-                    <option>Remote</option>
-                    <option>Contract</option>
-                    <option>Internship</option>
-                </select>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2">
-                <select class="form-select form-control-custom" id="levelFilter">
-                    <option value="">All Levels</option>
-                    <option>Entry Level</option>
-                    <option>Mid Level</option>
-                    <option>Senior Level</option>
-                </select>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2">
-                <select class="form-select form-control-custom" id="locationFilter">
-                    <option value="">All Locations</option>
-                    @foreach($jobs->pluck('location')->unique() as $location)
-                        <option>{{ $location }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-12 col-md-6 col-lg-2">
-                <select class="form-select form-control-custom" id="salaryFilter">
-                    <option value="">Any Salary</option>
-                    <option value="30000">Above 30k</option>
-                    <option value="50000">Above 50k</option>
-                    <option value="80000">Above 80k</option>
-                </select>
+            
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 pt-2 border-top border-light">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="form-check form-switch m-0">
+                        <input class="form-check-input" type="checkbox" role="switch" id="remoteSwitch" name="remote" value="1" {{ request('remote') ? 'checked' : '' }}>
+                        <label class="form-check-label text-dark fw-semibold" for="remoteSwitch" style="font-size: 0.85rem;">Remote Only</label>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    @if(request()->anyFilled(['q', 'job_type', 'level', 'location', 'salary', 'remote', 'sort']))
+                        <a href="{{ route('student.jobs') }}" class="btn btn-secondary-custom btn-sm py-2 px-3 d-flex align-items-center gap-1">
+                            <i class="bi bi-x-circle"></i> Clear Filters
+                        </a>
+                    @endif
+                    <button type="submit" class="btn btn-primary-custom btn-sm py-2 px-4">
+                        <i class="bi bi-funnel-fill me-1"></i> Apply Filters
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 
     <div class="d-flex align-items-center justify-content-between mb-3 px-1">
-        <span class="results-count" id="resultsCount"><strong>{{ $jobs->count() }}</strong> jobs found</span>
+        <span class="results-count">Showing <strong>{{ $jobs->firstItem() ?? 0 }}–{{ $jobs->lastItem() ?? 0 }}</strong> of <strong>{{ $jobs->total() }}</strong> jobs found</span>
     </div>
 
     <div class="d-flex flex-column gap-3" id="jobList">
@@ -194,15 +193,11 @@
                 $applied = auth()->user()->jobApplications()->where('job_listing_id', $job->id)->exists();
                 $bookmarked = $bookmarkedIds->contains($job->id);
             @endphp
-            <div class="job-card d-flex flex-column gap-0"
-                 data-title="{{ strtolower($job->title) }}"
-                 data-company="{{ strtolower($job->user->name ?? 'company') }}"
-                 data-type="{{ $job->job_type }}"
-                 data-level="{{ $job->level ?? '' }}"
-                 data-location="{{ strtolower($job->location) }}"
-                 data-salary="{{ $job->min_salary }}">
+            <div class="job-card d-flex flex-column gap-0">
                 <div class="d-flex align-items-start gap-3">
-                    <div class="job-logo" style="background-color: #EEF2FF; color: #4F46E5;">{{ strtoupper(substr($job->user->name ?? 'C', 0, 2)) }}</div>
+                    <div class="job-logo" style="background-color: #EEF2FF; color: #4F46E5;">
+                        {{ strtoupper(substr($job->user->name ?? 'C', 0, 2)) }}
+                    </div>
                     <div class="flex-grow-1">
                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div>
@@ -210,10 +205,18 @@
                                 <span class="text-secondary" style="font-size:0.78rem;">{{ $job->user->name ?? 'Company' }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="badge-job-type {{ $job->job_type === 'Full Time' ? 'badge-full-time' : ($job->job_type === 'Part Time' ? 'badge-part-time' : ($job->job_type === 'Remote' ? 'badge-remote' : 'badge-contract')) }}">{{ $job->job_type }}</span>
+                                <span class="badge-job-type 
+                                    @if($job->job_type === 'Full Time') badge-full-time
+                                    @elseif($job->job_type === 'Part Time') badge-part-time
+                                    @elseif($job->job_type === 'Remote') badge-remote
+                                    @elseif($job->job_type === 'Contract') badge-contract
+                                    @else badge-internship
+                                    @endif">
+                                    {{ $job->job_type }}
+                                </span>
                                 <form method="POST" action="{{ route('student.jobs.bookmark', $job) }}">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm {{ $bookmarked ? 'btn-warning' : 'btn-outline-secondary' }} rounded-pill">
+                                    <button type="submit" class="btn btn-sm {{ $bookmarked ? 'btn-warning text-white' : 'btn-outline-secondary' }} rounded-pill" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">
                                         <i class="bi {{ $bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark' }}"></i>
                                     </button>
                                 </form>
@@ -244,66 +247,19 @@
                 </div>
             </div>
         @empty
-            <div class="text-center py-5">
-                <p class="text-secondary mb-0">No active jobs right now.</p>
+            <div class="text-center py-5 card card-custom">
+                <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width:4rem;height:4rem;background:#EEF2FF;">
+                    <i class="bi bi-briefcase-fill" style="font-size:1.5rem;color:#4F46E5;"></i>
+                </div>
+                <h6 class="fw-bold text-dark mb-1">No jobs found</h6>
+                <p class="text-secondary mb-0" style="font-size:0.82rem;">Try adjusting your search or filter criteria.</p>
             </div>
         @endforelse
     </div>
 
-    <div id="emptyState" class="text-center py-5 d-none">
-        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle" style="width:4rem;height:4rem;background:#EEF2FF;">
-            <i class="bi bi-briefcase-fill" style="font-size:1.5rem;color:#4F46E5;"></i>
-        </div>
-        <h6 class="fw-bold text-dark mb-1">No jobs found</h6>
-        <p class="text-secondary mb-0" style="font-size:0.82rem;">Try adjusting your search or filter criteria.</p>
+    <!-- Pagination links -->
+    <div class="d-flex justify-content-center mt-4 pagination-wrapper">
+        {{ $jobs->links() }}
     </div>
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    const searchInput = document.getElementById('jobSearchInput');
-    const jobTypeFilter = document.getElementById('jobTypeFilter');
-    const levelFilter = document.getElementById('levelFilter');
-    const locationFilter = document.getElementById('locationFilter');
-    const salaryFilter = document.getElementById('salaryFilter');
-    const jobCards = document.querySelectorAll('#jobList .job-card');
-    const resultsCount = document.getElementById('resultsCount');
-    const emptyState = document.getElementById('emptyState');
-
-    function filterJobs() {
-        const q = searchInput.value.trim().toLowerCase();
-        const type = jobTypeFilter.value;
-        const level = levelFilter.value;
-        const location = locationFilter.value.trim().toLowerCase();
-        const salary = parseInt(salaryFilter.value, 10) || 0;
-        let count = 0;
-
-        jobCards.forEach(card => {
-            const title = card.dataset.title || '';
-            const company = card.dataset.company || '';
-            const cardType = card.dataset.type || '';
-            const cardLevel = (card.dataset.level || '').toLowerCase();
-            const cardLocation = (card.dataset.location || '').toLowerCase();
-            const cardSalary = parseInt(card.dataset.salary || '0', 10);
-            const matchQ = !q || title.includes(q) || company.includes(q);
-            const matchType = !type || cardType === type;
-            const matchLevel = !level || cardLevel === level.toLowerCase();
-            const matchLocation = !location || cardLocation.includes(location);
-            const matchSalary = !salary || cardSalary >= salary;
-
-            const visible = matchQ && matchType && matchLevel && matchLocation && matchSalary;
-            card.style.display = visible ? '' : 'none';
-            if (visible) count++;
-        });
-
-        resultsCount.innerHTML = `<strong>${count}</strong> job${count !== 1 ? 's' : ''} found`;
-        emptyState.classList.toggle('d-none', count > 0);
-    }
-
-    [searchInput, jobTypeFilter, levelFilter, locationFilter, salaryFilter].forEach(el => {
-        el.addEventListener('input', filterJobs);
-        el.addEventListener('change', filterJobs);
-    });
-</script>
-@endpush

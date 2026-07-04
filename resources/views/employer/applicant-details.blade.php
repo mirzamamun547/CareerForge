@@ -13,6 +13,14 @@
         Back to List
     </a>
 
+    @if(session('status') == 'status-updated')
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Application status updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row g-4">
         <!-- Left Column: Applicant Info -->
         <div class="col-12 col-lg-4">
@@ -20,7 +28,7 @@
                 <!-- Avatar -->
                 <div class="mx-auto mb-3">
                     <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-secondary fw-bold mx-auto" style="width: 80px; height: 80px; font-size: 1.5rem;">
-                        RU
+                        {{ strtoupper(substr($application->student->name, 0, 2)) }}
                     </div>
                 </div>
                 <h5 class="fw-bold text-dark mb-1" style="font-size: 1rem;">{{ $application->student->name }}</h5>
@@ -41,13 +49,21 @@
                     </div>
                     <div class="mb-3">
                         <span class="text-secondary d-block" style="font-size: 0.75rem;">Current Status</span>
-                        <select class="form-select form-control-custom mt-1" style="font-size: 0.85rem;">
-                            <option selected>{{ $application->status }}</option>
-                            <option>Shortlisted</option>
-                            <option>Interview</option>
-                            <option>Hired</option>
-                            <option>Rejected</option>
-                        </select>
+                        @if($application->status === 'Withdrawn')
+                            <span class="badge bg-secondary text-white mt-1 py-2 px-3 rounded" style="font-size: 0.85rem;">Withdrawn</span>
+                        @else
+                            <form action="{{ route('employer.applicants.status.update', $application) }}" method="POST" id="statusUpdateForm">
+                                @csrf
+                                <select name="status" class="form-select form-control-custom mt-1" style="font-size: 0.85rem;" onchange="document.getElementById('statusUpdateForm').submit();">
+                                    <option value="Applied" {{ $application->status === 'Applied' ? 'selected' : '' }}>Applied</option>
+                                    <option value="Under Review" {{ $application->status === 'Under Review' ? 'selected' : '' }}>Under Review</option>
+                                    <option value="Shortlisted" {{ $application->status === 'Shortlisted' ? 'selected' : '' }}>Shortlisted</option>
+                                    <option value="Interview" {{ $application->status === 'Interview' ? 'selected' : '' }}>Interview</option>
+                                    <option value="Hired" {{ $application->status === 'Hired' ? 'selected' : '' }}>Hired</option>
+                                    <option value="Rejected" {{ $application->status === 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                </select>
+                            </form>
+                        @endif
                     </div>
                 </div>
 

@@ -323,7 +323,9 @@
 
                 <a href="/student/notifications" class="nav-link-custom {{ Request::is('student/notifications') ? 'active' : '' }}">
                     <i class="bi bi-bell"></i> Notifications
-                    <span class="notif-badge ms-auto"></span>
+                    @if(auth()->user()->unreadNotifications()->count() > 0)
+                        <span class="badge bg-danger ms-auto rounded-pill" style="font-size: 0.65rem; padding: 0.25em 0.55em;">{{ auth()->user()->unreadNotifications()->count() }}</span>
+                    @endif
                 </a>
             </nav>
 
@@ -361,7 +363,9 @@
                     @yield('header_actions')
                     <a href="/student/notifications" class="notif-btn">
                         <i class="bi bi-bell"></i>
-                        <span class="dot"></span>
+                        @if(auth()->user()->unreadNotifications()->count() > 0)
+                            <span class="dot"></span>
+                        @endif
                     </a>
                     <div class="user-chip">
                         @if(Auth::user()->studentProfile && Auth::user()->studentProfile->profile_picture)

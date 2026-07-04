@@ -111,6 +111,28 @@
 
 @section('content')
 <div class="container-fluid p-0">
+    @if(session('status'))
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @if(session('status') == 'skill-added')
+                Skill added successfully!
+            @elseif(session('status') == 'skill-updated')
+                Skill updated successfully!
+            @elseif(session('status') == 'skill-deleted')
+                Skill removed successfully!
+            @endif
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Error!</strong> Please check the form fields.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row g-4">
 
         {{-- Skills List (Main) --}}
@@ -118,7 +140,7 @@
             <div class="card card-custom p-4">
                 <div class="skills-header">
                     <h5 class="fw-bold text-dark m-0" style="font-size:1rem;">All Skills</h5>
-                    <span class="badge-custom-indigo" style="font-size:0.72rem; padding:0.35em 0.8em;">6 Skills</span>
+                    <span class="badge-custom-indigo" style="font-size:0.72rem; padding:0.35em 0.8em;">{{ $counts['total'] }} Skills</span>
                 </div>
 
                 {{-- Table Header --}}
@@ -132,91 +154,33 @@
 
                 {{-- Skills --}}
                 <div class="d-flex flex-column" id="skillsList">
-
-                    {{-- PHP --}}
-                    <div class="skill-row">
-                        <div class="skill-name">PHP</div>
-                        <div><span class="skill-level-label level-advanced">Advanced</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:80%;"></div>
+                    @forelse($skills as $skill)
+                        <div class="skill-row" data-id="{{ $skill->id }}" data-name="{{ $skill->name }}" data-level="{{ $skill->level }}" data-proficiency="{{ $skill->proficiency }}">
+                            <div class="skill-name">{{ $skill->name }}</div>
+                            <div>
+                                <span class="skill-level-label level-{{ strtolower($skill->level) }}">
+                                    {{ $skill->level }}
+                                </span>
+                            </div>
+                            <div class="skill-progress-wrap">
+                                <div class="skill-progress-bar" style="width: {{ $skill->proficiency }}%; @if($skill->level === 'Expert') background: linear-gradient(90deg, #10B981, #059669); @endif"></div>
+                            </div>
+                            <div class="skill-pct" @if($skill->level === 'Expert') style="color:#10B981;" @endif>{{ $skill->proficiency }}%</div>
+                            <div class="skill-actions d-flex gap-1">
+                                <button class="btn-icon edit-skill-btn" title="Edit"><i class="bi bi-pencil"></i></button>
+                                <form action="{{ route('student.skills.destroy', $skill) }}" method="POST" class="d-inline delete-skill-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-icon danger delete-btn" title="Delete"><i class="bi bi-trash3"></i></button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="skill-pct">80%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
+                    @empty
+                        <div class="text-center py-5 text-secondary">
+                            <i class="bi bi-lightning-charge-fill display-6 text-muted mb-3 d-block"></i>
+                            <p class="mb-0">No skills added yet. Add your skills to build your profile!</p>
                         </div>
-                    </div>
-
-                    {{-- Laravel --}}
-                    <div class="skill-row">
-                        <div class="skill-name">Laravel</div>
-                        <div><span class="skill-level-label level-advanced">Advanced</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:75%;"></div>
-                        </div>
-                        <div class="skill-pct">75%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </div>
-
-                    {{-- JavaScript --}}
-                    <div class="skill-row">
-                        <div class="skill-name">JavaScript</div>
-                        <div><span class="skill-level-label level-intermediate">Intermediate</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:60%;"></div>
-                        </div>
-                        <div class="skill-pct">60%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </div>
-
-                    {{-- MySQL --}}
-                    <div class="skill-row">
-                        <div class="skill-name">MySQL</div>
-                        <div><span class="skill-level-label level-advanced">Advanced</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:80%;"></div>
-                        </div>
-                        <div class="skill-pct">80%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </div>
-
-                    {{-- HTML --}}
-                    <div class="skill-row">
-                        <div class="skill-name">HTML</div>
-                        <div><span class="skill-level-label level-expert">Expert</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:90%; background: linear-gradient(90deg, #10B981, #059669);"></div>
-                        </div>
-                        <div class="skill-pct" style="color:#10B981;">90%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </div>
-
-                    {{-- CSS --}}
-                    <div class="skill-row">
-                        <div class="skill-name">CSS</div>
-                        <div><span class="skill-level-label level-intermediate">Intermediate</span></div>
-                        <div class="skill-progress-wrap">
-                            <div class="skill-progress-bar" style="width:70%;"></div>
-                        </div>
-                        <div class="skill-pct">70%</div>
-                        <div class="skill-actions d-flex gap-1">
-                            <button class="btn-icon" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="btn-icon danger" title="Delete"><i class="bi bi-trash3"></i></button>
-                        </div>
-                    </div>
-
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -227,21 +191,25 @@
             {{-- Summary Card --}}
             <div class="summary-card">
                 <p class="mb-2" style="font-size:0.75rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.07em;">Skills Overview</p>
-                <h2>6</h2>
+                <h2>{{ $counts['total'] }}</h2>
                 <p>Total Skills Added</p>
                 <hr style="border-color:rgba(255,255,255,0.25); margin: 1rem 0 0.75rem;">
                 <div class="d-flex justify-content-between">
                     <div class="text-center">
-                        <div style="font-size:1.25rem; font-weight:800;">2</div>
+                        <div style="font-size:1.25rem; font-weight:800;">{{ $counts['expert'] }}</div>
                         <div style="font-size:0.7rem; opacity:0.75;">Expert</div>
                     </div>
                     <div class="text-center">
-                        <div style="font-size:1.25rem; font-weight:800;">3</div>
+                        <div style="font-size:1.25rem; font-weight:800;">{{ $counts['advanced'] }}</div>
                         <div style="font-size:0.7rem; opacity:0.75;">Advanced</div>
                     </div>
                     <div class="text-center">
-                        <div style="font-size:1.25rem; font-weight:800;">2</div>
-                        <div style="font-size:0.7rem; opacity:0.75;">Intermediate</div>
+                        <div style="font-size:1.25rem; font-weight:800;">{{ $counts['intermediate'] }}</div>
+                        <div style="font-size:0.7rem; opacity:0.75;">Intermed.</div>
+                    </div>
+                    <div class="text-center">
+                        <div style="font-size:1.25rem; font-weight:800;">{{ $counts['beginner'] }}</div>
+                        <div style="font-size:0.7rem; opacity:0.75;">Beginner</div>
                     </div>
                 </div>
             </div>
@@ -274,39 +242,90 @@
 <div class="modal fade" id="addSkillModal" tabindex="-1" aria-labelledby="addSkillModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold text-dark" id="addSkillModalLabel" style="font-size:1rem;">
-                    <i class="bi bi-plus-circle me-2" style="color:#4F46E5;"></i>Add New Skill
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body pt-3">
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Skill Name</label>
-                    <input type="text" class="form-control-custom form-control" id="newSkillName" placeholder="e.g. Vue.js, Docker, Git...">
+            <form action="{{ route('student.skills.store') }}" method="POST">
+                @csrf
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark" id="addSkillModalLabel" style="font-size:1rem;">
+                        <i class="bi bi-plus-circle me-2" style="color:#4F46E5;"></i>Add New Skill
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Level</label>
-                    <select class="form-control-custom form-control" id="newSkillLevel">
-                        <option value="Beginner">Beginner</option>
-                        <option value="Intermediate">Intermediate</option>
-                        <option value="Advanced">Advanced</option>
-                        <option value="Expert">Expert</option>
-                    </select>
+                <div class="modal-body pt-3">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Skill Name</label>
+                        <input type="text" class="form-control-custom form-control @error('name') is-invalid @enderror" name="name" placeholder="e.g. Vue.js, Docker, Git..." required value="{{ old('name') }}">
+                        @error('name')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Level</label>
+                        <select class="form-control-custom form-control" name="level" required>
+                            <option value="Beginner" {{ old('level') == 'Beginner' ? 'selected' : '' }}>Beginner</option>
+                            <option value="Intermediate" {{ old('level') == 'Intermediate' ? 'selected' : '' }}>Intermediate</option>
+                            <option value="Advanced" {{ old('level') == 'Advanced' || !old('level') ? 'selected' : '' }}>Advanced</option>
+                            <option value="Expert" {{ old('level') == 'Expert' ? 'selected' : '' }}>Expert</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark d-flex justify-content-between" style="font-size:0.85rem;">
+                            Proficiency <span id="addPctLabel" class="text-primary fw-bold">70%</span>
+                        </label>
+                        <input type="range" class="form-range" min="10" max="100" step="5" value="{{ old('proficiency', 70) }}" name="proficiency" id="addProficiencyRange">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label fw-semibold text-dark d-flex justify-content-between" style="font-size:0.85rem;">
-                        Proficiency <span id="pctLabel" class="text-primary fw-bold">70%</span>
-                    </label>
-                    <input type="range" class="form-range" min="10" max="100" step="5" value="70" id="proficiencyRange">
+                <div class="modal-footer border-0 pt-0 gap-2">
+                    <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-plus-lg me-1"></i>Add Skill
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer border-0 pt-0 gap-2">
-                <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary-custom" id="addSkillBtn">
-                    <i class="bi bi-plus-lg me-1"></i>Add Skill
-                </button>
-            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Edit Skill Modal --}}
+<div class="modal fade" id="editSkillModal" tabindex="-1" aria-labelledby="editSkillModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <form id="editSkillForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-dark" id="editSkillModalLabel" style="font-size:1rem;">
+                        <i class="bi bi-pencil-square me-2" style="color:#4F46E5;"></i>Edit Skill
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Skill Name</label>
+                        <input type="text" class="form-control-custom form-control" name="name" id="editSkillName" placeholder="e.g. Vue.js, Docker, Git..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark" style="font-size:0.85rem;">Level</label>
+                        <select class="form-control-custom form-control" name="level" id="editSkillLevel" required>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark d-flex justify-content-between" style="font-size:0.85rem;">
+                            Proficiency <span id="editPctLabel" class="text-primary fw-bold">70%</span>
+                        </label>
+                        <input type="range" class="form-range" min="10" max="100" step="5" name="proficiency" id="editProficiencyRange">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0 gap-2">
+                    <button type="button" class="btn btn-secondary-custom" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="bi bi-check-lg me-1"></i>Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -314,18 +333,48 @@
 
 @push('scripts')
 <script>
-    // Range slider live update
-    const range = document.getElementById('proficiencyRange');
-    const pctLabel = document.getElementById('pctLabel');
-    if (range) {
-        range.addEventListener('input', () => { pctLabel.textContent = range.value + '%'; });
+    // Range sliders live update
+    const addRange = document.getElementById('addProficiencyRange');
+    const addPctLabel = document.getElementById('addPctLabel');
+    if (addRange && addPctLabel) {
+        addRange.addEventListener('input', () => { addPctLabel.textContent = addRange.value + '%'; });
     }
 
-    // Delete skill row
-    document.querySelectorAll('.btn-icon.danger').forEach(btn => {
+    const editRange = document.getElementById('editProficiencyRange');
+    const editPctLabel = document.getElementById('editPctLabel');
+    if (editRange && editPctLabel) {
+        editRange.addEventListener('input', () => { editPctLabel.textContent = editRange.value + '%'; });
+    }
+
+    // Handle Edit Skill Modal load
+    document.querySelectorAll('.edit-skill-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            if (confirm('Remove this skill?')) {
-                this.closest('.skill-row').remove();
+            const row = this.closest('.skill-row');
+            const id = row.dataset.id;
+            const name = row.dataset.name;
+            const level = row.dataset.level;
+            const proficiency = row.dataset.proficiency;
+
+            // Prefill edit form
+            const form = document.getElementById('editSkillForm');
+            form.action = `/student/skills/${id}`;
+
+            document.getElementById('editSkillName').value = name;
+            document.getElementById('editSkillLevel').value = level;
+            document.getElementById('editProficiencyRange').value = proficiency;
+            document.getElementById('editPctLabel').textContent = proficiency + '%';
+
+            // Open edit modal
+            const editModal = new bootstrap.Modal(document.getElementById('editSkillModal'));
+            editModal.show();
+        });
+    });
+
+    // Delete skill confirmations
+    document.querySelectorAll('.delete-skill-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm('Are you sure you want to remove this skill from your profile?')) {
+                e.preventDefault();
             }
         });
     });

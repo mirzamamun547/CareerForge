@@ -5,6 +5,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -74,6 +75,11 @@ class User extends Authenticatable
     public function jobBookmarks(): HasMany
     {
         return $this->hasMany(JobBookmark::class, 'student_id');
+    }
+
+    public function skills(): HasManyThrough
+    {
+        return $this->hasManyThrough(Skill::class, StudentProfile::class);
     }
 
     public function isStudent(): bool

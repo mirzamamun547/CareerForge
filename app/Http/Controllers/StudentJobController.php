@@ -5,18 +5,78 @@ namespace App\Http\Controllers;
 use App\Models\JobApplication;
 use App\Models\JobBookmark;
 use App\Models\JobListing;
+use App\Notifications\ApplicationSubmitted;
+use App\Notifications\ApplicationStatusChanged;
+use App\Notifications\NewApplicationReceived;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class StudentJobController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $jobs = JobListing::where('status', 'Active')->with('user')->latest()->get();
-        $bookmarkedIds = auth()->user()->jobBookmarks()->pluck('job_listing_id');
+        $query = JobListing::where('status', 'Active')->with('user');
 
-        return view('student.jobs', compact('jobs', 'bookmarkedIds'));
+        // Search text: Title, Company Name, Description, Skills
+        if ($request->filled('q')) {
+            $search = $request->input('q');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('skills', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        // Job Type filter
+        if ($request->filled('job_type')) {
+            $query->where('job_type', $request->input('job_type'));
+        }
+
+        // Level / Experience filter
+        if ($request->filled('level')) {
+            $query->where('level', $request->input('level'));
+        }
+
+        // Location filter
+        if ($request->filled('location')) {
+            $query->where('location', $request->input('location'));
+        }
+
+        // Salary range (minimum threshold)
+        if ($request->filled('salary')) {
+            $query->where('min_salary', '>=', (int) $request->input('salary'));
+        }
+
+        // Remote only filter
+        if ($request->boolean('remote')) {
+            $query->where(function ($q) {
+                $q->where('job_type', 'Remote')
+                  ->orWhere('location', 'like', '%remote%');
+            });
+        }
+
+        // Sorting / Order
+        $sort = $request->input('sort', 'newest');
+        if ($sort === 'oldest') {
+            $query->oldest();
+        } else {
+            $query->latest();
+        }
+
+        $jobs = $query->paginate(10)->withQueryString();
+        
+        $bookmarkedIds = auth()->user()->jobBookmarks()->pluck('job_listing_id');
+        
+        // Dynamic options for filters
+        $locations = JobListing::where('status', 'Active')->pluck('location')->unique()->filter()->values();
+        $jobTypes = JobListing::where('status', 'Active')->pluck('job_type')->unique()->filter()->values();
+        $levels = JobListing::where('status', 'Active')->pluck('level')->unique()->filter()->values();
+
+        return view('student.jobs', compact('jobs', 'bookmarkedIds', 'locations', 'jobTypes', 'levels'));
     }
 
     public function show(JobListing $job): View
@@ -40,14 +100,21 @@ class StudentJobController extends Controller
             'cover_letter' => ['nullable', 'string', 'max:5000'],
         ]);
 
-        $existing = $job->applications()->where('student_id', $request->user()->id)->exists();
+        $existing = $job->applications()->where('student_id', $request->user()->id)->first();
 
         if (! $existing) {
-            $job->applications()->create([
+            $application = $job->applications()->create([
                 'student_id' => $request->user()->id,
                 'status' => 'Applied',
                 'cover_letter' => $validated['cover_letter'] ?? null,
             ]);
+
+            // Dispatch Notifications
+            // 1. Notify Student
+            $request->user()->notify(new ApplicationSubmitted($application));
+
+            // 2. Notify Employer
+            $job->user->notify(new NewApplicationReceived($application));
         }
 
         return redirect()->route('student.jobs.apply.success', $job);
@@ -76,29 +143,97 @@ class StudentJobController extends Controller
         return redirect()->route('student.jobs');
     }
 
-    public function applications(): View
+    public function applications(Request $request): View
     {
-        $applications = auth()->user()->jobApplications()->with('jobListing.user')->latest()->get();
+        $query = auth()->user()->jobApplications()->with(['jobListing.user', 'jobListing.user.employerProfile']);
+        
+        // Filter by status if requested
+        if ($request->filled('status') && $request->input('status') !== 'all') {
+            $query->where('status', $request->input('status'));
+        }
 
-        return view('student.applications', compact('applications'));
+        $applications = $query->latest()->paginate(10)->withQueryString();
+
+        // Get status counts for stats & tabs
+        $allApplications = auth()->user()->jobApplications;
+        $counts = [
+            'all' => $allApplications->count(),
+            'Applied' => $allApplications->where('status', 'Applied')->count(),
+            'Under Review' => $allApplications->where('status', 'Under Review')->count(),
+            'Shortlisted' => $allApplications->where('status', 'Shortlisted')->count(),
+            'Interview' => $allApplications->where('status', 'Interview')->count(),
+            'Rejected' => $allApplications->where('status', 'Rejected')->count(),
+            'Hired' => $allApplications->where('status', 'Hired')->count(),
+            'Withdrawn' => $allApplications->where('status', 'Withdrawn')->count(),
+        ];
+
+        return view('student.applications', compact('applications', 'counts'));
     }
 
-    public function employerApplicants(): View
+    public function withdraw(JobApplication $application): RedirectResponse
     {
-        $applications = JobApplication::with(['student', 'jobListing'])
+        // Authorize student
+        abort_unless($application->student_id === auth()->id(), 403);
+
+        $oldStatus = $application->status;
+        $application->update(['status' => 'Withdrawn']);
+
+        // Dispatch status change notification
+        auth()->user()->notify(new ApplicationStatusChanged($application, $oldStatus, 'Withdrawn'));
+
+        return redirect()->route('student.applications')->with('status', 'application-withdrawn');
+    }
+
+    public function employerApplicants(Request $request): View
+    {
+        $query = JobApplication::with(['student.studentProfile', 'jobListing'])
             ->whereHas('jobListing', function ($query) {
                 $query->where('user_id', auth()->id());
-            })
-            ->latest()
-            ->get();
+            });
 
-        return view('employer.applicants', compact('applications'));
+        // Filter by job listing if requested
+        if ($request->filled('job_id')) {
+            $query->where('job_listing_id', $request->input('job_id'));
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $applications = $query->latest()->paginate(10)->withQueryString();
+        
+        $jobs = JobListing::where('user_id', auth()->id())->get();
+
+        return view('employer.applicants', compact('applications', 'jobs'));
     }
 
     public function employerApplicantDetails(JobApplication $application): View
     {
         abort_unless($application->jobListing->user_id === auth()->id(), 403);
+        $application->load(['student.studentProfile', 'student.studentProfile.skills', 'jobListing']);
 
         return view('employer.applicant-details', compact('application'));
+    }
+
+    public function employerUpdateStatus(Request $request, JobApplication $application): RedirectResponse
+    {
+        abort_unless($application->jobListing->user_id === auth()->id(), 403);
+
+        $validated = $request->validate([
+            'status' => ['required', 'in:Applied,Under Review,Shortlisted,Interview,Rejected,Hired'],
+        ]);
+
+        $oldStatus = $application->status;
+        $newStatus = $validated['status'];
+
+        if ($oldStatus !== $newStatus) {
+            $application->update(['status' => $newStatus]);
+
+            // Notify Student of status change
+            $application->student->notify(new ApplicationStatusChanged($application, $oldStatus, $newStatus));
+        }
+
+        return redirect()->route('employer.applicant-details', $application)->with('status', 'status-updated');
     }
 }

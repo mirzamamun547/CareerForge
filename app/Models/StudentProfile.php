@@ -42,4 +42,9 @@ class StudentProfile extends Model
     {
         return $this->hasOne(Resume::class)->latestOfMany();
     }
+
+    public function skills(): HasMany
+    {
+        return $this->hasMany(Skill::class);
+    }
 }
