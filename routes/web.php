@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EmployerJobController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentResumeController;
@@ -54,8 +55,10 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function () {
-    Route::get('/jobs', function () { return view('employer.jobs'); })->name('employer.jobs');
-    Route::get('/manage-jobs', function () { return view('employer.manage-jobs'); })->name('employer.manage-jobs');
+    Route::get('/jobs', [EmployerJobController::class, 'create'])->name('employer.jobs');
+    Route::post('/jobs', [EmployerJobController::class, 'store'])->name('employer.jobs.store');
+    Route::get('/manage-jobs', [EmployerJobController::class, 'index'])->name('employer.manage-jobs');
+    Route::put('/jobs/{job}', [EmployerJobController::class, 'update'])->name('employer.jobs.update');
     Route::get('/dashboard', function () { return view('employer.dashboard'); })->name('employer.dashboard');
     Route::get('/applicants', function () { return view('employer.applicants'); })->name('employer.applicants');
     Route::get('/applicant-details', function () { return view('employer.applicant-details'); })->name('employer.applicant-details');

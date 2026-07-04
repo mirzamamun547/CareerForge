@@ -19,15 +19,16 @@
                     </a>
                 </div>
 
-                <form>
+                <form method="POST" action="{{ route('employer.jobs.store') }}">
+                    @csrf
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Title</label>
-                        <input type="text" class="form-control form-control-custom" placeholder="e.g. Laravel Developer" required>
+                        <input type="text" name="title" class="form-control form-control-custom" placeholder="e.g. Laravel Developer" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Category</label>
-                        <select class="form-select form-control-custom">
+                        <select name="category" class="form-select form-control-custom">
                             <option>Development</option>
                             <option>Design</option>
                             <option>Marketing</option>
@@ -36,7 +37,7 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Type</label>
-                        <select class="form-select form-control-custom">
+                        <select name="job_type" class="form-select form-control-custom">
                             <option>Full Time</option>
                             <option>Part Time</option>
                             <option>Internship</option>
@@ -45,25 +46,27 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Job Location</label>
-                        <input type="text" class="form-control form-control-custom" placeholder="Dhaka, Bangladesh" required>
+                        <input type="text" name="location" class="form-control form-control-custom" placeholder="Dhaka, Bangladesh" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Salary Range</label>
                         <div class="row g-2">
                             <div class="col">
-                                <input type="number" class="form-control form-control-custom" placeholder="Min (BDT)" required>
+                                <input type="number" name="min_salary" class="form-control form-control-custom" placeholder="Min (BDT)" required>
                             </div>
                             <div class="col">
-                                <input type="number" class="form-control form-control-custom" placeholder="Max (BDT)" required>
+                                <input type="number" name="max_salary" class="form-control form-control-custom" placeholder="Max (BDT)" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Description</label>
-                        <textarea class="form-control form-control-custom" rows="5" placeholder="Briefly describe the requirements, qualifications, and duties..." required></textarea>
+                        <textarea name="description" class="form-control form-control-custom" rows="5" placeholder="Briefly describe the requirements, qualifications, and duties..." required></textarea>
                     </div>
+
+                    <input type="hidden" name="status" value="Active">
 
                     <!-- Action buttons at the bottom -->
                     <div class="d-flex gap-3">

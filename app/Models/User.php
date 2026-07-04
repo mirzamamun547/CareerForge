@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -58,6 +59,11 @@ class User extends Authenticatable
     public function employerProfile(): HasOne
     {
         return $this->hasOne(EmployerProfile::class);
+    }
+
+    public function jobListings(): HasMany
+    {
+        return $this->hasMany(JobListing::class);
     }
 
     public function isStudent(): bool
