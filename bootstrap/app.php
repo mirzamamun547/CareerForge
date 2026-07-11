@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            'resume.uploaded' => \App\Http\Middleware\EnsureResumeUploaded::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

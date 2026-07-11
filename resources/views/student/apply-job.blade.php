@@ -24,7 +24,10 @@
                     @csrf
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-dark">Cover letter</label>
-                        <textarea name="cover_letter" class="form-control form-control-custom" rows="6" placeholder="Tell the employer why you're a great fit for this opportunity."></textarea>
+                        <textarea name="cover_letter" class="form-control form-control-custom @error('cover_letter') is-invalid @enderror" rows="6" placeholder="Tell the employer why you're a great fit for this opportunity (at least 50 characters)." required>{{ old('cover_letter') }}</textarea>
+                        @error('cover_letter')
+                            <div class="invalid-feedback d-block" style="font-size:0.8rem;">{{ $message }}</div>
+                        @enderror
                         <div class="form-text text-secondary">A short message helps you stand out. Keep it concise and relevant.</div>
                     </div>
 

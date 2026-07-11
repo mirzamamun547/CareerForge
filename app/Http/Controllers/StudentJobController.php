@@ -124,7 +124,7 @@ class StudentJobController extends Controller
     public function apply(Request $request, JobListing $job): RedirectResponse
     {
         $validated = $request->validate([
-            'cover_letter' => ['nullable', 'string', 'max:5000'],
+            'cover_letter' => ['required', 'string', 'min:50', 'max:5000'],
         ]);
 
         $existing = $job->applications()->where('student_id', $request->user()->id)->first();

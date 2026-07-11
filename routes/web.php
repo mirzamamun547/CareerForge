@@ -92,8 +92,8 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::delete('/skills/{skill}', [SkillController::class, 'destroy'])->name('student.skills.destroy');
     Route::get('/jobs', [StudentJobController::class, 'index'])->name('student.jobs');
     Route::get('/jobs/{job}', [StudentJobController::class, 'show'])->name('student.jobs.show');
-    Route::get('/jobs/{job}/apply', [StudentJobController::class, 'showApplyForm'])->name('student.jobs.apply.form');
-    Route::post('/jobs/{job}/apply', [StudentJobController::class, 'apply'])->name('student.jobs.apply');
+    Route::get('/jobs/{job}/apply', [StudentJobController::class, 'showApplyForm'])->name('student.jobs.apply.form')->middleware('resume.uploaded');
+    Route::post('/jobs/{job}/apply', [StudentJobController::class, 'apply'])->name('student.jobs.apply')->middleware('resume.uploaded');
     Route::get('/jobs/{job}/apply/success', [StudentJobController::class, 'applySuccess'])->name('student.jobs.apply.success');
     Route::post('/jobs/{job}/bookmark', [StudentJobController::class, 'bookmark'])->name('student.jobs.bookmark');
     Route::get('/applications', [StudentJobController::class, 'applications'])->name('student.applications');
