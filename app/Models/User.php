@@ -27,6 +27,8 @@ class User extends Authenticatable
         'role',
         'phone',
         'profile_picture',
+        'status',
+        'verified',
     ];
 
     /**
@@ -49,6 +51,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'verified' => 'boolean',
         ];
     }
 
@@ -113,7 +116,7 @@ class User extends Authenticatable
         return match ($this->role) {
             'student' => route('student.dashboard'),
             'employer' => route('employer.dashboard'),
-            'admin' => route('dashboard'),
+            'admin' => route('admin.dashboard'),
             default => route('dashboard'),
         };
     }

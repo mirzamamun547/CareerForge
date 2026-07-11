@@ -7,6 +7,7 @@ use App\Http\Controllers\SkillController;
 use App\Http\Controllers\StudentJobController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentResumeController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -99,6 +100,33 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::post('/applications/{application}/withdraw', [StudentJobController::class, 'withdraw'])->name('student.applications.withdraw');
     Route::get('/interviews', function () { return view('student.interviews'); })->name('student.interviews');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('student.notifications');
+});
+
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::post('/users/{user}/toggle-status', [AdminController::class, 'toggleUserStatus'])->name('admin.users.toggle-status');
+    Route::get('/verification', [AdminController::class, 'verification'])->name('admin.verification');
+    Route::post('/verification/{employer}/approve', [AdminController::class, 'approveEmployer'])->name('admin.verification.approve');
+    Route::post('/verification/{employer}/reject', [AdminController::class, 'rejectEmployer'])->name('admin.verification.reject');
+    Route::get('/jobs', [AdminController::class, 'jobs'])->name('admin.jobs');
+    Route::post('/jobs/{job}/dismiss-report', [AdminController::class, 'dismissJobReport'])->name('admin.jobs.dismiss-report');
+    Route::post('/jobs/{job}/remove', [AdminController::class, 'removeJob'])->name('admin.jobs.remove');
+    Route::get('/taxonomy', [AdminController::class, 'taxonomy'])->name('admin.taxonomy');
+    Route::post('/taxonomy/category', [AdminController::class, 'storeCategory'])->name('admin.taxonomy.category.store');
+    Route::put('/taxonomy/category/{category}', [AdminController::class, 'updateCategory'])->name('admin.taxonomy.category.update');
+    Route::delete('/taxonomy/category/{category}', [AdminController::class, 'destroyCategory'])->name('admin.taxonomy.category.destroy');
+    Route::post('/taxonomy/skill', [AdminController::class, 'storeSkill'])->name('admin.taxonomy.skill.store');
+    Route::put('/taxonomy/skill/{skill}', [AdminController::class, 'updateSkill'])->name('admin.taxonomy.skill.update');
+    Route::delete('/taxonomy/skill/{skill}', [AdminController::class, 'destroySkill'])->name('admin.taxonomy.skill.destroy');
+    Route::get('/resumes', [AdminController::class, 'resumes'])->name('admin.resumes');
+    Route::get('/resumes/{resume}/download', [AdminController::class, 'downloadResume'])->name('admin.resumes.download');
+    Route::post('/resumes/{resume}/review', [AdminController::class, 'reviewResume'])->name('admin.resumes.review');
+    Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    Route::get('/activity', [AdminController::class, 'activity'])->name('admin.activity');
+    Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+    Route::post('/settings/toggle', [AdminController::class, 'toggleSetting'])->name('admin.settings.toggle');
+    Route::post('/settings/credentials', [AdminController::class, 'updateCredentials'])->name('admin.settings.updateCredentials');
 });
 
 require __DIR__.'/auth.php';
