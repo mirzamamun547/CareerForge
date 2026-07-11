@@ -68,8 +68,34 @@ class StudentJobController extends Controller
             $query->latest();
         }
 
+        // --- Smart Job Matching (pure SQL, no AI) ---
+        // For the logged-in student, count how many of the job's required
+        // skills_master rows overlap with the student's own skills. Both
+        // counts are computed as SQL subqueries (withCount), so no PHP-side
+        // loop is needed to score every job.
+        $studentProfile = auth()->user()->studentProfile;
+        $studentSkillMasterIds = $studentProfile ? $studentProfile->skillMasterIds() : collect();
+
+        $query->withCount('skillMasters as required_skills_count')
+            ->withCount(['skillMasters as matched_skills_count' => function ($q) use ($studentSkillMasterIds) {
+                $q->whereIn('skills_master.id', $studentSkillMasterIds);
+            }]);
+
+        if ($sort === 'match') {
+            $query->orderByRaw('CASE WHEN required_skills_count > 0 THEN matched_skills_count / required_skills_count ELSE 0 END DESC');
+        }
+
         $jobs = $query->paginate(10)->withQueryString();
-        
+
+        // Attach a 0-100 match_percentage to each job for display.
+        $jobs->getCollection()->transform(function (JobListing $job) {
+            $job->match_percentage = $job->required_skills_count > 0
+                ? (int) round(($job->matched_skills_count / $job->required_skills_count) * 100)
+                : null;
+
+            return $job;
+        });
+
         $bookmarkedIds = auth()->user()->jobBookmarks()->pluck('job_listing_id');
         
         // Dynamic options for filters

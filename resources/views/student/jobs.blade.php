@@ -158,6 +158,7 @@
                     <select class="form-select form-control-custom" name="sort">
                         <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
                         <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                        <option value="match" {{ request('sort') == 'match' ? 'selected' : '' }}>Best Match</option>
                     </select>
                 </div>
             </div>
@@ -201,7 +202,16 @@
                     <div class="flex-grow-1">
                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div>
-                                <h6 class="fw-bold text-dark mb-0" style="font-size:0.95rem;">{{ $job->title }}</h6>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h6 class="fw-bold text-dark mb-0" style="font-size:0.95rem;">{{ $job->title }}</h6>
+                                    @if(!is_null($job->match_percentage))
+                                        <span class="badge rounded-pill" style="font-size:0.68rem; font-weight:700; padding:0.3em 0.65em;
+                                            background-color: {{ $job->match_percentage >= 70 ? '#ECFDF5' : ($job->match_percentage >= 40 ? '#FEF3C7' : '#FFF1F2') }};
+                                            color: {{ $job->match_percentage >= 70 ? '#10B981' : ($job->match_percentage >= 40 ? '#D97706' : '#F43F5E') }};">
+                                            <i class="bi bi-stars"></i> {{ $job->match_percentage }}% Match
+                                        </span>
+                                    @endif
+                                </div>
                                 <span class="text-secondary" style="font-size:0.78rem;">{{ $job->user->name ?? 'Company' }}</span>
                             </div>
                             <div class="d-flex align-items-center gap-2">

@@ -47,4 +47,12 @@ class StudentProfile extends Model
     {
         return $this->hasMany(Skill::class);
     }
+
+    /**
+     * Distinct skills_master IDs this student has (used for job matching).
+     */
+    public function skillMasterIds()
+    {
+        return $this->skills()->whereNotNull('skill_master_id')->pluck('skill_master_id')->unique()->values();
+    }
 }

@@ -15,7 +15,7 @@
             </div>
             <div class="d-flex flex-column gap-3 mt-3">
                 @php
-    $maxFunnel = max(array_column($funnel, 'count'));
+    $maxFunnel = (int) max(array_column($funnel, 'count'));
     $maxFunnel = $maxFunnel > 0 ? $maxFunnel : 1;
 @endphp
                 @foreach($funnel as $f)

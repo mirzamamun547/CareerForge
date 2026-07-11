@@ -34,7 +34,7 @@ class EmployerJobController extends Controller
 
         $validated['benefits'] = ! empty($validated['benefits']) ? implode(', ', $validated['benefits']) : null;
 
-        $request->user()->jobListings()->create($validated);
+        $request->user()->jobListings()->create($validated)->syncSkillsFromText();
 
         return redirect()->route('employer.manage-jobs')->with('success', 'Job posted successfully.');
     }
@@ -69,6 +69,7 @@ class EmployerJobController extends Controller
         $validated['benefits'] = ! empty($validated['benefits']) ? implode(', ', $validated['benefits']) : null;
 
         $job->update($validated);
+        $job->syncSkillsFromText();
 
         return back()->with('success', 'Job updated successfully.');
     }
