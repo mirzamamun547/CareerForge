@@ -69,6 +69,7 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/applicants', [StudentJobController::class, 'employerApplicants'])->name('employer.applicants');
     Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
     Route::post('/applicant-details/{application}/status', [StudentJobController::class, 'employerUpdateStatus'])->name('employer.applicants.status.update');
+    Route::post('/applicant-details/{application}/resume-review', [StudentJobController::class, 'employerReviewResume'])->name('employer.applicant-details.resume-review');
     Route::get('/interview-schedule', function () { return view('employer.interview-schedule'); })->name('employer.interview-schedule');
     Route::get('/schedule-interview', function () { return view('employer.schedule-interview'); })->name('employer.schedule-interview');
     Route::get('/company-profile', function () { return view('employer.company-profile'); })->name('employer.company-profile');
@@ -83,7 +84,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::get('/resume', [StudentResumeController::class, 'edit'])->name('student.resume');
     Route::post('/resume', [StudentResumeController::class, 'store'])->name('student.resume.upload');
     Route::get('/resume/download', [StudentResumeController::class, 'download'])->name('student.resume.download');
-    Route::get('/resume-review', function () { return view('student.resume-review'); })->name('student.resume-review');
+    Route::get('/resume-review', [StudentResumeController::class, 'review'])->name('student.resume-review');
     Route::get('/skills', [SkillController::class, 'index'])->name('student.skills');
     Route::post('/skills', [SkillController::class, 'store'])->name('student.skills.store');
     Route::put('/skills/{skill}', [SkillController::class, 'update'])->name('student.skills.update');

@@ -82,6 +82,14 @@ class User extends Authenticatable
         return $this->hasManyThrough(Skill::class, StudentProfile::class);
     }
 
+    /**
+     * Resume reviews this user (admin/employer) has written.
+     */
+    public function resumeReviewsWritten(): HasMany
+    {
+        return $this->hasMany(ResumeReview::class, 'reviewed_by');
+    }
+
     public function isStudent(): bool
     {
         return $this->role === 'student';

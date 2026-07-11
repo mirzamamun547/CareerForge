@@ -51,6 +51,18 @@ class StudentResumeController extends Controller
     }
 
     /**
+     * Display the resume review results for the student's latest resume.
+     */
+    public function review(Request $request): View
+    {
+        $profile = Auth::user()->studentProfile;
+        $latestResume = $profile ? $profile->latestResume()->with('latestReview')->first() : null;
+        $latestReview = $latestResume ? $latestResume->latestReview : null;
+
+        return view('student.resume-review', compact('latestResume', 'latestReview'));
+    }
+
+    /**
      * Securely download the student's own resume.
      */
     public function download(Request $request): StreamedResponse

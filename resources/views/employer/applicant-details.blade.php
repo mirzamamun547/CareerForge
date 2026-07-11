@@ -21,6 +21,14 @@
         </div>
     @endif
 
+    @if(session('status') == 'review-submitted')
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Resume review submitted successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row g-4">
         <!-- Left Column: Applicant Info -->
         <div class="col-12 col-lg-4">
@@ -99,6 +107,9 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link fw-semibold text-secondary" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skills-pane" type="button" role="tab" style="font-size: 0.85rem;">Skills</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link fw-semibold text-secondary" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-pane" type="button" role="tab" style="font-size: 0.85rem;">Resume Review</button>
                     </li>
                 </ul>
 
@@ -194,6 +205,54 @@
                             <span class="badge-custom-amber px-3 py-2" style="font-size: 0.8rem;">AWS</span>
                             <span class="badge-custom-amber px-3 py-2" style="font-size: 0.8rem;">CI/CD</span>
                         </div>
+                    </div>
+
+                    <!-- Resume Review Tab -->
+                    <div class="tab-pane fade" id="review-pane" role="tabpanel">
+                        @php
+                            $latestResume = $application->student->studentProfile?->latestResume;
+                            $latestReview = $latestResume?->latestReview;
+                        @endphp
+
+                        @if(!$latestResume)
+                            <p class="text-secondary mb-0" style="font-size: 0.85rem;">This applicant has not uploaded a resume yet.</p>
+                        @else
+                            @if($latestReview)
+                                <div class="p-3 rounded-3 mb-4" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">Existing Review</span>
+                                        <span class="badge-custom-indigo px-3 py-1" style="font-size: 0.8rem;">{{ $latestReview->overall_score }}/100</span>
+                                    </div>
+                                    <p class="text-secondary mb-1" style="font-size: 0.83rem; white-space: pre-line;">{{ $latestReview->feedback }}</p>
+                                    <span class="text-secondary" style="font-size: 0.72rem;">
+                                        Reviewed on {{ $latestReview->reviewed_at?->format('d M Y') }}
+                                        @if($latestReview->reviewer) by {{ $latestReview->reviewer->name }} @endif
+                                    </span>
+                                </div>
+                            @endif
+
+                            <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">
+                                {{ $latestReview ? 'Submit a New Review' : 'Review this Resume' }}
+                            </h6>
+                            <form action="{{ route('employer.applicant-details.resume-review', $application) }}" method="POST">
+                                @csrf
+                                <div class="mb-3">
+                                    <label class="form-label" style="font-size: 0.82rem;">Overall Score (0-100)</label>
+                                    <input type="number" name="overall_score" min="0" max="100" required
+                                        class="form-control form-control-custom" style="font-size: 0.85rem;"
+                                        value="{{ old('overall_score') }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" style="font-size: 0.82rem;">Feedback</label>
+                                    <textarea name="feedback" rows="4" required
+                                        class="form-control form-control-custom" style="font-size: 0.85rem;"
+                                        placeholder="Strengths, weaknesses, and suggestions for this resume...">{{ old('feedback') }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;">
+                                    <i class="bi bi-send-check"></i> Submit Review
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 

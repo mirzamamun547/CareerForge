@@ -2,7 +2,7 @@
 
 @section('title', 'Resume Review')
 @section('header_title', 'Resume Review')
-@section('header_subtitle', 'AI-powered feedback on your uploaded resume.')
+@section('header_subtitle', 'Feedback from employers/admins on your uploaded resume.')
 
 @push('styles')
 <style>
@@ -38,34 +38,16 @@
         padding: 0.3em 0.9em;
         border-radius: 50rem;
     }
-    .feedback-section { margin-bottom: 1.5rem; }
-    .feedback-section h6 {
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: #2D3142;
-        margin-bottom: 0.75rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .feedback-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
-    .feedback-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.6rem;
-        font-size: 0.83rem;
+    .feedback-box {
+        font-size: 0.85rem;
         color: #4B5563;
         background: #F9FAFB;
         border: 1px solid #E5E7EB;
-        border-radius: 0.65rem;
-        padding: 0.6rem 0.85rem;
+        border-radius: 0.75rem;
+        padding: 1rem 1.1rem;
+        white-space: pre-line;
+        line-height: 1.7;
     }
-    .feedback-list li i { flex-shrink: 0; margin-top: 2px; }
-    .strength-icon  { color: #10B981; }
-    .weakness-icon  { color: #F43F5E; }
-    .suggest-icon   { color: #4F46E5; }
-    .step-icon   { color: #D97706; }
-    .next-step-list li { background: #FEF3C7; border-color: #FDE68A; color: #92400E; }
     .divider { border: none; border-top: 1px solid #F3F4F6; margin: 1.5rem 0; }
     .resume-file-chip {
         display: flex;
@@ -75,26 +57,6 @@
         background: #F9FAFB;
         border: 1px solid #E5E7EB;
         border-radius: 0.75rem;
-    }
-    .score-meter {
-        height: 8px;
-        border-radius: 50rem;
-        background: #E5E7EB;
-        overflow: hidden;
-        margin-top: 4px;
-    }
-    .score-meter-fill {
-        height: 100%;
-        border-radius: 50rem;
-        transition: width 1.2s cubic-bezier(.4,0,.2,1);
-    }
-    .metric-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
     }
 </style>
 @endpush
@@ -107,146 +69,110 @@
         <div class="col-12 col-lg-7">
             <div class="card card-custom p-4 h-100">
 
-                {{-- Score Header --}}
-                <div class="d-flex align-items-center gap-4 mb-4">
-                    {{-- SVG Ring --}}
-                    <div class="score-ring-wrap">
-                        <svg width="110" height="110" viewBox="0 0 110 110">
-                            <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
-                            <circle cx="55" cy="55" r="47" fill="none" stroke="#4F46E5" stroke-width="9"
-                                stroke-linecap="round"
-                                stroke-dasharray="295"
-                                stroke-dashoffset="{{ 295 - (295 * 72 / 100) }}"/>
-                        </svg>
-                        <div class="score-center">
-                            <div class="score-num">72</div>
-                            <div class="score-sub">/100</div>
+                @if($latestReview)
+                    {{-- Score Header --}}
+                    <div class="d-flex align-items-center gap-4 mb-4">
+                        <div class="score-ring-wrap">
+                            <svg width="110" height="110" viewBox="0 0 110 110">
+                                <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+                                <circle cx="55" cy="55" r="47" fill="none" stroke="#4F46E5" stroke-width="9"
+                                    stroke-linecap="round"
+                                    stroke-dasharray="295"
+                                    stroke-dashoffset="{{ 295 - (295 * ($latestReview->overall_score ?? 0) / 100) }}"/>
+                            </svg>
+                            <div class="score-center">
+                                <div class="score-num">{{ $latestReview->overall_score ?? '-' }}</div>
+                                <div class="score-sub">/100</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <h5 class="fw-bold text-dark m-0" style="font-size:1.05rem;">Overall Score</h5>
+                            </div>
+                            <div class="mb-1">
+                                <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
+                                    <i class="bi bi-check-circle me-1"></i>Reviewed
+                                </span>
+                            </div>
+                            <p class="text-secondary mb-0 mt-2" style="font-size:0.78rem;">
+                                Reviewed on {{ $latestReview->reviewed_at?->format('d M Y') }}
+                                @if($latestReview->reviewer)
+                                    by {{ $latestReview->reviewer->name }}
+                                @endif
+                            </p>
                         </div>
                     </div>
 
+                    <div class="divider"></div>
+
+                    {{-- Feedback --}}
                     <div>
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <h5 class="fw-bold text-dark m-0" style="font-size:1.05rem;">Overall Score</h5>
-                            <span class="review-badge" style="background:#EEF2FF; color:#4F46E5;">Junior Review</span>
-                        </div>
-                        <div class="mb-1">
-                            <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
-                                <i class="bi bi-check-circle me-1"></i>Reviewed
-                            </span>
-                        </div>
-                        <p class="text-secondary mb-0 mt-2" style="font-size:0.78rem;">
-                            Your resume has been analysed by our AI engine.<br>
-                            Here's a detailed breakdown below.
+                        <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
+                            <i class="bi bi-chat-square-text-fill me-2" style="color:#4F46E5;"></i>Feedback
+                        </h6>
+                        <div class="feedback-box">{{ $latestReview->feedback }}</div>
+                    </div>
+                @else
+                    {{-- Empty state: no review yet --}}
+                    <div class="text-center py-5">
+                        <i class="bi bi-hourglass-split" style="font-size:2.2rem; color:#9CA3AF;"></i>
+                        <h6 class="fw-bold text-dark mt-3 mb-1" style="font-size:0.95rem;">Not Reviewed Yet</h6>
+                        <p class="text-secondary mb-0" style="font-size:0.82rem;">
+                            @if($latestResume)
+                                Your resume is uploaded and waiting to be reviewed by an employer or admin.
+                            @else
+                                Upload a resume first to get it reviewed.
+                            @endif
                         </p>
                     </div>
-                </div>
-
-                {{-- Score Breakdown --}}
-                <div class="mb-4">
-                    <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
-                        <i class="bi bi-bar-chart-fill me-2" style="color:#4F46E5;"></i>Score Breakdown
-                    </h6>
-                    @php
-                        $metrics = [
-                            ['label' => 'Content Quality',    'score' => 78, 'color' => '#4F46E5'],
-                            ['label' => 'Formatting',         'score' => 85, 'color' => '#10B981'],
-                            ['label' => 'Keywords Match',     'score' => 60, 'color' => '#D97706'],
-                            ['label' => 'Skills Section',     'score' => 65, 'color' => '#F43F5E'],
-                        ];
-                    @endphp
-                    <div class="d-flex flex-column gap-2">
-                        @foreach($metrics as $m)
-                        <div>
-                            <div class="metric-row">
-                                <span style="color:#4B5563;">{{ $m['label'] }}</span>
-                                <span style="color:{{ $m['color'] }};">{{ $m['score'] }}%</span>
-                            </div>
-                            <div class="score-meter">
-                                <div class="score-meter-fill" style="width:{{ $m['score'] }}%; background:{{ $m['color'] }};"></div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                {{-- Strengths --}}
-                <div class="feedback-section">
-                    <h6><i class="bi bi-hand-thumbs-up-fill strength-icon"></i> Strengths</h6>
-                    <ul class="feedback-list">
-                        <li><i class="bi bi-check-circle-fill strength-icon"></i> Good terminal skills listed clearly</li>
-                        <li><i class="bi bi-check-circle-fill strength-icon"></i> Clear and well-structured layout</li>
-                        <li><i class="bi bi-check-circle-fill strength-icon"></i> Relevant work experience highlighted</li>
-                    </ul>
-                </div>
-
-                {{-- Weaknesses --}}
-                <div class="feedback-section">
-                    <h6><i class="bi bi-exclamation-triangle-fill weakness-icon"></i> Weaknesses</h6>
-                    <ul class="feedback-list">
-                        <li><i class="bi bi-x-circle-fill weakness-icon"></i> Summary is too short</li>
-                        <li><i class="bi bi-x-circle-fill weakness-icon"></i> No strong energy statement</li>
-                        <li><i class="bi bi-x-circle-fill weakness-icon"></i> Skills section can be improved</li>
-                    </ul>
-                </div>
-
-                {{-- Suggestions --}}
-                <div class="feedback-section mb-0">
-                    <h6><i class="bi bi-lightbulb-fill suggest-icon"></i> Suggestions</h6>
-                    <ul class="feedback-list">
-                        <li><i class="bi bi-arrow-right-circle-fill suggest-icon"></i> Add 2–3 strong projects with details</li>
-                        <li><i class="bi bi-arrow-right-circle-fill suggest-icon"></i> Improve summary section</li>
-                        <li><i class="bi bi-arrow-right-circle-fill suggest-icon"></i> Highlight key skills more prominently</li>
-                    </ul>
-                </div>
+                @endif
 
             </div>
         </div>
 
-        {{-- Right: Resume + Next Steps --}}
+        {{-- Right: Resume + Re-upload --}}
         <div class="col-12 col-lg-5 d-flex flex-column gap-4">
 
             {{-- Uploaded Resume --}}
             <div class="card card-custom p-4">
                 <h6 class="fw-bold text-dark mb-3" style="font-size:0.9rem;">
-                    <i class="bi bi-file-earmark-text me-2" style="color:#4F46E5;"></i>Reviewed Resume
+                    <i class="bi bi-file-earmark-text me-2" style="color:#4F46E5;"></i>
+                    {{ $latestReview ? 'Reviewed Resume' : 'Uploaded Resume' }}
                 </h6>
-                <div class="resume-file-chip">
-                    <div class="icon-shape flex-shrink-0" style="background-color:#EEF2FF;">
-                        <i class="bi bi-file-earmark-pdf" style="font-size:1.1rem; color:#4F46E5;"></i>
+                @if($latestResume)
+                    <div class="resume-file-chip">
+                        <div class="icon-shape flex-shrink-0" style="background-color:#EEF2FF;">
+                            <i class="bi bi-file-earmark-pdf" style="font-size:1.1rem; color:#4F46E5;"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold text-dark" style="font-size:0.88rem;">{{ basename($latestResume->file_path) }}</div>
+                            <div class="text-secondary" style="font-size:0.7rem;">Uploaded: {{ $latestResume->created_at->format('d M Y') }}</div>
+                        </div>
+                        <a href="{{ route('student.resume.download') }}" class="btn btn-sm btn-light border rounded-3 d-flex align-items-center gap-1" style="font-size:0.75rem;">
+                            <i class="bi bi-download"></i>
+                        </a>
                     </div>
-                    <div class="flex-grow-1">
-                        <div class="fw-bold text-dark" style="font-size:0.88rem;">Raihan_Uddin_Resume.pdf</div>
-                        <div class="text-secondary" style="font-size:0.7rem;">Uploaded: 12 May 2024 &bull; 249 KB</div>
-                    </div>
-                    <a href="#" class="btn btn-sm btn-light border rounded-3 d-flex align-items-center gap-1" style="font-size:0.75rem;">
-                        <i class="bi bi-download"></i>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Next Steps --}}
-            <div class="card card-custom p-4">
-                <h6 class="fw-bold text-dark mb-3" style="font-size:0.9rem;">
-                    <i class="bi bi-arrow-right-circle-fill me-2" style="color:#D97706;"></i>Next Steps
-                </h6>
-                <ul class="feedback-list next-step-list">
-                    <li><i class="bi bi-1-circle-fill step-icon"></i> Add more projects</li>
-                    <li><i class="bi bi-2-circle-fill step-icon"></i> Add a PDF/Canva resume</li>
-                    <li><i class="bi bi-3-circle-fill step-icon"></i> Improve career summary</li>
-                    <li><i class="bi bi-4-circle-fill step-icon"></i> Highlight top skills</li>
-                </ul>
+                @else
+                    <p class="text-secondary mb-0" style="font-size:0.82rem;">No resume uploaded yet.</p>
+                @endif
             </div>
 
             {{-- Re-upload --}}
             <div class="card card-custom p-4">
                 <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;">
-                    <i class="bi bi-arrow-repeat me-2" style="color:#10B981;"></i>Re-upload Resume
+                    <i class="bi bi-arrow-repeat me-2" style="color:#10B981;"></i>
+                    {{ $latestResume ? 'Re-upload Resume' : 'Upload Resume' }}
                 </h6>
-                <p class="text-secondary mb-3" style="font-size:0.78rem;">Upload an improved version to get a fresh review score.</p>
-                <a href="/student/resume" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-upload"></i> Upload New Version
+                <p class="text-secondary mb-3" style="font-size:0.78rem;">
+                    @if($latestResume)
+                        Upload an improved version to get a fresh review.
+                    @else
+                        Upload your resume so employers can review it.
+                    @endif
+                </p>
+                <a href="{{ route('student.resume') }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-upload"></i> {{ $latestResume ? 'Upload New Version' : 'Upload Resume' }}
                 </a>
             </div>
 

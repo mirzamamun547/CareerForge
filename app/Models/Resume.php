@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Resume extends Model
 {
@@ -19,5 +21,15 @@ class Resume extends Model
     public function studentProfile(): BelongsTo
     {
         return $this->belongsTo(StudentProfile::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ResumeReview::class);
+    }
+
+    public function latestReview(): HasOne
+    {
+        return $this->hasOne(ResumeReview::class)->latestOfMany('reviewed_at');
     }
 }

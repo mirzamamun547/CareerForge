@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JobApplication;
 use App\Models\JobBookmark;
 use App\Models\JobListing;
+use App\Models\ResumeReview;
 use App\Notifications\ApplicationSubmitted;
 use App\Notifications\ApplicationStatusChanged;
 use App\Notifications\NewApplicationReceived;
@@ -211,7 +212,12 @@ class StudentJobController extends Controller
     public function employerApplicantDetails(JobApplication $application): View
     {
         abort_unless($application->jobListing->user_id === auth()->id(), 403);
-        $application->load(['student.studentProfile', 'student.studentProfile.skills', 'jobListing']);
+        $application->load([
+            'student.studentProfile',
+            'student.studentProfile.skills',
+            'student.studentProfile.latestResume.latestReview',
+            'jobListing',
+        ]);
 
         return view('employer.applicant-details', compact('application'));
     }
@@ -235,5 +241,34 @@ class StudentJobController extends Controller
         }
 
         return redirect()->route('employer.applicant-details', $application)->with('status', 'status-updated');
+    }
+
+    /**
+     * Employer submits/updates a resume review for this applicant.
+     */
+    public function employerReviewResume(Request $request, JobApplication $application): RedirectResponse
+    {
+        abort_unless($application->jobListing->user_id === auth()->id(), 403);
+
+        $validated = $request->validate([
+            'overall_score' => ['required', 'integer', 'min:0', 'max:100'],
+            'feedback' => ['required', 'string', 'max:3000'],
+        ]);
+
+        $resume = $application->student->studentProfile?->latestResume;
+
+        abort_unless($resume, 404, 'This applicant has not uploaded a resume yet.');
+
+        ResumeReview::create([
+            'resume_id' => $resume->id,
+            'reviewed_by' => auth()->id(),
+            'overall_score' => $validated['overall_score'],
+            'feedback' => $validated['feedback'],
+            'reviewed_at' => now(),
+        ]);
+
+        $resume->update(['status' => 'reviewed']);
+
+        return redirect()->route('employer.applicant-details', $application)->with('status', 'review-submitted');
     }
 }
