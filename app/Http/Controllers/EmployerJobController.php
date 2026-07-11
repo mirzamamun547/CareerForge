@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobListing;
+use App\Models\SkillMaster;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -11,7 +12,9 @@ class EmployerJobController extends Controller
 {
     public function create(): View
     {
-        return view('employer.jobs');
+        $skillSuggestions = SkillMaster::orderBy('name')->pluck('name');
+
+        return view('employer.jobs', compact('skillSuggestions'));
     }
 
     public function store(Request $request): RedirectResponse

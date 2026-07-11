@@ -87,15 +87,67 @@
 
                     <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
                         <h5 class="fw-bold text-dark mb-3">Required Skills</h5>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge-custom-indigo">Laravel</span>
-                            <span class="badge-custom-indigo">PHP</span>
-                            <span class="badge-custom-indigo">MySQL</span>
-                            <span class="badge-custom-indigo">Git</span>
-                            <span class="badge-custom-indigo">Bootstrap</span>
+                        <div id="skillChips" class="d-flex flex-wrap gap-2 mb-3"></div>
+                        <input type="text" id="skillTagInput" list="skillSuggestionsList" class="form-control form-control-custom"
+                               placeholder="Type a skill and press Enter (e.g. React, Docker, AWS)...">
+                        <datalist id="skillSuggestionsList">
+                            @foreach(($skillSuggestions ?? []) as $suggestion)
+                                <option value="{{ $suggestion }}">
+                            @endforeach
+                        </datalist>
+                        <input type="hidden" name="skills" id="skillsHiddenInput" required>
+                        <div class="form-text mt-2" style="font-size:0.75rem;">
+                            Press <strong>Enter</strong> or <strong>,</strong> to add a skill. Pick an existing one from the suggestions or type a new one.
                         </div>
-                        <input type="text" name="skills" class="form-control form-control-custom" placeholder="Add more skills such as React, Docker, AWS..." required>
                     </div>
+
+                    <script>
+                    (function () {
+                        const chipContainer = document.getElementById('skillChips');
+                        const tagInput = document.getElementById('skillTagInput');
+                        const hiddenInput = document.getElementById('skillsHiddenInput');
+                        let skills = [];
+
+                        function render() {
+                            chipContainer.innerHTML = skills.map((skill, i) => `
+                                <span class="badge-custom-indigo d-inline-flex align-items-center gap-2">
+                                    ${skill}
+                                    <button type="button" data-index="${i}" class="skill-chip-remove btn-close btn-close-sm" style="font-size:0.55rem;"></button>
+                                </span>
+                            `).join('');
+                            hiddenInput.value = skills.join(', ');
+                            hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+
+                            chipContainer.querySelectorAll('.skill-chip-remove').forEach(btn => {
+                                btn.addEventListener('click', () => {
+                                    skills.splice(parseInt(btn.dataset.index), 1);
+                                    render();
+                                });
+                            });
+                        }
+
+                        function addSkill(raw) {
+                            const name = raw.trim().replace(/,$/, '');
+                            if (!name) return;
+                            const exists = skills.some(s => s.toLowerCase() === name.toLowerCase());
+                            if (!exists) {
+                                skills.push(name);
+                                render();
+                            }
+                            tagInput.value = '';
+                        }
+
+                        tagInput.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ',') {
+                                e.preventDefault();
+                                addSkill(tagInput.value);
+                            }
+                        });
+                        tagInput.addEventListener('blur', () => {
+                            if (tagInput.value.trim()) addSkill(tagInput.value);
+                        });
+                    })();
+                    </script>
 
                     <div class="border rounded-4 p-4 mb-4" style="border-color:#E5E7EB; background:#FCFCFD;">
                         <h5 class="fw-bold text-dark mb-3">Job Description</h5>
