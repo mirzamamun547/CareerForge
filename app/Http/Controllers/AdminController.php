@@ -531,6 +531,17 @@ class AdminController extends Controller
         return back();
         }
 
+    /**
+     * Let the admin trigger the auto-close job manually (useful for demos,
+     * since waiting for the daily cron isn't practical during a viva).
+     */
+    public function runCloseExpiredJobs()
+    {
+        \Illuminate\Support\Facades\Artisan::call('jobs:close-expired');
+
+        return back()->with('status', 'Ran the expired-jobs check: ' . trim(\Illuminate\Support\Facades\Artisan::output()));
+    }
+
     // Update admin email and password
     public function updateCredentials(Request $request)
     {

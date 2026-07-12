@@ -126,6 +126,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/activity', [AdminController::class, 'activity'])->name('admin.activity');
     Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
     Route::post('/settings/toggle', [AdminController::class, 'toggleSetting'])->name('admin.settings.toggle');
+    Route::post('/settings/run-close-expired-jobs', [AdminController::class, 'runCloseExpiredJobs'])->name('admin.settings.run-close-expired-jobs');
     Route::post('/settings/credentials', [AdminController::class, 'updateCredentials'])->name('admin.settings.updateCredentials');
 });
 

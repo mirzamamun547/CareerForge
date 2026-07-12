@@ -33,15 +33,23 @@
     <div class="switch-row d-flex align-items-center justify-content-between py-3 border-bottom">
         <div>
             <div class="switch-label fw-bold" style="font-size:0.95rem;">Auto-close expired job listings</div>
-            <div class="switch-desc text-secondary" style="font-size:0.78rem;">Jobs past their deadline are marked closed automatically</div>
+            <div class="switch-desc text-secondary" style="font-size:0.78rem;">Jobs past their deadline are marked closed automatically (runs daily via scheduler)</div>
         </div>
-        <form method="POST" action="{{ route('admin.settings.toggle') }}">
-            @csrf
-            <input type="hidden" name="key" value="auto_close_expired_jobs">
-            <div class="toggle-switch {{ $settings['auto_close_expired_jobs'] ? 'on' : '' }}" onclick="this.closest('form').submit();">
-                <div class="knob"></div>
-            </div>
-        </form>
+        <div class="d-flex align-items-center gap-3">
+            <form method="POST" action="{{ route('admin.settings.run-close-expired-jobs') }}">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-light border rounded-3" style="font-size:0.78rem;">
+                    <i class="bi bi-play-fill"></i> Run Now
+                </button>
+            </form>
+            <form method="POST" action="{{ route('admin.settings.toggle') }}">
+                @csrf
+                <input type="hidden" name="key" value="auto_close_expired_jobs">
+                <div class="toggle-switch {{ $settings['auto_close_expired_jobs'] ? 'on' : '' }}" onclick="this.closest('form').submit();">
+                    <div class="knob"></div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- Maintenance mode -->
