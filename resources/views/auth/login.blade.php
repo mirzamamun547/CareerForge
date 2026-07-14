@@ -12,7 +12,12 @@
                 <span class="text-2xl font-extrabold text-[#0f172a] tracking-tight">CareerForge</span>
             </div>
             <h2 class="text-2xl font-extrabold text-[#0f172a] tracking-tight mt-6">Welcome Back!</h2>
-            <p class="text-sm text-[#64748b] font-semibold mt-1">Login to your account</p>
+            @if (session('error'))
+<div class="bg-red-100 border border-red-300 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+    {{ session('error') }}
+</div>
+@endif
+<p class="text-sm text-[#64748b] font-semibold mt-1">Login to your account</p>
         </div>
 
         <!-- Form -->

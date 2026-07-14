@@ -15,6 +15,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
             'resume.uploaded' => \App\Http\Middleware\EnsureResumeUploaded::class,
         ]);
+
+        // Runs on every web request (guests pass through untouched); logs
+        // out any authenticated user whose account has been suspended.
+        $middleware->web(append: [
+            \App\Http\Middleware\CheckSuspendedUser::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
