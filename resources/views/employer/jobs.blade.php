@@ -60,7 +60,13 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-dark">Location *</label>
-                                <input type="text" name="location" class="form-control form-control-custom" placeholder="Dhaka, Bangladesh" required>
+                                <input type="text" id="location-search" name="location" class="form-control form-control-custom" placeholder="Search location... (e.g. Banani, Dhaka)" autocomplete="off" required>
+                                <div id="location-suggestions"></div>
+                                <input type="hidden" name="latitude" id="latitude">
+                                <input type="hidden" name="longitude" id="longitude">
+                                <input type="hidden" name="city" id="city">
+                                <input type="hidden" name="country" id="country">
+                                <div id="selected-location-card" class="selected-location-card" style="display: none;"></div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <label class="form-label fw-semibold text-dark">Experience Required</label>
@@ -287,7 +293,20 @@
     </div>
 </div>
 @push('scripts')
+<script src="{{ asset('js/location.js') }}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        initLocationAutocomplete({
+            searchInput: '#location-search',
+            suggestionsContainer: '#location-suggestions',
+            latInput: '#latitude',
+            lonInput: '#longitude',
+            cityInput: '#city',
+            countryInput: '#country',
+            selectedCard: '#selected-location-card'
+        });
+    });
+
     const previewModalButton = document.querySelector('[data-bs-target="#jobPreviewModal"]');
     const titleInput = document.querySelector('input[name="title"]');
     const categoryInput = document.querySelector('select[name="category"]');

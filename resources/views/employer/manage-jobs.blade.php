@@ -108,7 +108,13 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label class="form-label fw-semibold text-dark">Location</label>
-                                            <input type="text" name="location" class="form-control form-control-custom" value="{{ $job->location }}" required>
+                                            <input type="text" id="location-search-{{ $job->id }}" name="location" class="form-control form-control-custom" value="{{ $job->location }}" autocomplete="off" required>
+                                            <div id="location-suggestions-{{ $job->id }}"></div>
+                                            <input type="hidden" name="latitude" id="latitude-{{ $job->id }}" value="{{ $job->latitude }}">
+                                            <input type="hidden" name="longitude" id="longitude-{{ $job->id }}" value="{{ $job->longitude }}">
+                                            <input type="hidden" name="city" id="city-{{ $job->id }}" value="{{ $job->city }}">
+                                            <input type="hidden" name="country" id="country-{{ $job->id }}" value="{{ $job->country }}">
+                                            <div id="selected-location-card-{{ $job->id }}" class="selected-location-card" style="display: none;"></div>
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <label class="form-label fw-semibold text-dark">Salary range</label>
@@ -275,10 +281,21 @@
     </div>
 </div>
 @push('scripts')
+<script src="{{ asset('js/location.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.edit-job-form').forEach(function (form) {
             const jobId = form.dataset.jobId;
+
+            initLocationAutocomplete({
+                searchInput: `#location-search-${jobId}`,
+                suggestionsContainer: `#location-suggestions-${jobId}`,
+                latInput: `#latitude-${jobId}`,
+                lonInput: `#longitude-${jobId}`,
+                cityInput: `#city-${jobId}`,
+                countryInput: `#country-${jobId}`,
+                selectedCard: `#selected-location-card-${jobId}`
+            });
             const titleInput = form.querySelector('input[name="title"]');
             const categoryInput = form.querySelector('input[name="category"]');
             const locationInput = form.querySelector('input[name="location"]');
