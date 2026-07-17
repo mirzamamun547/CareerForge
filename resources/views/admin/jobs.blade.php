@@ -113,6 +113,32 @@
                                                 </div>
                                             </div>
 
+                                            <div class="border-top border-light pt-3 mb-4" style="font-size: 0.88rem;">
+                                                <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;"><i class="bi bi-geo-alt-fill text-primary"></i> Verified Location Coordinates</h6>
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                                            <span class="text-secondary">City</span>
+                                                            <span class="fw-bold text-dark">{{ $job->city ?? 'N/A' }}</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between border-bottom pb-2">
+                                                            <span class="text-secondary">Country</span>
+                                                            <span class="fw-bold text-dark">{{ $job->country ?? 'N/A' }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                                            <span class="text-secondary">Latitude</span>
+                                                            <span class="fw-bold text-dark">{{ $job->latitude ?? 'N/A' }}</span>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between border-bottom pb-2">
+                                                            <span class="text-secondary">Longitude</span>
+                                                            <span class="fw-bold text-dark">{{ $job->longitude ?? 'N/A' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="mb-3">
                                                 <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;">Description</h6>
                                                 <div class="p-3 rounded bg-light text-secondary" style="font-size:0.85rem; max-height: 150px; overflow-y: auto;">

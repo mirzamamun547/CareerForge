@@ -16,7 +16,7 @@
                     <i class="bi bi-send fs-5" style="color: #4F46E5;"></i>
                 </div>
             </div>
-            <h2 class="fw-extrabold text-dark m-0" style="font-weight: 800; font-size: 1.85rem;">12</h2>
+            <h2 class="fw-extrabold text-dark m-0" style="font-weight: 800; font-size: 1.85rem;">{{ $totalApplications }}</h2>
             <span class="text-secondary" style="font-size: 0.7rem;">Total Applied</span>
         </div>
     </div>
@@ -150,5 +150,52 @@
         </div>
     </div>
 
+</section>
+
+<!-- Recommended Jobs Section -->
+<section class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-4 rounded-4 bg-white">
+            <div class="d-flex justify-content-between align-items-center border-bottom border-light pb-3 mb-4">
+                <h2 class="fw-bold text-dark m-0" style="font-size: 1rem;">Recommended Opportunities</h2>
+                <a href="{{ route('student.jobs') }}" class="text-decoration-none fw-semibold text-primary" style="font-size: 0.75rem; color: #4F46E5 !important;">Explore All</a>
+            </div>
+
+            <div class="d-flex flex-column gap-3">
+                @forelse($recommendedJobs as $job)
+                    <div class="p-3 border border-light-subtle rounded-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-3 text-white fw-bold d-flex align-items-center justify-content-center" style="width: 2.75rem; height: 2.75rem; background-color: #EEF2FF; color: #4F46E5 !important;">
+                                {{ strtoupper(substr($job->user->name ?? 'C', 0, 2)) }}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size: 0.88rem;">{{ $job->title }}</h6>
+                                <span class="text-secondary small">{{ $job->user->name ?? 'Company' }}</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-center gap-3 justify-content-between justify-content-md-end">
+                            <span class="text-secondary small d-flex align-items-center gap-1">
+                                <i class="bi bi-geo-alt"></i> 
+                                @if($job->city && $job->country)
+                                    {{ $job->city }}, {{ $job->country }}
+                                @else
+                                    {{ $job->location }}
+                                @endif
+                                @if($job->latitude && $job->longitude)
+                                    <i class="bi bi-map text-primary small ms-1" title="Interactive map available"></i>
+                                @endif
+                            </span>
+                            <span class="badge bg-light text-secondary border border-light-subtle px-2.5 py-1.5" style="border-radius: 50rem; font-size: 0.7rem;">
+                                {{ $job->job_type }}
+                            </span>
+                            <a href="{{ route('student.jobs.show', $job) }}" class="btn btn-sm btn-outline-custom">View Details</a>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-secondary text-center py-3 mb-0">No active job listings recommended at this time.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
 </section>
 @endsection
