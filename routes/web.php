@@ -66,7 +66,12 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::post('/jobs', [EmployerJobController::class, 'store'])->name('employer.jobs.store');
     Route::get('/manage-jobs', [EmployerJobController::class, 'index'])->name('employer.manage-jobs');
     Route::put('/jobs/{job}', [EmployerJobController::class, 'update'])->name('employer.jobs.update');
-    Route::get('/dashboard', function () { return view('employer.dashboard'); })->name('employer.dashboard');
+    Route::get('/dashboard', function () {
+        $jobs = auth()->user()->jobListings()->latest()->take(5)->get();
+        $totalActiveJobs = auth()->user()->jobListings()->where('status', 'Active')->count();
+        $totalApplicants = \App\Models\JobApplication::whereIn('job_listing_id', auth()->user()->jobListings()->pluck('id'))->count();
+        return view('employer.dashboard', compact('jobs', 'totalActiveJobs', 'totalApplicants'));
+    })->name('employer.dashboard');
     Route::get('/applicants', [StudentJobController::class, 'employerApplicants'])->name('employer.applicants');
     Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
     Route::post('/applicant-details/{application}/status', [StudentJobController::class, 'employerUpdateStatus'])->name('employer.applicants.status.update');
@@ -79,7 +84,12 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
 
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
-    Route::get('/dashboard', function () { return view('student.dashboard'); })->name('student.dashboard');
+    Route::get('/dashboard', function () {
+        $recommendedJobs = \App\Models\JobListing::where('status', 'Active')->latest()->take(5)->get();
+        $totalApplications = auth()->user()->jobApplications()->count();
+        $totalInterviews = 2; // Mocked matching the mock schedule view
+        return view('student.dashboard', compact('recommendedJobs', 'totalApplications', 'totalInterviews'));
+    })->name('student.dashboard');
     Route::get('/profile', [StudentProfileController::class, 'edit'])->name('student.profile');
     Route::post('/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
     Route::get('/resume', [StudentResumeController::class, 'edit'])->name('student.resume');
