@@ -47,6 +47,33 @@
                     <p class="text-secondary mb-0" style="line-height: 1.8;">{{ $job->description }}</p>
                 </div>
 
+                @if($job->latitude && $job->longitude)
+                <div class="mt-5 pt-4 border-top border-light">
+                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt-fill text-primary"></i> Job Location</h6>
+                    
+                    <div class="card border border-light-subtle rounded-3 mb-3" style="background:#F9FAFB;">
+                        <div class="card-body p-3">
+                            <div class="row align-items-center g-3">
+                                <div class="col-12 col-md-8">
+                                    <div class="fw-bold text-dark mb-1">{{ $job->city ?? 'Location' }}</div>
+                                    <div class="text-secondary small">{{ $job->location }}</div>
+                                </div>
+                                <div class="col-12 col-md-4 text-md-end">
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ $job->latitude }},{{ $job->longitude }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100 mb-2 py-1.5" style="font-size:0.78rem;">
+                                        <i class="bi bi-google"></i> Google Maps
+                                    </a>
+                                    <a href="https://www.openstreetmap.org/?mlat={{ $job->latitude }}&mlon={{ $job->longitude }}#map=15/{{ $job->latitude }}/{{ $job->longitude }}" target="_blank" class="btn btn-sm btn-outline-secondary w-100 py-1.5" style="font-size:0.78rem;">
+                                        📍 OpenStreetMap
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="leaflet-job-map" style="height: 320px; border-radius: 0.75rem; border: 1px solid #E5E7EB; z-index: 1;"></div>
+                </div>
+                @endif
+
                 <div class="mt-4 border-top border-light pt-4">
                     <div class="d-flex flex-wrap gap-3">
                         <a href="{{ route('student.jobs.apply.form', $job) }}" class="btn btn-primary-custom">Apply Now</a>
@@ -84,4 +111,29 @@
         </div>
     </div>
 </div>
+
+@if($job->latitude && $job->longitude)
+@push('styles')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+@endpush
+
+@push('scripts')
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const lat = {{ $job->latitude }};
+        const lon = {{ $job->longitude }};
+        const map = L.map('leaflet-job-map').setView([lat, lon], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup('<strong>{{ $job->title }}</strong><br>{{ $job->city ?? $job->location }}')
+            .openPopup();
+    });
+</script>
+@endpush
+@endif
 @endsection

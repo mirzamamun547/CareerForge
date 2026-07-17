@@ -235,7 +235,14 @@
                         <hr class="section-divider mt-2">
                         <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div class="d-flex flex-wrap gap-3">
-                                <span class="text-secondary d-flex align-items-center gap-1" style="font-size:0.78rem;"><i class="bi bi-geo-alt" style="color:#9CA3AF;"></i> {{ $job->location }}</span>
+                                <span class="text-secondary d-flex align-items-center gap-1" style="font-size:0.78rem;">
+                                    <i class="bi bi-geo-alt" style="color:#9CA3AF;"></i> 
+                                    @if($job->city && $job->country)
+                                        {{ $job->city }}, {{ $job->country }}
+                                    @else
+                                        {{ $job->location }}
+                                    @endif
+                                </span>
                                 <span class="text-secondary d-flex align-items-center gap-1" style="font-size:0.78rem;"><i class="bi bi-bar-chart" style="color:#9CA3AF;"></i> {{ $job->level ?? 'Any Level' }}</span>
                                 <span class="salary-tag d-flex align-items-center gap-1"><i class="bi bi-currency-dollar"></i> {{ number_format($job->min_salary) }} – {{ number_format($job->max_salary) }}</span>
                             </div>
