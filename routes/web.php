@@ -8,8 +8,9 @@ use App\Http\Controllers\StudentJobController;
 use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentResumeController;
 use App\Http\Controllers\AdminController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GeminiController;
+use App\Http\Controllers\InterviewController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/gemini-test', [GeminiController::class, 'test']);
 Route::post('/gemini/generate', [GeminiController::class, 'generateFromRequest']);
@@ -79,8 +80,10 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
     Route::post('/applicant-details/{application}/status', [StudentJobController::class, 'employerUpdateStatus'])->name('employer.applicants.status.update');
     Route::post('/applicant-details/{application}/resume-review', [StudentJobController::class, 'employerReviewResume'])->name('employer.applicant-details.resume-review');
-    Route::get('/interview-schedule', function () { return view('employer.interview-schedule'); })->name('employer.interview-schedule');
-    Route::get('/schedule-interview', function () { return view('employer.schedule-interview'); })->name('employer.schedule-interview');
+    Route::get('/interview-schedule', [InterviewController::class, 'employerIndex'])->name('employer.interview-schedule');
+    Route::get('/schedule-interview', [InterviewController::class, 'create'])->name('employer.schedule-interview');
+    Route::post('/schedule-interview', [InterviewController::class, 'store'])->name('employer.schedule-interview.store');
+    Route::post('/interviews/{interview}/cancel', [InterviewController::class, 'cancel'])->name('employer.interviews.cancel');
     Route::get('/company-profile', function () { return view('employer.company-profile'); })->name('employer.company-profile');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('employer.notifications');
 });
@@ -90,7 +93,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::get('/dashboard', function () {
         $recommendedJobs = \App\Models\JobListing::where('status', 'Active')->latest()->take(5)->get();
         $totalApplications = auth()->user()->jobApplications()->count();
-        $totalInterviews = 2; // Mocked matching the mock schedule view
+        $totalInterviews = auth()->user()->interviewsAsStudent()->upcoming()->count();
         return view('student.dashboard', compact('recommendedJobs', 'totalApplications', 'totalInterviews'));
     })->name('student.dashboard');
     Route::get('/profile', [StudentProfileController::class, 'edit'])->name('student.profile');
@@ -112,7 +115,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::post('/jobs/{job}/bookmark', [StudentJobController::class, 'bookmark'])->name('student.jobs.bookmark');
     Route::get('/applications', [StudentJobController::class, 'applications'])->name('student.applications');
     Route::post('/applications/{application}/withdraw', [StudentJobController::class, 'withdraw'])->name('student.applications.withdraw');
-    Route::get('/interviews', function () { return view('student.interviews'); })->name('student.interviews');
+    Route::get('/interviews', [InterviewController::class, 'studentIndex'])->name('student.interviews');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('student.notifications');
 });
 

@@ -75,15 +75,23 @@
                     </div>
                 </div>
 
-                <div class="d-flex gap-2 mt-2">
-                    <a href="#" class="btn btn-primary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
-                        <i class="bi bi-download"></i>
-                        Download Resume
-                    </a>
-                    <a href="#" class="btn btn-secondary-custom d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
-                        <i class="bi bi-envelope"></i>
-                        View Cover Letter
-                    </a>
+                <div class="d-flex flex-column gap-2 mt-3">
+                    @if(!in_array($application->status, ['Withdrawn', 'Rejected', 'Hired']))
+                        <a href="{{ route('employer.schedule-interview', ['application_id' => $application->id]) }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem; background-color: #4F46E5; border-color: #4F46E5;">
+                            <i class="bi bi-calendar-event"></i>
+                            Schedule Interview
+                        </a>
+                    @endif
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                            <i class="bi bi-download"></i>
+                            Download Resume
+                        </a>
+                        <a href="#" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                            <i class="bi bi-envelope"></i>
+                            Cover Letter
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
