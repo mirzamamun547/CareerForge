@@ -58,7 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
@@ -99,6 +99,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::post('/resume', [StudentResumeController::class, 'store'])->name('student.resume.upload');
     Route::get('/resume/download', [StudentResumeController::class, 'download'])->name('student.resume.download');
     Route::get('/resume-review', [StudentResumeController::class, 'review'])->name('student.resume-review');
+    Route::post('/resume-review/ai', [StudentResumeController::class, 'requestAiReview'])->name('student.resume-review.ai');
     Route::get('/skills', [SkillController::class, 'index'])->name('student.skills');
     Route::post('/skills', [SkillController::class, 'store'])->name('student.skills.store');
     Route::put('/skills/{skill}', [SkillController::class, 'update'])->name('student.skills.update');

@@ -90,10 +90,15 @@
                             <div class="d-flex align-items-center gap-2 mb-1">
                                 <h5 class="fw-bold text-dark m-0" style="font-size:1.05rem;">Overall Score</h5>
                             </div>
-                            <div class="mb-1">
+                            <div class="mb-1 d-flex gap-2">
                                 <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
                                     <i class="bi bi-check-circle me-1"></i>Reviewed
                                 </span>
+                                @if(($latestReview->source ?? 'manual') === 'ai')
+                                    <span class="badge-custom-indigo" style="font-size:0.72rem; padding:0.3em 0.8em;">
+                                        <i class="bi bi-stars me-1"></i>AI Review
+                                    </span>
+                                @endif
                             </div>
                             <p class="text-secondary mb-0 mt-2" style="font-size:0.78rem;">
                                 Reviewed on {{ $latestReview->reviewed_at?->format('d M Y') }}
@@ -157,6 +162,24 @@
                     <p class="text-secondary mb-0" style="font-size:0.82rem;">No resume uploaded yet.</p>
                 @endif
             </div>
+
+            {{-- AI Review --}}
+            @if($latestResume)
+                <div class="card card-custom p-4">
+                    <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;">
+                        <i class="bi bi-stars me-2" style="color:#4F46E5;"></i>Instant AI Review
+                    </h6>
+                    <p class="text-secondary mb-3" style="font-size:0.78rem;">
+                        Get instant feedback from Gemini AI while you wait for a human reviewer.
+                    </p>
+                    <form action="{{ route('student.resume-review.ai') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2 w-100">
+                            <i class="bi bi-stars"></i> Get AI Review
+                        </button>
+                    </form>
+                </div>
+            @endif
 
             {{-- Re-upload --}}
             <div class="card card-custom p-4">

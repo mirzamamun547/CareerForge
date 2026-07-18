@@ -13,6 +13,7 @@ class ResumeReview extends Model
     protected $fillable = [
         'resume_id',
         'reviewed_by',
+        'source',
         'overall_score',
         'feedback',
         'reviewed_at',
