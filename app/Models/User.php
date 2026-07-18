@@ -93,6 +93,16 @@ class User extends Authenticatable
         return $this->hasMany(ResumeReview::class, 'reviewed_by');
     }
 
+    public function interviewsAsEmployer(): HasMany
+    {
+        return $this->hasMany(Interview::class, 'employer_id');
+    }
+
+    public function interviewsAsStudent(): HasMany
+    {
+        return $this->hasMany(Interview::class, 'student_id');
+    }
+
     public function isStudent(): bool
     {
         return $this->role === 'student';

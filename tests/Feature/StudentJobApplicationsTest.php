@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\JobListing;
 use App\Models\User;
+use App\Models\StudentProfile;
+use App\Models\Resume;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -27,6 +29,20 @@ class StudentJobApplicationsTest extends TestCase
     {
         $employer = User::factory()->create(['role' => 'employer']);
         $student = User::factory()->create(['role' => 'student']);
+        
+        $profile = StudentProfile::create([
+            'user_id' => $student->id,
+            'phone' => '+8801711223344',
+            'university' => 'DU',
+            'department' => 'CSE',
+            'graduation_year' => 2026,
+        ]);
+        
+        $profile->resumes()->create([
+            'file_path' => 'resumes/dummy.pdf',
+            'status' => 'pending',
+        ]);
+
         $job = JobListing::create([
             'user_id' => $employer->id,
             'title' => 'Laravel Developer',
@@ -48,7 +64,7 @@ class StudentJobApplicationsTest extends TestCase
         $applyFormResponse->assertStatus(200)->assertSee('Complete your application');
 
         $applyResponse = $this->post(route('student.jobs.apply', $job), [
-            'cover_letter' => 'I am excited to contribute to your team.',
+            'cover_letter' => 'I am very excited to contribute to your team and work with you.',
         ]);
         $applyResponse->assertRedirect(route('student.jobs.apply.success', $job));
 
