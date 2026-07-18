@@ -32,4 +32,14 @@ class Resume extends Model
     {
         return $this->hasOne(ResumeReview::class)->latestOfMany('reviewed_at');
     }
+
+    public function aiReview(): HasOne
+    {
+        return $this->hasOne(ResumeReview::class)->where('source', 'ai')->latestOfMany('reviewed_at');
+    }
+
+    public function manualReview(): HasOne
+    {
+        return $this->hasOne(ResumeReview::class)->where('source', 'manual')->latestOfMany('reviewed_at');
+    }
 }

@@ -59,10 +59,11 @@ class StudentResumeController extends Controller
     public function review(Request $request): View
     {
         $profile = Auth::user()->studentProfile;
-        $latestResume = $profile ? $profile->latestResume()->with('latestReview')->first() : null;
-        $latestReview = $latestResume ? $latestResume->latestReview : null;
+        $latestResume = $profile ? $profile->latestResume()->with(['aiReview', 'manualReview'])->first() : null;
+        $aiReview = $latestResume ? $latestResume->aiReview : null;
+        $manualReview = $latestResume ? $latestResume->manualReview : null;
 
-        return view('student.resume-review', compact('latestResume', 'latestReview'));
+        return view('student.resume-review', compact('latestResume', 'aiReview', 'manualReview'));
     }
 
     /**

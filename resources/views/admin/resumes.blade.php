@@ -39,17 +39,36 @@
                 @forelse($resumes as $resume)
                     @php 
                         $student = $resume->studentProfile->user; 
-                        $latestReview = $resume->latestReview;
+                        $manualReview = $resume->manualReview;
+                        $aiReview = $resume->aiReview;
                     @endphp
                     <tr>
                         <td style="font-weight:700;">{{ $student->name }}</td>
                         <td style="color:var(--muted);">{{ basename($resume->file_path) }}</td>
                         <td style="color:var(--muted);">{{ $resume->created_at->format('d M Y') }}</td>
-                        <td>{{ $latestReview ? ($latestReview->overall_score . '/100') : '—' }}</td>
-                        <td style="color:var(--muted);">{{ $latestReview && $latestReview->reviewer ? $latestReview->reviewer->name : '—' }}</td>
                         <td>
-                            @if($resume->status === 'reviewed')
+                            @if($manualReview)
+                                <span class="fw-bold text-dark">{{ $manualReview->overall_score }}/100</span>
+                            @elseif($aiReview)
+                                <span class="text-secondary" style="font-size: 0.85rem;"><i class="bi bi-stars" style="color:#4F46E5;"></i> {{ $aiReview->overall_score }}/100</span>
+                            @else
+                                —
+                            @endif
+                        </td>
+                        <td style="color:var(--muted);">
+                            @if($manualReview)
+                                {{ $manualReview->reviewer ? $manualReview->reviewer->name : 'Recruiter' }}
+                            @elseif($aiReview)
+                                <span class="badge-custom-indigo" style="font-size:0.7rem;"><i class="bi bi-stars"></i> AI</span>
+                            @else
+                                —
+                            @endif
+                        </td>
+                        <td>
+                            @if($manualReview)
                                 <span class="badge-custom-emerald">Reviewed</span>
+                            @elseif($aiReview)
+                                <span class="badge-custom-indigo"><i class="bi bi-stars"></i> AI Reviewed</span>
                             @else
                                 <span class="badge-custom-amber">Pending</span>
                             @endif
@@ -59,36 +78,73 @@
                                 <a href="{{ route('admin.resumes.download', $resume) }}" class="btn-ghost-custom btn-sm text-decoration-none">
                                     <i class="bi bi-download"></i> Download
                                 </a>
-                                @if($resume->status === 'reviewed')
+                                @if($manualReview)
                                     <button class="btn-ghost-custom btn-sm" data-bs-toggle="modal" data-bs-target="#viewReviewModal{{ $resume->id }}">View Review</button>
                                 @else
                                     <button class="btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#submitReviewModal{{ $resume->id }}">Review Now</button>
                                 @endif
+                                @if($aiReview)
+                                    <button class="btn-ghost-custom btn-sm text-indigo" data-bs-toggle="modal" data-bs-target="#viewAiReviewModal{{ $resume->id }}">
+                                        <i class="bi bi-stars"></i> AI Feedback
+                                    </button>
+                                @endif
                             </div>
 
-                            <!-- View Review Modal -->
-                            @if($latestReview)
+                            <!-- View Human Review Modal -->
+                            @if($manualReview)
                                 <div class="modal fade" id="viewReviewModal{{ $resume->id }}" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content border-0 rounded-4">
                                             <div class="modal-header border-0 pb-0">
-                                                <h5 class="fw-bold text-dark m-0">Resume Review Details</h5>
+                                                <h5 class="fw-bold text-dark m-0">Recruiter Review Details</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body pb-4">
                                                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
                                                     <span class="text-secondary">Overall Score</span>
-                                                    <span class="badge-custom-indigo" style="font-size:0.9rem;">{{ $latestReview->overall_score }}/100</span>
+                                                    <span class="badge bg-emerald-soft text-emerald fw-bold" style="font-size:0.9rem;">{{ $manualReview->overall_score }}/100</span>
                                                 </div>
                                                 <div class="mb-3">
                                                     <span class="text-secondary d-block mb-1">Feedback</span>
                                                     <div class="p-3 bg-light rounded text-secondary" style="white-space: pre-line; font-size: 0.85rem;">
-                                                        {{ $latestReview->feedback }}
+                                                        {{ $manualReview->feedback }}
                                                     </div>
                                                 </div>
                                                 <div class="text-secondary" style="font-size:0.75rem;">
-                                                    Reviewed by: <strong>{{ $latestReview->reviewer ? $latestReview->reviewer->name : 'System/Deleted' }}</strong>
-                                                    on {{ $latestReview->reviewed_at ? $latestReview->reviewed_at->format('d M Y, h:i A') : '—' }}
+                                                    Reviewed by: <strong>{{ $manualReview->reviewer ? $manualReview->reviewer->name : 'Recruiter/Admin' }}</strong>
+                                                    on {{ $manualReview->reviewed_at ? $manualReview->reviewed_at->format('d M Y, h:i A') : '—' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- View AI Review Modal -->
+                            @if($aiReview)
+                                <div class="modal fade" id="viewAiReviewModal{{ $resume->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content border-0 rounded-4">
+                                            <div class="modal-header border-0 pb-0">
+                                                <h5 class="fw-bold text-dark m-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-stars" style="color:#4F46E5;"></i> AI Insights & Analysis
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body pb-4">
+                                                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+                                                    <span class="text-secondary">AI Suggested Score</span>
+                                                    <span class="badge bg-indigo-soft text-indigo fw-bold" style="font-size:0.9rem;">{{ $aiReview->overall_score }}/100</span>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <span class="text-secondary d-block mb-1">AI Critique</span>
+                                                    <div class="p-3 bg-light rounded text-secondary" style="white-space: pre-line; font-size: 0.85rem; border-left: 3px solid #4F46E5;">
+                                                        {{ $aiReview->feedback }}
+                                                    </div>
+                                                </div>
+                                                <div class="text-secondary" style="font-size:0.75rem;">
+                                                    Generated by: <strong>Gemini AI (2.5-flash)</strong>
+                                                    on {{ $aiReview->reviewed_at ? $aiReview->reviewed_at->format('d M Y, h:i A') : '—' }}
                                                 </div>
                                             </div>
                                         </div>
@@ -107,13 +163,21 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body pb-4">
+                                                @if($aiReview)
+                                                    <div class="alert alert-info border-0 rounded-3 mb-3 d-flex gap-2" style="font-size: 0.8rem; background: #EEF2FF; color: #3730A3;">
+                                                        <i class="bi bi-stars"></i>
+                                                        <div>
+                                                            <strong>AI Suggested Score: {{ $aiReview->overall_score }}/100</strong>. You can use the AI Feedback button behind this modal to guide your review.
+                                                        </div>
+                                                    </div>
+                                                @endif
                                                 <div class="mb-3">
                                                     <label class="form-label fw-semibold text-dark">Overall Score (0 - 100)</label>
-                                                    <input type="number" name="overall_score" min="0" max="100" class="form-control-custom" required>
+                                                    <input type="number" name="overall_score" min="0" max="100" class="form-control-custom" value="{{ $aiReview ? $aiReview->overall_score : '' }}" required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label fw-semibold text-dark">Feedback & Suggestions</label>
-                                                    <textarea name="feedback" rows="5" class="form-control-custom" placeholder="Provide actionable feedback for the student..." required></textarea>
+                                                    <textarea name="feedback" rows="5" class="form-control-custom" placeholder="Provide actionable feedback for the student..." required>{{ $aiReview ? $aiReview->feedback : '' }}</textarea>
                                                 </div>
                                                 <div class="d-flex justify-content-end gap-2">
                                                     <button type="button" class="btn-ghost-custom" data-bs-dismiss="modal">Cancel</button>

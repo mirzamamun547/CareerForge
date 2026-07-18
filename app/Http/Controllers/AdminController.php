@@ -366,19 +366,27 @@ class AdminController extends Controller
     {
         $currentTab = $request->get('status', 'all');
 
-        $query = Resume::with(['studentProfile.user', 'latestReview']);
+        $query = Resume::with(['studentProfile.user', 'manualReview', 'aiReview']);
         if ($currentTab === 'reviewed') {
-            $query->where('status', 'reviewed');
+            $query->whereHas('reviews', function ($q) {
+                $q->where('source', 'manual');
+            });
         } elseif ($currentTab === 'pending') {
-            $query->where('status', 'pending');
+            $query->whereDoesntHave('reviews', function ($q) {
+                $q->where('source', 'manual');
+            });
         }
 
         $resumes = $query->latest()->paginate(10)->withQueryString();
 
         $counts = [
             'all' => Resume::count(),
-            'reviewed' => Resume::where('status', 'reviewed')->count(),
-            'pending' => Resume::where('status', 'pending')->count(),
+            'reviewed' => Resume::whereHas('reviews', function ($q) {
+                $q->where('source', 'manual');
+            })->count(),
+            'pending' => Resume::whereDoesntHave('reviews', function ($q) {
+                $q->where('source', 'manual');
+            })->count(),
         ];
 
         return view('admin.resumes', compact('resumes', 'currentTab', 'counts'));
@@ -402,6 +410,7 @@ class AdminController extends Controller
         ResumeReview::create([
             'resume_id' => $resume->id,
             'reviewed_by' => auth()->id(),
+            'source' => 'manual',
             'overall_score' => $validated['overall_score'],
             'feedback' => $validated['feedback'],
             'reviewed_at' => now(),

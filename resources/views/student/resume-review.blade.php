@@ -2,7 +2,7 @@
 
 @section('title', 'Resume Review')
 @section('header_title', 'Resume Review')
-@section('header_subtitle', 'Feedback from employers/admins on your uploaded resume.')
+@section('header_subtitle', 'Get instant AI insights and manual reviews from recruiters.')
 
 @push('styles')
 <style>
@@ -32,19 +32,13 @@
         color: #9CA3AF;
         font-weight: 600;
     }
-    .review-badge {
-        font-size: 0.72rem;
-        font-weight: 700;
-        padding: 0.3em 0.9em;
-        border-radius: 50rem;
-    }
     .feedback-box {
         font-size: 0.85rem;
         color: #4B5563;
         background: #F9FAFB;
         border: 1px solid #E5E7EB;
         border-radius: 0.75rem;
-        padding: 1rem 1.1rem;
+        padding: 1.25rem;
         white-space: pre-line;
         line-height: 1.7;
     }
@@ -58,6 +52,31 @@
         border: 1px solid #E5E7EB;
         border-radius: 0.75rem;
     }
+    .nav-tabs-custom {
+        border-bottom: 2px solid #F3F4F6;
+    }
+    .nav-tabs-custom .nav-link {
+        color: #6B7280;
+        border: none;
+        background: none;
+        border-bottom: 3px solid transparent;
+        padding: 0.75rem 1.25rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        border-radius: 0;
+    }
+    .nav-tabs-custom .nav-link:hover {
+        color: #4F46E5;
+    }
+    .nav-tabs-custom .nav-link.active {
+        color: #4F46E5;
+        border-bottom-color: #4F46E5;
+        background: none;
+    }
+    .nav-tabs-custom .nav-link i {
+        font-size: 1rem;
+    }
 </style>
 @endpush
 
@@ -65,138 +84,221 @@
 <div class="container-fluid p-0">
     <div class="row g-4">
 
-        {{-- Left: Score + Feedback --}}
-        <div class="col-12 col-lg-7">
-            <div class="card card-custom p-4 h-100">
-
-                @if($latestReview)
-                    {{-- Score Header --}}
-                    <div class="d-flex align-items-center gap-4 mb-4">
-                        <div class="score-ring-wrap">
-                            <svg width="110" height="110" viewBox="0 0 110 110">
-                                <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
-                                <circle cx="55" cy="55" r="47" fill="none" stroke="#4F46E5" stroke-width="9"
-                                    stroke-linecap="round"
-                                    stroke-dasharray="295"
-                                    stroke-dashoffset="{{ 295 - (295 * ($latestReview->overall_score ?? 0) / 100) }}"/>
-                            </svg>
-                            <div class="score-center">
-                                <div class="score-num">{{ $latestReview->overall_score ?? '-' }}</div>
-                                <div class="score-sub">/100</div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="d-flex align-items-center gap-2 mb-1">
-                                <h5 class="fw-bold text-dark m-0" style="font-size:1.05rem;">Overall Score</h5>
-                            </div>
-                            <div class="mb-1 d-flex gap-2">
-                                <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
-                                    <i class="bi bi-check-circle me-1"></i>Reviewed
-                                </span>
-                                @if(($latestReview->source ?? 'manual') === 'ai')
-                                    <span class="badge-custom-indigo" style="font-size:0.72rem; padding:0.3em 0.8em;">
-                                        <i class="bi bi-stars me-1"></i>AI Review
-                                    </span>
-                                @endif
-                            </div>
-                            <p class="text-secondary mb-0 mt-2" style="font-size:0.78rem;">
-                                Reviewed on {{ $latestReview->reviewed_at?->format('d M Y') }}
-                                @if($latestReview->reviewer)
-                                    by {{ $latestReview->reviewer->name }}
-                                @endif
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="divider"></div>
-
-                    {{-- Feedback --}}
-                    <div>
-                        <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
-                            <i class="bi bi-chat-square-text-fill me-2" style="color:#4F46E5;"></i>Feedback
-                        </h6>
-                        <div class="feedback-box">{{ $latestReview->feedback }}</div>
-                    </div>
-                @else
-                    {{-- Empty state: no review yet --}}
-                    <div class="text-center py-5">
-                        <i class="bi bi-hourglass-split" style="font-size:2.2rem; color:#9CA3AF;"></i>
-                        <h6 class="fw-bold text-dark mt-3 mb-1" style="font-size:0.95rem;">Not Reviewed Yet</h6>
-                        <p class="text-secondary mb-0" style="font-size:0.82rem;">
-                            @if($latestResume)
-                                Your resume is uploaded and waiting to be reviewed by an employer or admin.
+        {{-- Left: Reviews (AI and Human separated) --}}
+        <div class="col-12 col-lg-8">
+            <div class="card card-custom p-4">
+                
+                {{-- Tabs Header --}}
+                <ul class="nav nav-tabs nav-tabs-custom mb-4 gap-2" id="reviewTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active d-flex align-items-center gap-2" id="human-tab" data-bs-toggle="tab" data-bs-target="#human-review" type="button" role="tab" aria-controls="human-review" aria-selected="true">
+                            <i class="bi bi-person-badge-fill"></i> Recruiter Review
+                            @if($manualReview)
+                                <span class="badge rounded-pill bg-emerald-soft text-emerald ms-1" style="font-size: 0.65rem;">Reviewed</span>
                             @else
-                                Upload a resume first to get it reviewed.
+                                <span class="badge rounded-pill bg-light text-secondary ms-1" style="font-size: 0.65rem;">Pending</span>
                             @endif
-                        </p>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link d-flex align-items-center gap-2" id="ai-tab" data-bs-toggle="tab" data-bs-target="#ai-review" type="button" role="tab" aria-controls="ai-review" aria-selected="false">
+                            <i class="bi bi-stars" style="color: #4F46E5;"></i> AI Review
+                            @if($aiReview)
+                                <span class="badge rounded-pill bg-indigo-soft text-indigo ms-1" style="font-size: 0.65rem;">Available</span>
+                            @else
+                                <span class="badge rounded-pill bg-light text-secondary ms-1" style="font-size: 0.65rem;">Not Run</span>
+                            @endif
+                        </button>
+                    </li>
+                </ul>
+
+                {{-- Tabs Content --}}
+                <div class="tab-content" id="reviewTabsContent">
+                    
+                    {{-- 1. Recruiter Review Tab --}}
+                    <div class="tab-pane fade show active" id="human-review" role="tabpanel" aria-labelledby="human-tab">
+                        @if($manualReview)
+                            <div class="d-flex align-items-center gap-4 mb-4">
+                                <div class="score-ring-wrap">
+                                    <svg width="110" height="110" viewBox="0 0 110 110">
+                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#10B981" stroke-width="9"
+                                            stroke-linecap="round"
+                                            stroke-dasharray="295"
+                                            stroke-dashoffset="{{ 295 - (295 * $manualReview->overall_score / 100) }}"/>
+                                    </svg>
+                                    <div class="score-center">
+                                        <div class="score-num">{{ $manualReview->overall_score }}</div>
+                                        <div class="score-sub">/100</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1" style="font-size:1.05rem;">Recruiter Score</h5>
+                                    <div class="mb-2">
+                                        <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
+                                            <i class="bi bi-check-circle me-1"></i>Official Review
+                                        </span>
+                                    </div>
+                                    <p class="text-secondary mb-0" style="font-size:0.78rem;">
+                                        Reviewed by <strong>{{ $manualReview->reviewer ? $manualReview->reviewer->name : 'Administrator' }}</strong> 
+                                        on {{ $manualReview->reviewed_at?->format('d M Y, h:i A') }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div>
+                                <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
+                                    <i class="bi bi-chat-square-text-fill me-2" style="color:#10B981;"></i>Recruiter Feedback
+                                </h6>
+                                <div class="feedback-box">{{ $manualReview->feedback }}</div>
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="icon-shape mx-auto mb-3" style="width:60px; height:60px; background:#F3F4F6; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-hourglass-split text-secondary" style="font-size:1.6rem;"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size:0.95rem;">Waiting for Recruiter Review</h6>
+                                <p class="text-secondary mb-0 mx-auto" style="font-size:0.82rem; max-width:400px;">
+                                    Our admins and partner employers will review your resume shortly. You'll receive feedback and a score here once completed.
+                                </p>
+                            </div>
+                        @endif
                     </div>
-                @endif
+
+                    {{-- 2. AI Review Tab --}}
+                    <div class="tab-pane fade" id="ai-review" role="tabpanel" aria-labelledby="ai-tab">
+                        @if($aiReview)
+                            <div class="d-flex align-items-center gap-4 mb-4">
+                                <div class="score-ring-wrap">
+                                    <svg width="110" height="110" viewBox="0 0 110 110">
+                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#4F46E5" stroke-width="9"
+                                            stroke-linecap="round"
+                                            stroke-dasharray="295"
+                                            stroke-dashoffset="{{ 295 - (295 * $aiReview->overall_score / 100) }}"/>
+                                    </svg>
+                                    <div class="score-center">
+                                        <div class="score-num">{{ $aiReview->overall_score }}</div>
+                                        <div class="score-sub">/100</div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-1" style="font-size:1.05rem;">Gemini AI Score</h5>
+                                    <div class="mb-2">
+                                        <span class="badge-custom-indigo" style="font-size:0.72rem; padding:0.3em 0.8em;">
+                                            <i class="bi bi-stars me-1"></i>Instant AI Review
+                                        </span>
+                                    </div>
+                                    <p class="text-secondary mb-0" style="font-size:0.78rem;">
+                                        Generated on {{ $aiReview->reviewed_at?->format('d M Y, h:i A') }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div>
+                                <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
+                                    <i class="bi bi-chat-square-text-fill me-2" style="color:#4F46E5;"></i>AI Feedback & Suggestions
+                                </h6>
+                                <div class="feedback-box">{{ $aiReview->feedback }}</div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            {{-- Re-run AI review button --}}
+                            <div class="d-flex align-items-center justify-content-between p-3 bg-light rounded-4">
+                                <div class="text-secondary" style="font-size:0.75rem;">
+                                    Want to run the analysis again? Re-uploading a new resume is recommended.
+                                </div>
+                                <form action="{{ route('student.resume-review.ai') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+                                        <i class="bi bi-arrow-clockwise"></i> Re-run AI Analysis
+                                    </button>
+                                </form>
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="icon-shape mx-auto mb-3" style="width:60px; height:60px; background:#EEF2FF; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                                    <i class="bi bi-stars" style="font-size:1.6rem; color:#4F46E5;"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1" style="font-size:0.95rem;">Get Instant AI Feedback</h6>
+                                <p class="text-secondary mb-4 mx-auto" style="font-size:0.82rem; max-width:400px;">
+                                    Don't wait! Get an immediate comprehensive AI critique of your resume structure, strengths, and areas of improvement powered by Gemini.
+                                </p>
+                                @if($latestResume)
+                                    <form action="{{ route('student.resume-review.ai') }}" method="POST" class="d-inline-block">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary-custom d-flex align-items-center gap-2">
+                                            <i class="bi bi-stars"></i> Generate AI Review Now
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('student.resume') }}" class="btn btn-primary-custom">
+                                        Upload Resume First
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+
+                </div>
 
             </div>
         </div>
 
-        {{-- Right: Resume + Re-upload --}}
-        <div class="col-12 col-lg-5 d-flex flex-column gap-4">
+        {{-- Right Column: Resume File & Actions --}}
+        <div class="col-12 col-lg-4 d-flex flex-column gap-4">
 
-            {{-- Uploaded Resume --}}
+            {{-- Uploaded Resume Details --}}
             <div class="card card-custom p-4">
                 <h6 class="fw-bold text-dark mb-3" style="font-size:0.9rem;">
                     <i class="bi bi-file-earmark-text me-2" style="color:#4F46E5;"></i>
-                    {{ $latestReview ? 'Reviewed Resume' : 'Uploaded Resume' }}
+                    Active Resume
                 </h6>
                 @if($latestResume)
-                    <div class="resume-file-chip">
+                    <div class="resume-file-chip mb-3">
                         <div class="icon-shape flex-shrink-0" style="background-color:#EEF2FF;">
                             <i class="bi bi-file-earmark-pdf" style="font-size:1.1rem; color:#4F46E5;"></i>
                         </div>
-                        <div class="flex-grow-1">
-                            <div class="fw-bold text-dark" style="font-size:0.88rem;">{{ basename($latestResume->file_path) }}</div>
+                        <div class="flex-grow-1 overflow-hidden">
+                            <div class="fw-bold text-dark text-truncate" style="font-size:0.88rem;">{{ basename($latestResume->file_path) }}</div>
                             <div class="text-secondary" style="font-size:0.7rem;">Uploaded: {{ $latestResume->created_at->format('d M Y') }}</div>
                         </div>
-                        <a href="{{ route('student.resume.download') }}" class="btn btn-sm btn-light border rounded-3 d-flex align-items-center gap-1" style="font-size:0.75rem;">
+                        <a href="{{ route('student.resume.download') }}" class="btn btn-sm btn-light border rounded-3 d-flex align-items-center justify-content-center" style="width:32px; height:32px;">
                             <i class="bi bi-download"></i>
                         </a>
                     </div>
+
+                    <a href="{{ route('student.resume') }}" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center gap-2" style="font-size:0.82rem; border-radius:0.5rem; padding:0.6rem;">
+                        <i class="bi bi-upload"></i> Upload New Version
+                    </a>
                 @else
-                    <p class="text-secondary mb-0" style="font-size:0.82rem;">No resume uploaded yet.</p>
+                    <div class="text-center py-4 bg-light rounded-4">
+                        <i class="bi bi-file-earmark-arrow-up text-secondary" style="font-size:1.5rem;"></i>
+                        <p class="text-secondary mb-3 mt-1" style="font-size:0.78rem;">No resume uploaded yet.</p>
+                        <a href="{{ route('student.resume') }}" class="btn btn-sm btn-primary-custom px-4">
+                            Upload Now
+                        </a>
+                    </div>
                 @endif
             </div>
 
-            {{-- AI Review --}}
-            @if($latestResume)
-                <div class="card card-custom p-4">
-                    <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;">
-                        <i class="bi bi-stars me-2" style="color:#4F46E5;"></i>Instant AI Review
-                    </h6>
-                    <p class="text-secondary mb-3" style="font-size:0.78rem;">
-                        Get instant feedback from Gemini AI while you wait for a human reviewer.
-                    </p>
-                    <form action="{{ route('student.resume-review.ai') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2 w-100">
-                            <i class="bi bi-stars"></i> Get AI Review
-                        </button>
-                    </form>
-                </div>
-            @endif
-
-            {{-- Re-upload --}}
-            <div class="card card-custom p-4">
-                <h6 class="fw-bold text-dark mb-2" style="font-size:0.9rem;">
-                    <i class="bi bi-arrow-repeat me-2" style="color:#10B981;"></i>
-                    {{ $latestResume ? 'Re-upload Resume' : 'Upload Resume' }}
+            {{-- Tips Card --}}
+            <div class="card border-0 p-4 rounded-4" style="background: linear-gradient(135deg, #4F46E5, #3730A3); color: white;">
+                <h6 class="fw-bold mb-2 d-flex align-items-center gap-2" style="font-size:0.9rem;">
+                    <i class="bi bi-lightbulb"></i> Pro Tips
                 </h6>
-                <p class="text-secondary mb-3" style="font-size:0.78rem;">
-                    @if($latestResume)
-                        Upload an improved version to get a fresh review.
-                    @else
-                        Upload your resume so employers can review it.
-                    @endif
-                </p>
-                <a href="{{ route('student.resume') }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2">
-                    <i class="bi bi-upload"></i> {{ $latestResume ? 'Upload New Version' : 'Upload Resume' }}
-                </a>
+                <ul class="ps-3 mb-0" style="font-size:0.76rem; opacity:0.9; line-height:1.6;">
+                    <li class="mb-2"><strong>Get AI Review</strong> to instantly optimize your language, verbs, and keywords before recruiters look at it.</li>
+                    <li><strong>Recruiter reviews</strong> are completed manually by admins and company talent teams who view your profile.</li>
+                    <li>Your latest resume is the active one shared with job postings. Keep it up to date!</li>
+                </ul>
             </div>
 
         </div>

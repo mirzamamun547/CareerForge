@@ -211,28 +211,43 @@
                     <div class="tab-pane fade" id="review-pane" role="tabpanel">
                         @php
                             $latestResume = $application->student->studentProfile?->latestResume;
-                            $latestReview = $latestResume?->latestReview;
+                            $manualReview = $latestResume?->manualReview;
+                            $aiReview = $latestResume?->aiReview;
                         @endphp
 
                         @if(!$latestResume)
                             <p class="text-secondary mb-0" style="font-size: 0.85rem;">This applicant has not uploaded a resume yet.</p>
                         @else
-                            @if($latestReview)
-                                <div class="p-3 rounded-3 mb-4" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+                            @if($manualReview)
+                                <div class="p-3 rounded-3 mb-4" style="background-color: #ECFDF5; border: 1px solid #A7F3D0;">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
-                                        <span class="fw-bold text-dark" style="font-size: 0.9rem;">Existing Review</span>
-                                        <span class="badge-custom-indigo px-3 py-1" style="font-size: 0.8rem;">{{ $latestReview->overall_score }}/100</span>
+                                        <span class="fw-bold text-emerald" style="font-size: 0.9rem;">Your Review (Manual)</span>
+                                        <span class="badge bg-emerald-soft text-emerald px-3 py-1" style="font-size: 0.8rem;">{{ $manualReview->overall_score }}/100</span>
                                     </div>
-                                    <p class="text-secondary mb-1" style="font-size: 0.83rem; white-space: pre-line;">{{ $latestReview->feedback }}</p>
+                                    <p class="text-secondary mb-1" style="font-size: 0.83rem; white-space: pre-line;">{{ $manualReview->feedback }}</p>
                                     <span class="text-secondary" style="font-size: 0.72rem;">
-                                        Reviewed on {{ $latestReview->reviewed_at?->format('d M Y') }}
-                                        @if($latestReview->reviewer) by {{ $latestReview->reviewer->name }} @endif
+                                        Reviewed on {{ $manualReview->reviewed_at?->format('d M Y') }} by {{ $manualReview->reviewer ? $manualReview->reviewer->name : 'You' }}
+                                    </span>
+                                </div>
+                            @endif
+
+                            @if($aiReview)
+                                <div class="p-3 rounded-3 mb-4 text-indigo" style="background-color: #EEF2FF; border: 1px solid #C7D2FE;">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="fw-bold d-flex align-items-center gap-2" style="font-size: 0.9rem;">
+                                            <i class="bi bi-stars"></i> Gemini AI Analysis
+                                        </span>
+                                        <span class="badge bg-indigo-soft text-indigo px-3 py-1" style="font-size: 0.8rem;">{{ $aiReview->overall_score }}/100</span>
+                                    </div>
+                                    <p class="text-secondary mb-1" style="font-size: 0.83rem; white-space: pre-line;">{{ $aiReview->feedback }}</p>
+                                    <span class="text-secondary" style="font-size: 0.72rem;">
+                                        Generated on {{ $aiReview->reviewed_at?->format('d M Y') }}
                                     </span>
                                 </div>
                             @endif
 
                             <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">
-                                {{ $latestReview ? 'Submit a New Review' : 'Review this Resume' }}
+                                {{ $manualReview ? 'Update Your Review' : 'Submit a Review' }}
                             </h6>
                             <form action="{{ route('employer.applicant-details.resume-review', $application) }}" method="POST">
                                 @csrf
@@ -240,16 +255,17 @@
                                     <label class="form-label" style="font-size: 0.82rem;">Overall Score (0-100)</label>
                                     <input type="number" name="overall_score" min="0" max="100" required
                                         class="form-control form-control-custom" style="font-size: 0.85rem;"
-                                        value="{{ old('overall_score') }}">
+                                        value="{{ old('overall_score', $manualReview ? $manualReview->overall_score : ($aiReview ? $aiReview->overall_score : '')) }}">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label" style="font-size: 0.82rem;">Feedback</label>
                                     <textarea name="feedback" rows="4" required
                                         class="form-control form-control-custom" style="font-size: 0.85rem;"
-                                        placeholder="Strengths, weaknesses, and suggestions for this resume...">{{ old('feedback') }}</textarea>
+                                        placeholder="Strengths, weaknesses, and suggestions for this resume..."
+                                    >{{ old('feedback', $manualReview ? $manualReview->feedback : ($aiReview ? $aiReview->feedback : '')) }}</textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;">
-                                    <i class="bi bi-send-check"></i> Submit Review
+                                    <i class="bi bi-send-check"></i> {{ $manualReview ? 'Update Review' : 'Submit Review' }}
                                 </button>
                             </form>
                         @endif

@@ -241,7 +241,8 @@ class StudentJobController extends Controller
         $application->load([
             'student.studentProfile',
             'student.studentProfile.skills',
-            'student.studentProfile.latestResume.latestReview',
+            'student.studentProfile.latestResume.manualReview',
+            'student.studentProfile.latestResume.aiReview',
             'jobListing',
         ]);
 
@@ -288,6 +289,7 @@ class StudentJobController extends Controller
         ResumeReview::create([
             'resume_id' => $resume->id,
             'reviewed_by' => auth()->id(),
+            'source' => 'manual',
             'overall_score' => $validated['overall_score'],
             'feedback' => $validated['feedback'],
             'reviewed_at' => now(),
