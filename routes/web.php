@@ -9,7 +9,10 @@ use App\Http\Controllers\StudentProfileController;
 use App\Http\Controllers\StudentResumeController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GeminiController;
 
+Route::get('/gemini-test', [GeminiController::class, 'test']);
+Route::post('/gemini/generate', [GeminiController::class, 'generateFromRequest']);
 
 Route::get('/', function () {
     return view('welcome');
