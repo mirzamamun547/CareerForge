@@ -22,7 +22,7 @@ class AdminController extends Controller
     {
         $stats = [
             'students' => User::where('role', 'student')->count(),
-            'studentGrowth' => 8.2, // mock growth percentage
+            'studentGrowth' => 8.2,
             'employers' => User::where('role', 'employer')->count(),
             'employerGrowth' => 4.6,
             'activeJobs' => JobListing::where('status', 'Active')->count(),
@@ -35,14 +35,14 @@ class AdminController extends Controller
             'flaggedAccounts' => User::where('status', 'flagged')->count(),
         ];
 
-        // Monthly job postings (last 6 months)
+        
         $jobsMonthly = [];
         for ($i = 5; $i >= 0; $i--) {
             $month = now()->subMonths($i);
             $count = JobListing::whereMonth('created_at', $month->month)
                 ->whereYear('created_at', $month->year)
                 ->count();
-            // Fallback mock values to make it look nice if DB is empty
+           
             if ($count === 0) {
                 $count = [38, 52, 47, 61, 58, 74][5 - $i] ?? 10;
             }

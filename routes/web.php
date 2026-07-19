@@ -16,7 +16,12 @@ Route::get('/gemini-test', [GeminiController::class, 'test']);
 Route::post('/gemini/generate', [GeminiController::class, 'generateFromRequest']);
 
 Route::get('/', function () {
-    return view('welcome');
+    $featuredJobs = \App\Models\JobListing::where('status', 'Active')
+        ->with('user.employerProfile')
+        ->latest()
+        ->take(3)
+        ->get();
+    return view('welcome', compact('featuredJobs'));
 });
 
 Route::middleware('guest')->group(function () {
