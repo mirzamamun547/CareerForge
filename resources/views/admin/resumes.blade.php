@@ -80,8 +80,6 @@
                                 </a>
                                 @if($manualReview)
                                     <button class="btn-ghost-custom btn-sm" data-bs-toggle="modal" data-bs-target="#viewReviewModal{{ $resume->id }}">View Review</button>
-                                @else
-                                    <button class="btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#submitReviewModal{{ $resume->id }}">Review Now</button>
                                 @endif
                                 @if($aiReview)
                                     <button class="btn-ghost-custom btn-sm text-indigo" data-bs-toggle="modal" data-bs-target="#viewAiReviewModal{{ $resume->id }}">

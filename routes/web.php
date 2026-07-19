@@ -70,7 +70,11 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function () {
+Route::middleware(['auth', 'role:employer', 'employer.verified'])->prefix('employer')->group(function () {
+    Route::get('/pending-verification', function () {
+        return view('employer.pending-verification');
+    })->name('employer.pending-verification');
+
     Route::get('/jobs', [EmployerJobController::class, 'create'])->name('employer.jobs');
     Route::post('/jobs', [EmployerJobController::class, 'store'])->name('employer.jobs.store');
     Route::get('/manage-jobs', [EmployerJobController::class, 'index'])->name('employer.manage-jobs');

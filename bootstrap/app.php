@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
             'resume.uploaded' => \App\Http\Middleware\EnsureResumeUploaded::class,
+            'employer.verified' => \App\Http\Middleware\EnsureEmployerIsVerified::class,
         ]);
 
         // Runs on every web request (guests pass through untouched); logs

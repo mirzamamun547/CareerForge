@@ -562,7 +562,7 @@ class AdminController extends Controller
 
         $user->email = $validated['email'];
         if (!empty($validated['password'])) {
-            $user->password = Hash::make($validated['password']);
+            $user->password = $validated['password']; // Hashed cast will automatically hash it
         }
         $user->save();
 

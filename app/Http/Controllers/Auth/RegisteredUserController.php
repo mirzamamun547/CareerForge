@@ -119,12 +119,15 @@ class RegisteredUserController extends Controller
             : null;
 
         $user = DB::transaction(function () use ($validated, $companyLogoPath) {
+            $requireVerification = \App\Models\Setting::get('require_employer_verification', '1') === '1';
+
             $user = User::create([
                 'name' => $validated['contact_person'],
                 'email' => $validated['company_email'],
                 'password' => Hash::make($validated['password']),
                 'role' => 'employer',
                 'phone' => $validated['phone'],
+                'verified' => !$requireVerification,
             ]);
 
             EmployerProfile::create([
