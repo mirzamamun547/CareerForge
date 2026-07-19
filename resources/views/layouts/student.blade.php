@@ -279,9 +279,13 @@
 
                 <!-- User Mini Card -->
                 <div class="d-flex align-items-center gap-2 p-2 rounded-3 mb-1" style="background:#F9FAFB;border:1px solid #F3F4F6;">
-                    <div class="user-avatar flex-shrink-0" style="width:2.2rem;height:2.2rem;font-size:0.75rem;">RU</div>
+                    @if(Auth::user()->studentProfile && Auth::user()->studentProfile->profile_picture)
+                        <img src="{{ asset('storage/' . Auth::user()->studentProfile->profile_picture) }}" alt="Avatar" class="rounded-circle flex-shrink-0" style="width:2.2rem;height:2.2rem;object-fit:cover;">
+                    @else
+                        <div class="user-avatar flex-shrink-0" style="width:2.2rem;height:2.2rem;font-size:0.75rem;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</div>
+                    @endif
                     <div class="overflow-hidden">
-                        <div class="fw-bold text-dark text-truncate" style="font-size:0.8rem;">Raihan Uddin</div>
+                        <div class="fw-bold text-dark text-truncate" style="font-size:0.8rem;">{{ Auth::user()->name }}</div>
                         <div class="text-secondary text-truncate" style="font-size:0.68rem;">Student</div>
                     </div>
                 </div>

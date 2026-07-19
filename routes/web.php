@@ -76,10 +76,30 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/manage-jobs', [EmployerJobController::class, 'index'])->name('employer.manage-jobs');
     Route::put('/jobs/{job}', [EmployerJobController::class, 'update'])->name('employer.jobs.update');
     Route::get('/dashboard', function () {
-        $jobs = auth()->user()->jobListings()->latest()->take(5)->get();
-        $totalActiveJobs = auth()->user()->jobListings()->where('status', 'Active')->count();
-        $totalApplicants = \App\Models\JobApplication::whereIn('job_listing_id', auth()->user()->jobListings()->pluck('id'))->count();
-        return view('employer.dashboard', compact('jobs', 'totalActiveJobs', 'totalApplicants'));
+        $user = auth()->user();
+        $jobs = $user->jobListings()->latest()->take(5)->get();
+        $totalActiveJobs = $user->jobListings()->where('status', 'Active')->count();
+        $totalApplicants = \App\Models\JobApplication::whereIn('job_listing_id', $user->jobListings()->pluck('id'))->count();
+        $totalInterviews = $user->interviewsAsEmployer()->upcoming()->count();
+
+        // Recent applicants across all jobs (last 5)
+        $recentApplicants = \App\Models\JobApplication::whereIn('job_listing_id', $user->jobListings()->pluck('id'))
+            ->with(['student', 'jobListing'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        // Upcoming interviews (next 3)
+        $upcomingInterviews = $user->interviewsAsEmployer()->upcoming()
+            ->with('student')
+            ->orderBy('scheduled_at', 'asc')
+            ->take(3)
+            ->get();
+
+        return view('employer.dashboard', compact(
+            'jobs', 'totalActiveJobs', 'totalApplicants', 'totalInterviews',
+            'recentApplicants', 'upcomingInterviews'
+        ));
     })->name('employer.dashboard');
     Route::get('/applicants', [StudentJobController::class, 'employerApplicants'])->name('employer.applicants');
     Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
@@ -97,10 +117,47 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->group(function () {
     Route::get('/dashboard', function () {
+        $user = auth()->user();
+        $profile = $user->studentProfile;
+
         $recommendedJobs = \App\Models\JobListing::where('status', 'Active')->latest()->take(5)->get();
-        $totalApplications = auth()->user()->jobApplications()->count();
-        $totalInterviews = auth()->user()->interviewsAsStudent()->upcoming()->count();
-        return view('student.dashboard', compact('recommendedJobs', 'totalApplications', 'totalInterviews'));
+        $totalApplications = $user->jobApplications()->count();
+        $totalInterviews = $user->interviewsAsStudent()->upcoming()->count();
+
+        // Resume status
+        $resume = $user->resume;
+        $resumeStatus = 'Not Uploaded';
+        $resumeStatusColor = '#6B7280';
+        if ($resume) {
+            if ($resume->admin_reviewed) {
+                $resumeStatus = 'Reviewed';
+                $resumeStatusColor = '#10B981';
+            } elseif ($resume->ai_reviewed) {
+                $resumeStatus = 'AI Reviewed';
+                $resumeStatusColor = '#4F46E5';
+            } else {
+                $resumeStatus = 'Under Review';
+                $resumeStatusColor = '#D97706';
+            }
+        }
+
+        // Profile completion percentage
+        $fields = ['name', 'email', 'phone'];
+        $profileFields = ['university', 'department', 'graduation_year', 'profile_picture'];
+        $filled = collect($fields)->filter(fn($f) => !empty($user->$f))->count();
+        $filledProfile = collect($profileFields)->filter(fn($f) => !empty($profile?->$f))->count();
+        $total = count($fields) + count($profileFields) + ($resume ? 1 : 0);
+        $done  = $filled + $filledProfile + ($resume ? 1 : 0);
+        $profileCompletion = $total > 0 ? round(($done / ($total + 1)) * 100) : 0;
+
+        // Recent applications (last 5)
+        $recentApplications = $user->jobApplications()->with('jobListing')->latest()->take(5)->get();
+
+        return view('student.dashboard', compact(
+            'recommendedJobs', 'totalApplications', 'totalInterviews',
+            'resumeStatus', 'resumeStatusColor', 'profileCompletion',
+            'recentApplications', 'user', 'profile'
+        ));
     })->name('student.dashboard');
     Route::get('/profile', [StudentProfileController::class, 'edit'])->name('student.profile');
     Route::post('/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
