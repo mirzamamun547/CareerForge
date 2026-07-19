@@ -153,7 +153,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
         $filledProfile = collect($profileFields)->filter(fn($f) => !empty($profile?->$f))->count();
         $total = count($fields) + count($profileFields) + ($resume ? 1 : 0);
         $done  = $filled + $filledProfile + ($resume ? 1 : 0);
-        $profileCompletion = $total > 0 ? round(($done / ($total + 1)) * 100) : 0;
+        $profileCompletion = $total > 0 ? round(($done / $total) * 100) : 0;
 
         // Recent applications (last 5)
         $recentApplications = $user->jobApplications()->with('jobListing')->latest()->take(5)->get();

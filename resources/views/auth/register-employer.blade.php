@@ -128,9 +128,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                         </svg>
                     </span>
-                    <textarea name="company_address" id="company_address" rows="2" required
+                    <textarea name="company_address" id="company_address" rows="2" required autocomplete="off"
                               class="auth-input w-full pl-10 pr-4 py-2.5 bg-white border border-[#cbd5e1] rounded-lg text-sm text-[#0f172a] placeholder-[#94a3b8] transition-all resize-none"
                               placeholder="Enter company address">{{ old('company_address') }}</textarea>
+                    <div id="company-address-suggestions"></div>
                 </div>
                 @error('company_address') <p class="text-xs text-red-500 mt-1 font-medium">{{ $message }}</p> @enderror
             </div>
@@ -242,4 +243,14 @@
         </div>
 
     </div>
+
+    <script src="{{ asset('js/location.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initLocationAutocomplete({
+                searchInput: '#company_address',
+                suggestionsContainer: '#company-address-suggestions',
+            });
+        });
+    </script>
 </x-guest-layout>

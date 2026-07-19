@@ -73,7 +73,8 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;" id="locationLabel">Meeting Link</label>
-                            <input type="text" name="location" id="locationInput" value="{{ old('location') }}" class="form-control form-control-custom @error('location') is-invalid @enderror" placeholder="e.g. Zoom link or video call URL">
+                            <input type="text" name="location" id="locationInput" value="{{ old('location') }}" autocomplete="off" class="form-control form-control-custom @error('location') is-invalid @enderror" placeholder="e.g. Zoom link or video call URL">
+                            <div id="location-suggestions"></div>
                             @error('location')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -195,6 +196,19 @@
         // Run on initial load
         updatePreview();
         updateLocationPlaceholder();
+    });
+</script>
+<script src="{{ asset('js/location.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Location is only a real physical address for on-site interviews
+        // (for online interviews this field holds a meeting link instead),
+        // so only call the location API while "On-site" is selected.
+        initLocationAutocomplete({
+            searchInput: '#locationInput',
+            suggestionsContainer: '#location-suggestions',
+            shouldSearch: () => document.getElementById('typeOnsite').checked,
+        });
     });
 </script>
 @endpush

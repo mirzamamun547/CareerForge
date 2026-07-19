@@ -109,7 +109,21 @@ function initLocationAutocomplete(config) {
             return;
         }
 
+        // Some fields (e.g. interview location, which can be a meeting link
+        // instead of a physical address) only want location lookups some of
+        // the time. If a shouldSearch() predicate is provided and returns
+        // false, skip calling the API entirely.
+        if (typeof config.shouldSearch === 'function' && !config.shouldSearch()) {
+            suggestionsContainer.innerHTML = '';
+            return;
+        }
+
         debounceTimeout = setTimeout(() => {
+            if (typeof config.shouldSearch === 'function' && !config.shouldSearch()) {
+                suggestionsContainer.innerHTML = '';
+                return;
+            }
+
             fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=8&countrycodes=bd`)
                 .then(response => response.json())
                 .then(data => {

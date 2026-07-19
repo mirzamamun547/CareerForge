@@ -149,7 +149,8 @@
 
                     <div class="col-12">
                         <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Location / Address</label>
-                        <textarea name="company_address" class="form-control form-control-custom" rows="3" placeholder="e.g. 123 Main Street, Dhaka, Bangladesh">{{ old('company_address', $profile->company_address) }}</textarea>
+                        <textarea name="company_address" id="company_address" autocomplete="off" class="form-control form-control-custom" rows="3" placeholder="e.g. 123 Main Street, Dhaka, Bangladesh">{{ old('company_address', $profile->company_address) }}</textarea>
+                        <div id="company-address-suggestions"></div>
                     </div>
 
                     <!-- Company Logo -->
@@ -214,5 +215,14 @@
     @if($errors->any())
         showEditMode();
     @endif
+</script>
+<script src="{{ asset('js/location.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        initLocationAutocomplete({
+            searchInput: '#company_address',
+            suggestionsContainer: '#company-address-suggestions',
+        });
+    });
 </script>
 @endsection
