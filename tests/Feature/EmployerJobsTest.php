@@ -124,4 +124,73 @@ class EmployerJobsTest extends TestCase
         $response->assertSee('previewSidebarTitle', false);
         $response->assertSee('previewSidebarMeta', false);
     }
+
+    public function test_employer_can_view_company_profile(): void
+    {
+        $employer = User::factory()->create(['role' => 'employer']);
+        \App\Models\EmployerProfile::create([
+            'user_id' => $employer->id,
+            'company_name' => 'Test Company',
+            'company_email' => 'test@company.com',
+            'website' => 'https://testcompany.com',
+            'industry' => 'Tech',
+            'company_address' => 'Test Location',
+            'contact_person' => 'Test Contact',
+        ]);
+
+        $this->actingAs($employer);
+
+        $response = $this->get(route('employer.company-profile'));
+
+        $response->assertOk();
+        $response->assertSee('Test Company');
+        $response->assertSee('test@company.com');
+        $response->assertSee('https://testcompany.com');
+        $response->assertSee('Tech');
+        $response->assertSee('Test Location');
+        $response->assertSee('Test Contact');
+    }
+
+    public function test_employer_can_update_company_profile(): void
+    {
+        $employer = User::factory()->create(['role' => 'employer', 'phone' => '1234567890']);
+        $profile = \App\Models\EmployerProfile::create([
+            'user_id' => $employer->id,
+            'company_name' => 'Old Company Name',
+            'company_email' => 'old@company.com',
+            'website' => 'https://oldcompany.com',
+            'industry' => 'Old Tech',
+            'company_address' => 'Old Location',
+            'contact_person' => 'Old Contact',
+        ]);
+
+        $this->actingAs($employer);
+
+        $response = $this->post(route('employer.company-profile.update'), [
+            'company_name' => 'New Company Name',
+            'company_email' => 'new@company.com',
+            'phone' => '0987654321',
+            'website' => 'https://newcompany.com',
+            'company_address' => 'New Location',
+            'industry' => 'New Tech',
+            'contact_person' => 'New Contact',
+        ]);
+
+        $response->assertRedirect();
+        
+        $this->assertDatabaseHas('employer_profiles', [
+            'id' => $profile->id,
+            'company_name' => 'New Company Name',
+            'company_email' => 'new@company.com',
+            'website' => 'https://newcompany.com',
+            'company_address' => 'New Location',
+            'industry' => 'New Tech',
+            'contact_person' => 'New Contact',
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $employer->id,
+            'phone' => '0987654321',
+        ]);
+    }
 }

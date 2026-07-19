@@ -84,4 +84,52 @@ class EmployerJobController extends Controller
 
         return back()->with('success', 'Job updated successfully.');
     }
+
+    public function editCompanyProfile(): View
+    {
+        $user = auth()->user();
+        $profile = $user->employerProfile ?? new \App\Models\EmployerProfile();
+        return view('employer.company-profile', compact('profile', 'user'));
+    }
+
+    public function updateCompanyProfile(Request $request): RedirectResponse
+    {
+        $user = auth()->user();
+        $profile = $user->employerProfile ?? new \App\Models\EmployerProfile(['user_id' => $user->id]);
+
+        $validated = $request->validate([
+            'company_name' => ['required', 'string', 'max:255'],
+            'company_email' => ['required', 'string', 'email', 'max:255'],
+            'phone' => ['required', 'string', 'max:30'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'company_address' => ['nullable', 'string'],
+            'industry' => ['nullable', 'string', 'max:255'],
+            'contact_person' => ['nullable', 'string', 'max:255'],
+            'company_logo' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $user->update([
+            'phone' => $validated['phone'],
+        ]);
+
+        if ($request->hasFile('company_logo')) {
+            if ($profile->company_logo && \Storage::disk('public')->exists($profile->company_logo)) {
+                \Storage::disk('public')->delete($profile->company_logo);
+            }
+            $logoPath = $request->file('company_logo')->store('company-logos', 'public');
+            $profile->company_logo = $logoPath;
+        }
+
+        $profile->fill([
+            'company_name' => $validated['company_name'],
+            'company_email' => $validated['company_email'],
+            'website' => $validated['website'],
+            'company_address' => $validated['company_address'],
+            'industry' => $validated['industry'],
+            'contact_person' => $validated['contact_person'],
+        ]);
+        $profile->save();
+
+        return back()->with('success', 'Company profile updated successfully.');
+    }
 }

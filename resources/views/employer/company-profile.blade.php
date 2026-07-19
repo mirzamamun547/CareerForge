@@ -6,6 +6,28 @@
 
 @section('content')
 <div class="container-fluid p-0">
+    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mb-4 rounded-3 border-0 shadow-sm" role="alert" style="background-color: #ECFDF5; color: #065F46;">
+            <i class="bi bi-check-circle-fill me-2 text-emerald-500"></i>
+            <strong>Success!</strong> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show mb-4 rounded-3 border-0 shadow-sm" role="alert" style="background-color: #FEF2F2; color: #991B1B;">
+            <i class="bi bi-exclamation-triangle-fill me-2 text-rose-500"></i>
+            <strong>Whoops! Please fix the errors below:</strong>
+            <ul class="mb-0 mt-2 text-xs">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="card card-custom p-4">
 
         <!-- Header Row -->
@@ -19,54 +41,76 @@
                     <span class="text-secondary" style="font-size: 0.8rem;">Manage your company details</span>
                 </div>
             </div>
-            <button class="btn btn-primary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;" onclick="toggleEdit()">
+            <button id="editToggleBtn" type="button" class="btn btn-primary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;" onclick="toggleEdit()">
                 <i class="bi bi-pencil-square"></i>
                 Edit Profile
             </button>
         </div>
 
-        <form>
+        <form action="{{ route('employer.company-profile.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
             <div class="row g-4">
+                <!-- Company Name -->
                 <div class="col-md-6">
                     <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Name</label>
-                    <input type="text" class="form-control form-control-custom" value="TechSoft Ltd." readonly>
+                    <input type="text" name="company_name" class="form-control form-control-custom" value="{{ old('company_name', $profile->company_name) }}" readonly required>
                 </div>
+                
+                <!-- Email -->
                 <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Email</label>
-                    <input type="email" class="form-control form-control-custom" value="hr@techsoft.com" readonly>
+                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Email</label>
+                    <input type="email" name="company_email" class="form-control form-control-custom" value="{{ old('company_email', $profile->company_email) }}" readonly required>
                 </div>
+
+                <!-- Contact Person -->
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Contact Person</label>
+                    <input type="text" name="contact_person" class="form-control form-control-custom" value="{{ old('contact_person', $profile->contact_person) }}" readonly>
+                </div>
+
+                <!-- Phone -->
                 <div class="col-md-6">
                     <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Phone</label>
-                    <input type="text" class="form-control form-control-custom" value="0171xxxxxxx" readonly>
+                    <input type="text" name="phone" class="form-control form-control-custom" value="{{ old('phone', $user->phone) }}" readonly required>
                 </div>
+
+                <!-- Website -->
                 <div class="col-md-6">
                     <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Website</label>
-                    <input type="url" class="form-control form-control-custom" value="https://techsoft.com" readonly>
+                    <input type="url" name="website" class="form-control form-control-custom" value="{{ old('website', $profile->website) }}" readonly>
                 </div>
+
+                <!-- Industry -->
                 <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Location</label>
-                    <input type="text" class="form-control form-control-custom" value="Dhaka, Bangladesh" readonly>
+                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Industry</label>
+                    <input type="text" name="industry" class="form-control form-control-custom" value="{{ old('industry', $profile->industry) }}" readonly>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Size</label>
-                    <select class="form-select form-control-custom" disabled>
-                        <option>1-10 employees</option>
-                        <option>11-50 employees</option>
-                        <option selected>51-200 employees</option>
-                        <option>201-500 employees</option>
-                        <option>500+ employees</option>
-                    </select>
+
+                <!-- Location / Address -->
+                <div class="col-12">
+                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Location / Address</label>
+                    <textarea name="company_address" class="form-control form-control-custom" rows="3" readonly>{{ old('company_address', $profile->company_address) }}</textarea>
                 </div>
 
                 <!-- Company Logo Upload -->
                 <div class="col-12">
                     <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">Company Logo</label>
                     <div class="d-flex align-items-center gap-3">
-                        <div class="bg-secondary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px;">
-                            <i class="bi bi-image text-secondary" style="font-size: 1.5rem;"></i>
+                        <div class="bg-secondary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center border" style="width: 70px; height: 70px; overflow: hidden;">
+                            @if ($profile->company_logo)
+                                <img id="logoPreview" src="{{ asset('storage/' . $profile->company_logo) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <div id="logoPlaceholder" class="d-flex flex-column align-items-center">
+                                    <i class="bi bi-image text-secondary" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <img id="logoPreview" src="" alt="Logo" class="d-none" style="width: 100%; height: 100%; object-fit: cover;">
+                            @endif
                         </div>
                         <div>
-                            <button type="button" class="btn btn-sm btn-secondary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;">
+                            <!-- Hidden input file -->
+                            <input type="file" id="company_logo_input" name="company_logo" class="d-none" accept="image/*" onchange="previewLogo(this)" disabled>
+                            
+                            <button type="button" id="logoUploadBtn" class="btn btn-sm btn-secondary-custom d-inline-flex align-items-center gap-2" style="font-size: 0.8rem;" onclick="document.getElementById('company_logo_input').click()" disabled>
                                 <i class="bi bi-upload"></i>
                                 Change Logo
                             </button>
@@ -74,14 +118,9 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- About Company -->
-                <div class="col-12">
-                    <label class="form-label fw-semibold text-secondary" style="font-size: 0.85rem;">About Company</label>
-                    <textarea class="form-control form-control-custom" rows="5" readonly>TechSoft Ltd. is a leading software development company focused on building innovative digital solutions. We specialize in web applications, mobile apps, and enterprise software. Our team of talented developers, designers, and project managers work collaboratively to deliver high-quality products for clients across various industries.</textarea>
-                </div>
             </div>
 
+            <!-- Save & Cancel Buttons -->
             <div class="d-flex gap-3 mt-4 d-none" id="saveButtons">
                 <button type="submit" class="btn btn-primary-custom d-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.7rem 1.5rem;">
                     <i class="bi bi-check-lg"></i>
@@ -99,8 +138,11 @@
     function toggleEdit() {
         const form = document.querySelector('form');
         const inputs = form.querySelectorAll('input, textarea');
-        const selects = form.querySelectorAll('select');
         const saveButtons = document.getElementById('saveButtons');
+        const editToggleBtn = document.getElementById('editToggleBtn');
+        const logoInput = document.getElementById('company_logo_input');
+        const logoUploadBtn = document.getElementById('logoUploadBtn');
+        
         const isReadonly = inputs[0].hasAttribute('readonly');
 
         inputs.forEach(input => {
@@ -111,14 +153,41 @@
             }
         });
 
-        selects.forEach(select => {
-            select.disabled = !select.disabled;
-        });
-
         if (isReadonly) {
+            // Enable file input & logo button
+            logoInput.removeAttribute('disabled');
+            logoUploadBtn.removeAttribute('disabled');
+            
+            // Show save/cancel controls
             saveButtons.classList.remove('d-none');
+            editToggleBtn.classList.add('d-none');
         } else {
+            // Reset form controls & disable logo button
+            logoInput.setAttribute('disabled', true);
+            logoUploadBtn.setAttribute('disabled', true);
+            
+            // Hide save/cancel controls
             saveButtons.classList.add('d-none');
+            editToggleBtn.classList.remove('d-none');
+        }
+    }
+
+    function previewLogo(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const logoPreview = document.getElementById('logoPreview');
+                const logoPlaceholder = document.getElementById('logoPlaceholder');
+                
+                logoPreview.src = e.target.result;
+                logoPreview.classList.remove('d-none');
+                
+                if (logoPlaceholder) {
+                    logoPlaceholder.classList.add('d-none');
+                }
+            }
+            reader.readAsDataURL(file);
         }
     }
 </script>

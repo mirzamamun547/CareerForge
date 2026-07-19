@@ -89,7 +89,8 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/schedule-interview', [InterviewController::class, 'create'])->name('employer.schedule-interview');
     Route::post('/schedule-interview', [InterviewController::class, 'store'])->name('employer.schedule-interview.store');
     Route::post('/interviews/{interview}/cancel', [InterviewController::class, 'cancel'])->name('employer.interviews.cancel');
-    Route::get('/company-profile', function () { return view('employer.company-profile'); })->name('employer.company-profile');
+    Route::get('/company-profile', [EmployerJobController::class, 'editCompanyProfile'])->name('employer.company-profile');
+    Route::post('/company-profile', [EmployerJobController::class, 'updateCompanyProfile'])->name('employer.company-profile.update');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('employer.notifications');
 });
 
