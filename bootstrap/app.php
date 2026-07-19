@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // out any authenticated user whose account has been suspended.
         $middleware->web(append: [
             \App\Http\Middleware\CheckSuspendedUser::class,
+            \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
