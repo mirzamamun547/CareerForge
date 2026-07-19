@@ -82,6 +82,19 @@
             </button>
         </form>
 
+        <!-- Demo Credentials Helper -->
+        <div class="mt-6 p-4 rounded-xl border border-amber-100 bg-amber-50/50 hover:bg-amber-50 transition-colors cursor-pointer" 
+             onclick="document.getElementById('email').value='admin@example.com'; document.getElementById('password').value='admin123';">
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">💡 Testing Credentials</span>
+                <span class="text-[10px] bg-amber-100 text-amber-700 font-extrabold px-1.5 py-0.5 rounded-full ml-auto">Click to auto-fill</span>
+            </div>
+            <div style="font-family: monospace; font-size: 0.8rem; color: #78350f;">
+                <strong>Email:</strong> admin@example.com<br>
+                <strong>Password:</strong> admin123
+            </div>
+        </div>
+
         <!-- Footer Security warning -->
         <div class="text-center mt-6 pt-5 border-t border-[#e2e8f0]">
             <p class="text-xs text-[#d97706] font-semibold">

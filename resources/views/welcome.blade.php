@@ -736,40 +736,66 @@
         </section>
 
         <!-- Testimonials Section -->
-        <section class="w-full py-20 bg-white border-t border-slate-100">
+        <section class="w-full py-24 bg-gradient-to-b from-[#F8FAFC] to-white border-t border-slate-100">
             <div class="max-w-7xl mx-auto px-6">
                 <!-- Heading -->
-                <div class="text-center max-w-2xl mx-auto flex flex-col gap-3 mb-16">
-                    <span class="text-xs text-indigo-600 font-extrabold uppercase tracking-widest">Success Stories</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">Vetted and approved by our community</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed">See what students and employers are saying about the platform.</p>
+                <div class="text-center max-w-2xl mx-auto flex flex-col gap-4 mb-18">
+                    <span class="text-xs text-indigo-600 font-extrabold uppercase tracking-widest px-3 py-1 bg-indigo-50 rounded-full w-fit mx-auto">Success Stories</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                        Loved by Students & Verified Recruiters
+                    </h2>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">
+                        Read how CareerForge is helping students stand out and employers find top-tier talent.
+                    </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
                     <!-- Testimonial 1 -->
-                    <div class="bg-slate-50/50 border border-slate-200/50 rounded-2xl p-8 flex flex-col justify-between">
-                        <p class="text-sm italic text-slate-600 leading-relaxed mb-6">
-                            "The AI resume scorer on CareerForge gave me exactly the feedback I needed. It highlighted missing keywords and helped me restructure my projects. I got three interview invites within a week of polishing it."
-                        </p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">AS</div>
+                    <div class="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:border-indigo-100/80 transition-all duration-300 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex text-amber-400 gap-1 mb-5">
+                                @for ($i = 0; $i < 5; $i++)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                        <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                                    </svg>
+                                @endfor
+                            </div>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
+                                "The AI resume scorer on CareerForge gave me exactly the feedback I needed. It highlighted missing keywords and helped me restructure my projects. I got three interview invites within a week of polishing it."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-50">
+                            <div class="w-11 h-11 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center font-extrabold text-indigo-700 text-sm group-hover:scale-105 transition-transform">
+                                AS
+                            </div>
                             <div>
-                                <h4 class="text-sm font-bold text-slate-800">Albin Smith</h4>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Computer Science Student</span>
+                                <h4 class="text-sm font-extrabold text-slate-800">Albin Smith</h4>
+                                <span class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">Computer Science Graduate</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Testimonial 2 -->
-                    <div class="bg-slate-50/50 border border-slate-200/50 rounded-2xl p-8 flex flex-col justify-between">
-                        <p class="text-sm italic text-slate-600 leading-relaxed mb-6">
-                            "As an employer, vetting junior developers can be extremely time-consuming. CareerForge's verified skill metric and neat dashboard made it simple to spot top candidates immediately. Highly recommended platform."
-                        </p>
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-xs">MK</div>
+                    <div class="bg-white border border-slate-100 rounded-3xl p-8 shadow-sm hover:shadow-xl hover:border-emerald-100/80 transition-all duration-300 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex text-amber-400 gap-1 mb-5">
+                                @for ($i = 0; $i < 5; $i++)
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                        <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                                    </svg>
+                                @endfor
+                            </div>
+                            <p class="text-slate-600 text-sm leading-relaxed mb-6 font-medium">
+                                "As an employer, vetting junior developers can be extremely time-consuming. CareerForge's verified skill metric and neat dashboard made it simple to spot top candidates immediately. Highly recommended platform."
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-4 pt-6 border-t border-slate-50">
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center font-extrabold text-emerald-700 text-sm group-hover:scale-105 transition-transform">
+                                MK
+                            </div>
                             <div>
-                                <h4 class="text-sm font-bold text-slate-800">Mary K.</h4>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Hiring Director at InnovateTech</span>
+                                <h4 class="text-sm font-extrabold text-slate-800">Mary K.</h4>
+                                <span class="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Hiring Director at InnovateTech</span>
                             </div>
                         </div>
                     </div>
@@ -778,99 +804,98 @@
         </section>
 
         <!-- Interactive FAQ Section -->
-        <section id="faq" class="w-full py-20 bg-slate-50 border-t border-slate-100" x-data="{ active: null }">
+        <section id="faq" class="w-full py-24 bg-[#F8FAFC] border-t border-slate-100" x-data="{ active: null }">
             <div class="max-w-4xl mx-auto px-6">
                 <!-- Heading -->
-                <div class="text-center flex flex-col gap-3 mb-16">
-                    <span class="text-xs text-indigo-600 font-extrabold uppercase tracking-widest">Questions</span>
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Frequently Asked Questions</h2>
-                    <p class="text-slate-500 text-sm leading-relaxed">Got questions about CareerForge? We have answers.</p>
+                <div class="text-center flex flex-col gap-4 mb-16">
+                    <span class="text-xs text-indigo-600 font-extrabold uppercase tracking-widest px-3 py-1 bg-indigo-50 rounded-full w-fit mx-auto">FAQs</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">Got Questions? We Have Answers</h2>
+                    <p class="text-slate-500 text-sm sm:text-base leading-relaxed">Everything you need to know about the CareerForge platform.</p>
                 </div>
 
                 <!-- FAQ Accordion List -->
                 <div class="space-y-4">
                     <!-- Q1 -->
-                    <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
-                        <button @click="active = active === 1 ? null : 1" class="w-full px-6 py-4 flex items-center justify-between font-bold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/40 transition-colors">
+                    <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm transition-all duration-200" :class="active === 1 ? 'ring-2 ring-indigo-600/10 border-indigo-100' : ''">
+                        <button @click="active = active === 1 ? null : 1" class="w-full px-6 py-5 flex items-center justify-between font-extrabold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/30 transition-colors">
                             <span>What is CareerForge?</span>
-                            <span class="text-slate-400 transform transition-transform" :class="active === 1 ? 'rotate-180' : ''">
+                            <span class="text-slate-400 transform transition-transform duration-200" :class="active === 1 ? 'rotate-180 text-indigo-600' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </span>
                         </button>
-                        <div x-show="active === 1" x-collapse class="px-6 pb-5 border-t border-slate-50 pt-3 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        <div x-show="active === 1" x-collapse class="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50">
                             CareerForge is a comprehensive career readiness platform designed to help students bridge the gap between academia and professional careers. We offer AI-driven resume scoring, standardized skill assessments based on global taxonomies, and matching filters for verified recruiters.
                         </div>
                     </div>
 
                     <!-- Q2 -->
-                    <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
-                        <button @click="active = active === 2 ? null : 2" class="w-full px-6 py-4 flex items-center justify-between font-bold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/40 transition-colors">
+                    <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm transition-all duration-200" :class="active === 2 ? 'ring-2 ring-indigo-600/10 border-indigo-100' : ''">
+                        <button @click="active = active === 2 ? null : 2" class="w-full px-6 py-5 flex items-center justify-between font-extrabold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/30 transition-colors">
                             <span>How does the AI Resume review work?</span>
-                            <span class="text-slate-400 transform transition-transform" :class="active === 2 ? 'rotate-180' : ''">
+                            <span class="text-slate-400 transform transition-transform duration-200" :class="active === 2 ? 'rotate-180 text-indigo-600' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </span>
                         </button>
-                        <div x-show="active === 2" class="px-6 pb-5 border-t border-slate-50 pt-3 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        <div x-show="active === 2" x-collapse class="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50">
                             When you upload your resume PDF in the Student portal, our analyzer processes your content against verified industry descriptors. We calculate an immediate compatibility score and provide inline bullet-point recommendations detailing missing skills, formatting improvements, and structural edits.
                         </div>
                     </div>
 
                     <!-- Q3 -->
-                    <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
-                        <button @click="active = active === 3 ? null : 3" class="w-full px-6 py-4 flex items-center justify-between font-bold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/40 transition-colors">
+                    <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm transition-all duration-200" :class="active === 3 ? 'ring-2 ring-indigo-600/10 border-indigo-100' : ''">
+                        <button @click="active = active === 3 ? null : 3" class="w-full px-6 py-5 flex items-center justify-between font-extrabold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/30 transition-colors">
                             <span>Is it free for students to use?</span>
-                            <span class="text-slate-400 transform transition-transform" :class="active === 3 ? 'rotate-180' : ''">
+                            <span class="text-slate-400 transform transition-transform duration-200" :class="active === 3 ? 'rotate-180 text-indigo-600' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </span>
                         </button>
-                        <div x-show="active === 3" class="px-6 pb-5 border-t border-slate-50 pt-3 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        <div x-show="active === 3" x-collapse class="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50">
                             Yes! All core student activities—such as uploading your resume, requesting reviews, taking taxonomy skill assessments, tracking goals, and applying to job posts—are 100% free of charge.
                         </div>
                     </div>
 
                     <!-- Q4 -->
-                    <div class="bg-white border border-slate-200/80 rounded-xl overflow-hidden shadow-sm">
-                        <button @click="active = active === 4 ? null : 4" class="w-full px-6 py-4 flex items-center justify-between font-bold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/40 transition-colors">
+                    <div class="bg-white border border-slate-200/60 rounded-2xl overflow-hidden shadow-sm transition-all duration-200" :class="active === 4 ? 'ring-2 ring-indigo-600/10 border-indigo-100' : ''">
+                        <button @click="active = active === 4 ? null : 4" class="w-full px-6 py-5 flex items-center justify-between font-extrabold text-left text-slate-800 text-sm sm:text-base hover:bg-slate-50/30 transition-colors">
                             <span>How do employers verify their company profile?</span>
-                            <span class="text-slate-400 transform transition-transform" :class="active === 4 ? 'rotate-180' : ''">
+                            <span class="text-slate-400 transform transition-transform duration-200" :class="active === 4 ? 'rotate-180 text-indigo-600' : ''">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </span>
                         </button>
-                        <div x-show="active === 4" class="px-6 pb-5 border-t border-slate-50 pt-3 text-xs sm:text-sm text-slate-500 leading-relaxed">
+                        <div x-show="active === 4" x-collapse class="px-6 pb-6 pt-1 text-xs sm:text-sm text-slate-500 leading-relaxed border-t border-slate-50">
                             When an employer registers, they submit standard company profiles including address, website, and industry details. Administrators review these profiles in the Admin Dashboard, validating authenticity before allowing them to post active jobs, safeguarding students from spam listings.
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
         <!-- Final CTA Banner -->
-        <section class="w-full py-16 bg-white relative">
+        <section class="w-full py-20 bg-white relative">
             <div class="max-w-7xl mx-auto px-6">
-                <div class="bg-gradient-to-r from-indigo-900 via-indigo-950 to-slate-900 rounded-3xl p-10 md:p-16 text-center text-white relative overflow-hidden shadow-xl">
-                    <!-- Glow decor -->
-                    <div class="absolute w-64 h-64 rounded-full bg-indigo-500/10 blur-3xl -top-12 -left-12"></div>
-                    <div class="absolute w-64 h-64 rounded-full bg-purple-500/10 blur-3xl -bottom-12 -right-12"></div>
+                <div class="rounded-3xl p-10 md:p-16 text-center text-white relative overflow-hidden shadow-xl shadow-indigo-100" style="background: linear-gradient(135deg, #4f46e5 0%, #312e81 50%, #0f172a 100%);">
+                    <!-- Glow decoration -->
+                    <div class="absolute w-72 h-72 rounded-full bg-indigo-500/20 blur-3xl -top-12 -left-12"></div>
+                    <div class="absolute w-72 h-72 rounded-full bg-purple-500/20 blur-3xl -bottom-12 -right-12"></div>
 
                     <div class="relative z-10 max-w-2xl mx-auto flex flex-col items-center gap-6">
-                        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Ready to Forge Your Career?</h2>
-                        <p class="text-slate-300 text-sm md:text-base leading-relaxed">
-                            Get started today by creating your free student profile, uploading your resume, and matching with the perfect employer.
+                        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Ready to Forge Your Career?</h2>
+                        <p class="text-indigo-100/90 text-sm md:text-base leading-relaxed" style="color: rgba(238, 242, 255, 0.9) !important;">
+                            Create your free account today, verify your skills with customized benchmarks, and get discovered by top-tier recruiters.
                         </p>
                         <div class="flex flex-wrap items-center justify-center gap-4 mt-2">
-                            <a href="/register" class="px-6 py-3.5 text-xs md:text-sm font-extrabold text-indigo-900 bg-white hover:bg-slate-100 rounded-xl transition-all">
+                            <a href="/register" class="px-7 py-3.5 text-xs md:text-sm font-extrabold rounded-xl transition-all shadow-md hover:-translate-y-0.5" style="color: #312e81 !important; background-color: #ffffff !important;">
                                 Create Free Account
                             </a>
-                            <a href="/login" class="px-6 py-3.5 text-xs md:text-sm font-extrabold text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all">
+                            <a href="/login" class="px-7 py-3.5 text-xs md:text-sm font-extrabold text-white bg-white/10 hover:bg-white/20 border rounded-xl transition-all hover:-translate-y-0.5" style="border-color: rgba(255,255,255,0.2) !important;">
                                 Login Workspace
                             </a>
                         </div>
@@ -879,41 +904,41 @@
             </div>
         </section>
 
-        <!-- stats & sitemap footer -->
-        <footer class="w-full bg-[#0F172A] text-white py-16 mt-auto border-t border-slate-800">
+        <!-- Stats & Sitemap Footer -->
+        <footer class="w-full py-16 mt-auto" style="background-color: #0b0f19 !important; border-top: 1px solid #111827; color: #94a3b8 !important;">
             <div class="max-w-7xl mx-auto px-6">
                 <!-- Top statistics grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 pb-12" style="border-bottom: 1px solid rgba(255,255,255,0.08);">
                     <div class="flex flex-col items-start gap-1">
-                        <span class="text-3xl font-extrabold text-indigo-400">10,000+</span>
-                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Registered Students</span>
+                        <span class="text-3xl font-extrabold" style="color: #818cf8 !important;">10,000+</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider" style="color: #64748b !important;">Registered Students</span>
                     </div>
                     <div class="flex flex-col items-start gap-1">
-                        <span class="text-3xl font-extrabold text-emerald-400">2,500+</span>
-                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Verified Employers</span>
+                        <span class="text-3xl font-extrabold" style="color: #34d399 !important;">2,500+</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider" style="color: #64748b !important;">Verified Employers</span>
                     </div>
                     <div class="flex flex-col items-start gap-1">
-                        <span class="text-3xl font-extrabold text-amber-400">5,000+</span>
-                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Active Jobs</span>
+                        <span class="text-3xl font-extrabold" style="color: #fbbf24 !important;">5,000+</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider" style="color: #64748b !important;">Active Jobs</span>
                     </div>
                     <div class="flex flex-col items-start gap-1">
-                        <span class="text-3xl font-extrabold text-pink-400">25,000+</span>
-                        <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Applications Submitted</span>
+                        <span class="text-3xl font-extrabold" style="color: #f472b6 !important;">25,000+</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider" style="color: #64748b !important;">Applications Submitted</span>
                     </div>
                 </div>
 
                 <!-- Footer site details -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pt-12 text-sm text-slate-400">
-                    <div class="md:col-span-5 flex flex-col gap-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="white" class="w-4.5 h-4.5">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pt-12 text-sm">
+                    <div class="md:col-span-5 flex flex-col gap-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-900/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="white" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
                                 </svg>
                             </div>
-                            <span class="text-lg font-extrabold text-white tracking-tight">CareerForge</span>
+                            <span class="text-lg font-extrabold text-white tracking-tight" style="color: #ffffff !important;">CareerForge</span>
                         </div>
-                        <p class="text-xs text-slate-500 leading-relaxed max-w-sm">
+                        <p class="text-xs leading-relaxed max-w-sm" style="color: #94a3b8 !important;">
                             CareerForge is an integrated platform enabling skills assessments, interactive resume reviews, roadmap development, and direct applicant matching.
                         </p>
                     </div>
@@ -921,36 +946,39 @@
                     <!-- Sitemap links -->
                     <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
                         <div class="flex flex-col gap-3">
-                            <span class="text-xs font-bold text-white uppercase tracking-wider">Solutions</span>
-                            <a href="#features" class="text-xs hover:text-white transition-colors">Features</a>
-                            <a href="#jobs" class="text-xs hover:text-white transition-colors">Job Matching</a>
-                            <a href="#how-it-works" class="text-xs hover:text-white transition-colors">AI Resume Review</a>
+                            <span class="text-xs font-bold uppercase tracking-wider" style="color: #ffffff !important;">Solutions</span>
+                            <a href="#features" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Features</a>
+                            <a href="#jobs" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Job Matching</a>
+                            <a href="#how-it-works" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">AI Resume Review</a>
                         </div>
                         <div class="flex flex-col gap-3">
-                            <span class="text-xs font-bold text-white uppercase tracking-wider">Portals</span>
-                            <a href="/register/student" class="text-xs hover:text-white transition-colors">Student Entry</a>
-                            <a href="/register/employer" class="text-xs hover:text-white transition-colors">Employer Entry</a>
-                            <a href="/login/admin" class="text-xs hover:text-white transition-colors">Admin Gateway</a>
+                            <span class="text-xs font-bold uppercase tracking-wider" style="color: #ffffff !important;">Portals</span>
+                            <a href="/register/student" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Student Entry</a>
+                            <a href="/register/employer" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Employer Entry</a>
+                            <a href="/login/admin" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Admin Gateway</a>
                         </div>
                         <div class="flex flex-col gap-3">
-                            <span class="text-xs font-bold text-white uppercase tracking-wider">Legal</span>
-                            <a href="#" class="text-xs hover:text-white transition-colors">Privacy Policy</a>
-                            <a href="#" class="text-xs hover:text-white transition-colors">Terms of Service</a>
-                            <a href="#" class="text-xs hover:text-white transition-colors">Cookie Settings</a>
+                            <span class="text-xs font-bold uppercase tracking-wider" style="color: #ffffff !important;">Legal</span>
+                            <a href="#" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Privacy Policy</a>
+                            <a href="#" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Terms of Service</a>
+                            <a href="#" class="text-xs hover:text-indigo-400 transition-colors" style="color: #94a3b8 !important; text-decoration: none;">Cookie Settings</a>
                         </div>
                     </div>
                 </div>
 
-                <div class="border-t border-slate-800/80 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <div class="border-t mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs gap-4" style="border-color: rgba(255,255,255,0.05); color: #64748b !important;">
                     <span>&copy; {{ date('Y') }} CareerForge. All rights reserved.</span>
                     <div class="flex gap-4">
-                        <a href="#" class="hover:text-slate-400 transition-colors">Twitter</a>
-                        <a href="#" class="hover:text-slate-400 transition-colors">LinkedIn</a>
-                        <a href="#" class="hover:text-slate-400 transition-colors">GitHub</a>
+                        <a href="#" class="hover:text-slate-400 transition-colors" style="color: #64748b !important; text-decoration: none;">Twitter</a>
+                        <a href="#" class="hover:text-slate-400 transition-colors" style="color: #64748b !important; text-decoration: none;">LinkedIn</a>
+                        <a href="#" class="hover:text-slate-400 transition-colors" style="color: #64748b !important; text-decoration: none;">GitHub</a>
                     </div>
                 </div>
             </div>
         </footer>
+
+
+
 
     </body>
 </html>
