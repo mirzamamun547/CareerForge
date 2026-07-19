@@ -83,14 +83,24 @@
                         </a>
                     @endif
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
-                            <i class="bi bi-download"></i>
-                            Download Resume
-                        </a>
-                        <a href="#" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                        @php
+                            $latestResume = $application->student->studentProfile?->latestResume;
+                        @endphp
+                        @if($latestResume)
+                            <a href="{{ asset('storage/' . $latestResume->file_path) }}" target="_blank" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                                <i class="bi bi-download"></i>
+                                Download Resume
+                            </a>
+                        @else
+                            <button type="button" disabled class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2 opacity-50" style="font-size: 0.85rem; padding: 0.6rem 1rem;">
+                                <i class="bi bi-file-earmark-slash"></i>
+                                No Resume
+                            </button>
+                        @endif
+                        <button type="button" class="btn btn-secondary-custom flex-grow-1 d-flex align-items-center justify-content-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1rem;" onclick="new bootstrap.Tab(document.getElementById('cover-tab')).show();">
                             <i class="bi bi-envelope"></i>
                             Cover Letter
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -125,30 +135,50 @@
                 <div class="tab-content" id="applicantTabContent">
                     <!-- Resume Tab -->
                     <div class="tab-pane fade show active" id="resume-pane" role="tabpanel">
-                        <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
-                            <div class="icon-shape" style="background-color: #EEF2FF;">
-                                <i class="bi bi-file-earmark-pdf text-primary" style="font-size: 1.2rem; color: #4F46E5 !important;"></i>
+                        @if($latestResume)
+                            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+                                <div class="icon-shape" style="background-color: #EEF2FF;">
+                                    <i class="bi bi-file-earmark-pdf text-primary" style="font-size: 1.2rem; color: #4F46E5 !important;"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <h6 class="fw-bold text-dark mb-0 text-truncate" style="font-size: 0.9rem;">{{ basename($latestResume->file_path) }}</h6>
+                                    <span class="text-secondary" style="font-size: 0.75rem;">
+                                        Uploaded on {{ $latestResume->created_at->format('d M Y') }}
+                                    </span>
+                                </div>
+                                <a href="{{ asset('storage/' . $latestResume->file_path) }}" target="_blank" class="ms-auto btn btn-sm btn-light border rounded-3 d-flex align-items-center gap-1">
+                                    <i class="bi bi-download"></i> Download
+                                </a>
                             </div>
-                            <div>
-                                <h6 class="fw-bold text-dark mb-0" style="font-size: 0.9rem;">Raihan_Uddin_Resume.pdf</h6>
-                                <span class="text-secondary" style="font-size: 0.75rem;">(120 KB)</span>
+                            <div class="mt-4" style="height: 550px;">
+                                <iframe src="{{ asset('storage/' . $latestResume->file_path) }}" class="w-100 h-100 border rounded-3 shadow-sm"></iframe>
                             </div>
-                            <a href="#" class="ms-auto btn btn-sm btn-light border rounded-3">
-                                <i class="bi bi-download"></i> Download
-                            </a>
-                        </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="text-secondary mb-2" style="font-size: 2rem;">
+                                    <i class="bi bi-file-earmark-slash"></i>
+                                </div>
+                                <p class="text-secondary mb-0">No resume has been uploaded by the applicant yet.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Cover Letter Tab -->
                     <div class="tab-pane fade" id="cover-pane" role="tabpanel">
-                        <p class="text-secondary" style="font-size: 0.9rem; line-height: 1.8;">
-                            Dear Hiring Manager,<br><br>
-                            I am writing to express my interest in the Backend Developer position at TechSoft Ltd. With over 3 years of experience in building scalable web applications using Laravel and PHP, I believe I would be a strong addition to your engineering team.<br><br>
-                            In my current role, I have successfully architected RESTful APIs that serve over 10,000 daily requests, optimized database queries to reduce response times by 40%, and implemented CI/CD pipelines using GitHub Actions.<br><br>
-                            I am excited about the opportunity to bring my skills and passion for clean code to your organization.<br><br>
-                            Best regards,<br>
-                            Raihan Uddin
-                        </p>
+                        @if($application->cover_letter)
+                            <div class="p-4 rounded-3" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+                                <p class="text-dark mb-0" style="font-size: 0.95rem; line-height: 1.8; white-space: pre-line;">
+                                    {{ $application->cover_letter }}
+                                </p>
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="text-secondary mb-2" style="font-size: 2rem;">
+                                    <i class="bi bi-envelope-slash"></i>
+                                </div>
+                                <p class="text-secondary mb-0">No cover letter was submitted with this application.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Profile Tab -->
@@ -156,63 +186,65 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <span class="text-secondary d-block" style="font-size: 0.75rem;">Full Name</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">Raihan Uddin</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->name }}</span>
                             </div>
                             <div class="col-md-6">
                                 <span class="text-secondary d-block" style="font-size: 0.75rem;">Email</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">raihan@example.com</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->email }}</span>
                             </div>
                             <div class="col-md-6">
                                 <span class="text-secondary d-block" style="font-size: 0.75rem;">Phone</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">+880 1712-345678</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->studentProfile?->phone ?? 'Not Provided' }}</span>
                             </div>
                             <div class="col-md-6">
-                                <span class="text-secondary d-block" style="font-size: 0.75rem;">Location</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">Dhaka, Bangladesh</span>
+                                <span class="text-secondary d-block" style="font-size: 0.75rem;">University</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->studentProfile?->university ?? 'Not Provided' }}</span>
                             </div>
                             <div class="col-md-6">
-                                <span class="text-secondary d-block" style="font-size: 0.75rem;">Date of Birth</span>
-                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">15 March 1997</span>
+                                <span class="text-secondary d-block" style="font-size: 0.75rem;">Department</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->studentProfile?->department ?? 'Not Provided' }}</span>
                             </div>
                             <div class="col-md-6">
-                                <span class="text-secondary d-block" style="font-size: 0.75rem;">LinkedIn</span>
-                                <a href="#" class="fw-semibold" style="font-size: 0.9rem; color: #4F46E5;">linkedin.com/in/raihanuddin</a>
+                                <span class="text-secondary d-block" style="font-size: 0.75rem;">Graduation Year</span>
+                                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{ $application->student->studentProfile?->graduation_year ?? 'Not Provided' }}</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Experience Tab -->
                     <div class="tab-pane fade" id="experience-pane" role="tabpanel">
-                        <div class="mb-4 pb-3 border-bottom border-light">
-                            <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Backend Developer</h6>
-                            <span class="text-secondary" style="font-size: 0.8rem;">DataSoft Ltd. &bull; Jan 2022 - Present</span>
-                            <p class="text-secondary mt-2 mb-0" style="font-size: 0.85rem;">
-                                Developed and maintained REST APIs using Laravel. Managed MySQL databases and optimized query performance. Collaborated with frontend teams on SPA integrations.
+                        <div class="p-4 rounded-3 text-center" style="background-color: #F9FAFB; border: 1px solid #E5E7EB;">
+                            <div class="text-secondary mb-3" style="font-size: 2rem;">
+                                <i class="bi bi-journal-text"></i>
+                            </div>
+                            <h6 class="fw-bold text-dark mb-2">Detailed Work History Available in Resume</h6>
+                            <p class="text-secondary mb-3" style="font-size: 0.85rem; max-width: 500px; margin: 0 auto;">
+                                Detailed career timeline, project roles, and employment history are fully described in the candidate's uploaded resume.
                             </p>
-                        </div>
-                        <div class="mb-2">
-                            <h6 class="fw-bold text-dark mb-1" style="font-size: 0.9rem;">Junior Developer</h6>
-                            <span class="text-secondary" style="font-size: 0.8rem;">WebCraft BD &bull; Jun 2020 - Dec 2021</span>
-                            <p class="text-secondary mt-2 mb-0" style="font-size: 0.85rem;">
-                                Built client websites using PHP and WordPress. Assisted in database design and implemented payment gateway integrations.
-                            </p>
+                            <button type="button" class="btn btn-sm btn-outline-primary" style="border-color: #4F46E5; color: #4F46E5;" onclick="new bootstrap.Tab(document.getElementById('resume-tab')).show();">
+                                View Resume
+                            </button>
                         </div>
                     </div>
 
                     <!-- Skills Tab -->
                     <div class="tab-pane fade" id="skills-pane" role="tabpanel">
-                        <div class="d-flex flex-wrap gap-2">
-                            <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">PHP</span>
-                            <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">Laravel</span>
-                            <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">MySQL</span>
-                            <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">REST APIs</span>
-                            <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">Git</span>
-                            <span class="badge-custom-emerald px-3 py-2" style="font-size: 0.8rem;">Docker</span>
-                            <span class="badge-custom-emerald px-3 py-2" style="font-size: 0.8rem;">Redis</span>
-                            <span class="badge-custom-emerald px-3 py-2" style="font-size: 0.8rem;">JavaScript</span>
-                            <span class="badge-custom-amber px-3 py-2" style="font-size: 0.8rem;">AWS</span>
-                            <span class="badge-custom-amber px-3 py-2" style="font-size: 0.8rem;">CI/CD</span>
-                        </div>
+                        @if($application->student->studentProfile && $application->student->studentProfile->skills->count() > 0)
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach($application->student->studentProfile->skills as $skill)
+                                    <span class="badge-custom-indigo px-3 py-2" style="font-size: 0.8rem;">
+                                        {{ $skill->name }} ({{ $skill->level ?? 'Proficient' }})
+                                    </span>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <div class="text-secondary mb-2" style="font-size: 2rem;">
+                                    <i class="bi bi-tag-slash"></i>
+                                </div>
+                                <p class="text-secondary mb-0">No specific skills have been added to the profile yet.</p>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Resume Review Tab -->

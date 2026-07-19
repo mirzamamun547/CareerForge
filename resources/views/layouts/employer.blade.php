@@ -246,10 +246,6 @@
                             <span class="badge bg-danger ms-auto rounded-pill" style="font-size: 0.65rem; padding: 0.25em 0.55em;">{{ auth()->user()->unreadNotifications()->count() }}</span>
                         @endif
                     </a>
-                    <a href="#settings" class="nav-link-custom">
-                        <i class="bi bi-gear fs-5"></i>
-                        Settings
-                    </a>
                 </nav>
             </div>
 
