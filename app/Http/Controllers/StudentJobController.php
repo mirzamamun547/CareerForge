@@ -299,4 +299,22 @@ class StudentJobController extends Controller
 
         return redirect()->route('employer.applicant-details', $application)->with('status', 'review-submitted');
     }
+
+    /**
+     * Update the employer notes on the job application.
+     */
+    public function employerUpdateNotes(Request $request, JobApplication $application): RedirectResponse
+    {
+        abort_unless($application->jobListing->user_id === auth()->id(), 403);
+
+        $validated = $request->validate([
+            'employer_notes' => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $application->update([
+            'employer_notes' => $validated['employer_notes'],
+        ]);
+
+        return redirect()->route('employer.applicant-details', $application)->with('status', 'notes-updated');
+    }
 }

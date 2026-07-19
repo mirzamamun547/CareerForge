@@ -117,43 +117,50 @@
                     
                     {{-- 1. Recruiter Review Tab --}}
                     <div class="tab-pane fade show active" id="human-review" role="tabpanel" aria-labelledby="human-tab">
-                        @if($manualReview)
-                            <div class="d-flex align-items-center gap-4 mb-4">
-                                <div class="score-ring-wrap">
-                                    <svg width="110" height="110" viewBox="0 0 110 110">
-                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
-                                        <circle cx="55" cy="55" r="47" fill="none" stroke="#10B981" stroke-width="9"
-                                            stroke-linecap="round"
-                                            stroke-dasharray="295"
-                                            stroke-dashoffset="{{ 295 - (295 * $manualReview->overall_score / 100) }}"/>
-                                    </svg>
-                                    <div class="score-center">
-                                        <div class="score-num">{{ $manualReview->overall_score }}</div>
-                                        <div class="score-sub">/100</div>
+                        @if($manualReviews->count() > 0)
+                            <div class="d-flex flex-column gap-4">
+                                @foreach($manualReviews as $review)
+                                    <div class="p-3.5 rounded-4 border border-light-subtle bg-light bg-opacity-50">
+                                        <div class="d-flex align-items-center gap-3 flex-wrap flex-md-nowrap">
+                                            <div class="score-ring-wrap" style="width: 80px; height: 80px;">
+                                                <svg width="80" height="80" viewBox="0 0 110 110">
+                                                    <circle cx="55" cy="55" r="47" fill="none" stroke="#E5E7EB" stroke-width="9"/>
+                                                    <circle cx="55" cy="55" r="47" fill="none" stroke="#10B981" stroke-width="9"
+                                                        stroke-linecap="round"
+                                                        stroke-dasharray="295"
+                                                        stroke-dashoffset="{{ 295 - (295 * $review->overall_score / 100) }}"/>
+                                                </svg>
+                                                <div class="score-center">
+                                                    <div class="score-num" style="font-size: 1.3rem;">{{ $review->overall_score }}</div>
+                                                    <div class="score-sub" style="font-size: 0.55rem;">/100</div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <h5 class="fw-bold text-dark mb-1" style="font-size:0.95rem;">
+                                                    @if($review->reviewer && $review->reviewer->role === 'employer')
+                                                        Review from {{ $review->reviewer->employerProfile?->company_name ?? $review->reviewer->name }}
+                                                    @else
+                                                        Review from CareerForge Recruiter
+                                                    @endif
+                                                </h5>
+                                                <div class="mb-2">
+                                                    <span class="badge-custom-emerald" style="font-size:0.65rem; padding:0.25em 0.7em;">
+                                                        <i class="bi bi-check-circle me-1"></i>
+                                                        {{ $review->reviewer && $review->reviewer->role === 'employer' ? 'Employer Feedback' : 'Official Review' }}
+                                                    </span>
+                                                </div>
+                                                <p class="text-secondary mb-0" style="font-size:0.72rem;">
+                                                    Submitted on {{ $review->reviewed_at?->format('d M Y, h:i A') }}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <div class="feedback-box bg-white border border-light-subtle py-2.5 px-3 mb-0" style="font-size: 0.8rem; line-height: 1.6;">{{ $review->feedback }}</div>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <h5 class="fw-bold text-dark mb-1" style="font-size:1.05rem;">Recruiter Score</h5>
-                                    <div class="mb-2">
-                                        <span class="badge-custom-emerald" style="font-size:0.72rem; padding:0.3em 0.8em;">
-                                            <i class="bi bi-check-circle me-1"></i>Official Review
-                                        </span>
-                                    </div>
-                                    <p class="text-secondary mb-0" style="font-size:0.78rem;">
-                                        Reviewed by <strong>{{ $manualReview->reviewer ? $manualReview->reviewer->name : 'Administrator' }}</strong> 
-                                        on {{ $manualReview->reviewed_at?->format('d M Y, h:i A') }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div class="divider"></div>
-
-                            <div>
-                                <h6 class="fw-bold text-dark mb-3" style="font-size:0.88rem;">
-                                    <i class="bi bi-chat-square-text-fill me-2" style="color:#10B981;"></i>Recruiter Feedback
-                                </h6>
-                                <div class="feedback-box">{{ $manualReview->feedback }}</div>
+                                @endforeach
                             </div>
                         @else
                             <div class="text-center py-5">
@@ -162,7 +169,7 @@
                                 </div>
                                 <h6 class="fw-bold text-dark mb-1" style="font-size:0.95rem;">Waiting for Recruiter Review</h6>
                                 <p class="text-secondary mb-0 mx-auto" style="font-size:0.82rem; max-width:400px;">
-                                    Our admins and partner employers will review your resume shortly. You'll receive feedback and a score here once completed.
+                                    Our admins and partner employers will review your resume shortly. You'll receive feedback and scores here once completed.
                                 </p>
                             </div>
                         @endif

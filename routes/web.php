@@ -105,6 +105,7 @@ Route::middleware(['auth', 'role:employer'])->prefix('employer')->group(function
     Route::get('/applicant-details/{application}', [StudentJobController::class, 'employerApplicantDetails'])->name('employer.applicant-details');
     Route::post('/applicant-details/{application}/status', [StudentJobController::class, 'employerUpdateStatus'])->name('employer.applicants.status.update');
     Route::post('/applicant-details/{application}/resume-review', [StudentJobController::class, 'employerReviewResume'])->name('employer.applicant-details.resume-review');
+    Route::post('/applicant-details/{application}/notes', [StudentJobController::class, 'employerUpdateNotes'])->name('employer.applicant-details.notes.update');
     Route::get('/interview-schedule', [InterviewController::class, 'employerIndex'])->name('employer.interview-schedule');
     Route::get('/schedule-interview', [InterviewController::class, 'create'])->name('employer.schedule-interview');
     Route::post('/schedule-interview', [InterviewController::class, 'store'])->name('employer.schedule-interview.store');

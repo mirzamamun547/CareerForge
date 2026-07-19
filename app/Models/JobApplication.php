@@ -16,6 +16,7 @@ class JobApplication extends Model
         'job_listing_id',
         'status',
         'cover_letter',
+        'employer_notes',
     ];
 
     public function student(): BelongsTo

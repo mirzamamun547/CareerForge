@@ -29,6 +29,14 @@
         </div>
     @endif
 
+    @if(session('status') == 'notes-updated')
+        <div class="alert alert-success alert-dismissible fade show border-0 rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            Internal notes updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="row g-4">
         <!-- Left Column: Applicant Info -->
         <div class="col-12 col-lg-4">
@@ -314,12 +322,15 @@
 
                 <!-- Notes Section -->
                 <div class="border-top border-light pt-4 mt-4">
-                    <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">Notes</h6>
-                    <textarea class="form-control form-control-custom" rows="3" placeholder="Add your notes about this applicant..."></textarea>
-                    <button class="btn btn-primary-custom mt-3 d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;">
-                        <i class="bi bi-save"></i>
-                        Save Note
-                    </button>
+                    <h6 class="fw-bold text-dark mb-3" style="font-size: 0.9rem;">Notes (Internal)</h6>
+                    <form action="{{ route('employer.applicant-details.notes.update', $application) }}" method="POST">
+                        @csrf
+                        <textarea name="employer_notes" class="form-control form-control-custom" rows="3" placeholder="Add private notes about this candidate's interview performance, fit, or follow-ups...">{{ old('employer_notes', $application->employer_notes) }}</textarea>
+                        <button type="submit" class="btn btn-primary-custom mt-3 d-inline-flex align-items-center gap-2" style="font-size: 0.85rem; padding: 0.6rem 1.2rem;">
+                            <i class="bi bi-save"></i>
+                            Save Note
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
