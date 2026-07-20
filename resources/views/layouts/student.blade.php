@@ -316,6 +316,9 @@
                 <a href="/student/jobs" class="nav-link-custom {{ Request::is('student/jobs') ? 'active' : '' }}">
                     <i class="bi bi-briefcase"></i> Browse Jobs
                 </a>
+                <a href="/student/saved-jobs" class="nav-link-custom {{ Request::is('student/saved-jobs') ? 'active' : '' }}">
+                    <i class="bi bi-bookmark-star"></i> Saved Jobs
+                </a>
                 <a href="/student/applications" class="nav-link-custom {{ Request::is('student/applications') ? 'active' : '' }}">
                     <i class="bi bi-folder2-open"></i> My Applications
                 </a>

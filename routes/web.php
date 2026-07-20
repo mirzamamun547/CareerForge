@@ -181,6 +181,7 @@ Route::middleware(['auth', 'role:student'])->prefix('student')->group(function (
     Route::post('/jobs/{job}/apply', [StudentJobController::class, 'apply'])->name('student.jobs.apply')->middleware('resume.uploaded');
     Route::get('/jobs/{job}/apply/success', [StudentJobController::class, 'applySuccess'])->name('student.jobs.apply.success');
     Route::post('/jobs/{job}/bookmark', [StudentJobController::class, 'bookmark'])->name('student.jobs.bookmark');
+    Route::get('/saved-jobs', [StudentJobController::class, 'savedJobs'])->name('student.saved-jobs');
     Route::get('/applications', [StudentJobController::class, 'applications'])->name('student.applications');
     Route::post('/applications/{application}/withdraw', [StudentJobController::class, 'withdraw'])->name('student.applications.withdraw');
     Route::get('/interviews', [InterviewController::class, 'studentIndex'])->name('student.interviews');

@@ -226,6 +226,7 @@
                                 </span>
                                 <form method="POST" action="{{ route('student.jobs.bookmark', $job) }}">
                                     @csrf
+                                    <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
                                     <button type="submit" class="btn btn-sm {{ $bookmarked ? 'btn-warning text-white' : 'btn-outline-secondary' }} rounded-pill" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">
                                         <i class="bi {{ $bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark' }}"></i>
                                     </button>

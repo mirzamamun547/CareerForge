@@ -167,7 +167,26 @@ class StudentJobController extends Controller
             ]);
         }
 
+        // Send the student back to wherever they bookmarked from (list page
+        // with its filters/pagination intact, or the job details page)
+        // instead of always resetting to the plain jobs list. Only allow
+        // redirecting back to a URL on this site.
+        $redirectTo = $request->input('redirect_to');
+        if ($redirectTo && str_starts_with($redirectTo, url('/'))) {
+            return redirect($redirectTo);
+        }
+
         return redirect()->route('student.jobs');
+    }
+
+    public function savedJobs(): View
+    {
+        $bookmarks = auth()->user()->jobBookmarks()
+            ->with(['jobListing.user.employerProfile'])
+            ->latest()
+            ->paginate(10);
+
+        return view('student.saved-jobs', compact('bookmarks'));
     }
 
     public function applications(Request $request): View

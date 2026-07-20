@@ -77,6 +77,14 @@
                 <div class="mt-4 border-top border-light pt-4">
                     <div class="d-flex flex-wrap gap-3">
                         <a href="{{ route('student.jobs.apply.form', $job) }}" class="btn btn-primary-custom">Apply Now</a>
+                        <form method="POST" action="{{ route('student.jobs.bookmark', $job) }}">
+                            @csrf
+                            <input type="hidden" name="redirect_to" value="{{ url()->full() }}">
+                            <button type="submit" class="btn {{ $bookmarked ? 'btn-warning text-white' : 'btn-outline-secondary' }} d-inline-flex align-items-center gap-2">
+                                <i class="bi {{ $bookmarked ? 'bi-bookmark-fill' : 'bi-bookmark' }}"></i>
+                                {{ $bookmarked ? 'Saved' : 'Save Job' }}
+                            </button>
+                        </form>
                         <a href="{{ route('student.jobs') }}" class="btn btn-outline-custom">Back to jobs</a>
                     </div>
                 </div>
